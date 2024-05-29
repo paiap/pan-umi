@@ -49,6 +49,7 @@ declare namespace API {
   interface UserInfo {
     id?: string;
     name?: string;
+    user?: string;
     /** nick */
     nickName?: string;
     /** email */
