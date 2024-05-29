@@ -11,7 +11,9 @@ export default defineConfig({
   layout: {
     title: 'panan-umi',
   },
-
+  qiankun: {
+    slave: {},
+  },
   routes: [
     {
       path: '/',
@@ -26,7 +28,8 @@ export default defineConfig({
       name: '权限演示',
       path: '/access',
       component: './Access',
-    }
+      access: 'access',
+    },
   ],
   npmClient: 'yarn',
 });

@@ -10,7 +10,7 @@
 export async function getInitialState(): Promise<{ name: string, user: string }> {
   return {
     name: 'panan-umi',
-    user: 'panan-umi',
+    user: 'panan',
   };
 }
 
@@ -20,5 +20,6 @@ export const layout = () => {
     menu: {
       locale: false,
     },
+    
   };
 };
