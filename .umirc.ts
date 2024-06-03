@@ -1,8 +1,9 @@
+import { routes } from './src/pages/route';
 import { defineConfig } from '@umijs/max';
 
 export default defineConfig({
   antd: {
-    dark: true,
+    // dark: true,
   },
   access: {},
   model: {},
@@ -11,25 +12,10 @@ export default defineConfig({
   layout: {
     title: 'panan-umi',
   },
+  clientLoader: {}, //路由数据加载
   qiankun: {
     slave: {},
   },
-  routes: [
-    {
-      path: '/',
-      redirect: '/home',
-    },
-    {
-      name: '首页',
-      path: '/home',
-      component: './Home',
-    },
-    {
-      name: '权限演示',
-      path: '/access',
-      component: './Access',
-      access: 'access',
-    },
-  ],
+  routes,
   npmClient: 'yarn',
 });

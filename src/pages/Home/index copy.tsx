@@ -6,22 +6,18 @@ import { useEffect } from 'react';
 import { Button } from 'antd';
 import Guide from '@/components/Guide';
 
-const AccessPage: React.FC = () => {
+const HomePage: React.FC = () => {
   const { name, setName } = useModel('global');
   const { initialState, setInitialState }: any = useModel('@@initialState');
   const { data } = useClientLoaderData()
   console.log(data)
 
   useEffect(() => {
-    if(!initialState?.user) return
-    console.log(initialState?.user)
     setName(initialState?.user)
   }, [initialState])
 
   return (
-    <PageContainer ghost header={{
-      title: '权限演示',
-    }}>
+    <PageContainer ghost>
       <div className={styles.container}>
         <Guide name={trim(name)} />
       </div>
@@ -30,13 +26,10 @@ const AccessPage: React.FC = () => {
   );
 };
 
-export default AccessPage;
-
-
-
+export default HomePage;
 
 export const clientLoader = async () => {
   return {
-    name: 'panan',
+    name: 'panan-clientLoader',
   }
 }
