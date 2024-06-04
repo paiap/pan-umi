@@ -6,7 +6,7 @@ import { getModelList } from '../request';
 
 const { Option } = Select;
 const otherStyles = {
-  width: '220px'
+  width: '210px'
 }
 
 const ModelSearch = (props: {
@@ -15,9 +15,13 @@ const ModelSearch = (props: {
   orderOptions: string | number,
   setLoading: (c: boolean) => void,
   setDataSource: (c: any[]) => void
-  setTotal: (c: number) => void
+  setTotal: (c: number) => void;
+  pages:{
+    page: number,
+    pageSize: number
+  }
 }) => {
-  const { focused, setLoading, orderType, orderOptions, setDataSource, setTotal } = props
+  const { focused, setLoading, orderType, orderOptions, setDataSource, setTotal, pages } = props
   const [form] = Form.useForm();
   const [expand, setExpand] = useState(false);
 
@@ -68,15 +72,16 @@ const ModelSearch = (props: {
 
 
   useEffect(() => {
-    if (!focused || !orderType || !orderOptions) return
+    if (!focused || !orderType || !orderOptions || !pages) return
     const formValues = form.getFieldsValue();
     handleChange({
       focused,
       orderType,
       orderOptions,
+      ...pages,
       ...formValues
     }, false);
-  }, [focused, orderType, orderOptions]);
+  }, [focused, orderType, orderOptions, pages]);
 
   /**
    * 

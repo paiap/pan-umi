@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
 import ModelCard from './ModelCard'
 import ModelSearch from './ModelSearch'
-import { Button, Select, Space, Spin, Tabs } from 'antd'
+import { Button, Pagination, Select, Space, Spin, Tabs } from 'antd'
 
 interface Props {
   [key: string]: any
@@ -81,6 +81,16 @@ const sortOptions = [
   }
 ]
 
+interface PAGE {
+  page: number,
+  pageSize: number
+}
+
+const INITPAGE: PAGE = {
+  page: 1,
+  pageSize: 10
+}
+
 const ModelList: FC<Props> = () => {
 
   const [items, setItems] = useState<any[]>([])
@@ -90,6 +100,7 @@ const ModelList: FC<Props> = () => {
   const [orderOptions, setOrderOptions] = useState<string>('desc')
   const [total, setTotal] = useState<number>(1)
   const [dataSource, setDataSource] = useState<ModelList.modeldetailParam[]>([])
+  const [pages, setPages] = useState<INITPAGE>(INITPAGE)
 
   const fetchItems = () => {
     setItems([
@@ -108,6 +119,13 @@ const ModelList: FC<Props> = () => {
     fetchItems()
   }, [])
 
+  const handlePageChange = (page: number, pageSize: number) => {
+    setPages({
+      page,
+      pageSize
+    });
+    // 在这里可以添加一个函数来处理页码改变时的逻辑，比如重新加载对应页的数据
+  };
 
   return (
     <>
@@ -118,6 +136,7 @@ const ModelList: FC<Props> = () => {
         setLoading={setLoading}
         setDataSource={setDataSource}
         setTotal={setTotal}
+        pages={pages}
       />
       <Tabs
         activeKey={focused}
@@ -165,6 +184,19 @@ const ModelList: FC<Props> = () => {
           })
         }
       </Spin>
+      <div style={{
+        textAlign: 'right',
+        padding: '8px'
+      }}>
+        <Pagination
+          current={pages.page}
+          total={total}
+          pageSize={10} // 每页显示10条
+          onChange={handlePageChange}
+          showTotal={(total) => `共 ${total} 条`} // 显示总条数
+        />
+      </div>
+
     </>
   )
 }

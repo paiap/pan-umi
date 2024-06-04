@@ -10,6 +10,7 @@ import ModelVersion from '@/components/icons/ModelVersion'
 import CheckIcon from '@/components/icons/CheckIcon'
 import TestIcon from '@/components/icons/TestIcon'
 import Reasoning from '@/components/icons/Reasoning'
+import './index.less'
 interface Props {
   data: ModelList.modeldetailParam,
   refresh: () => void
@@ -27,7 +28,7 @@ const ModelCard: FC<Props> = ({ data }) => {
   }, [data])
 
   return (
-    <div style={{ width: '100%', marginBottom: '8px' }}>
+    <div style={{ marginBottom: '8px' }} className='modelListContainer'>
       <Badge.Ribbon text={woc?.name} color={woc?.color}>
         <Card
           title={
@@ -49,7 +50,7 @@ const ModelCard: FC<Props> = ({ data }) => {
             },
             body: {
               padding: '8px',
-              overflowX:'auto'
+              overflowX:'auto',
             }
           }}
         >
@@ -68,7 +69,7 @@ const ModelCard: FC<Props> = ({ data }) => {
             {/* 模型描述 */}
             <div style={{
               width: '200px',
-              marginRight: '8px',
+              margin: '0 8px',
               whiteSpace: 'normal', // 允许文本换行
               overflowWrap: 'break-word', // 在长单词处换行
             }}>
@@ -114,7 +115,7 @@ const ModelCard: FC<Props> = ({ data }) => {
             </div>
             {/* 训练任务 */}
             <div style={{
-              width: '230px',
+              width: '210px',
               marginRight: '8px',
               whiteSpace: 'normal', // 允许文本换行
               overflowWrap: 'break-word', // 在长单词处换行
@@ -160,7 +161,7 @@ const ModelCard: FC<Props> = ({ data }) => {
             </div>
             {/* 模型版本 */}
             <div style={{
-              width: '120px',
+              width: '110px',
               marginRight: '8px',
               whiteSpace: 'normal', // 允许文本换行
               overflowWrap: 'break-word', // 在长单词处换行
@@ -184,7 +185,7 @@ const ModelCard: FC<Props> = ({ data }) => {
             </div>
             {/* 验证 */}
             <div style={{
-              width: '130px',
+              width: '120px',
               marginRight: '8px',
               whiteSpace: 'normal', // 允许文本换行
               overflowWrap: 'break-word', // 在长单词处换行
@@ -216,7 +217,7 @@ const ModelCard: FC<Props> = ({ data }) => {
             </div>
             {/* 测试 */}
             <div style={{
-              width: '130px',
+              width: '120px',
               marginRight: '8px',
               whiteSpace: 'normal', // 允许文本换行
               overflowWrap: 'break-word', // 在长单词处换行
@@ -248,7 +249,7 @@ const ModelCard: FC<Props> = ({ data }) => {
             </div>
             {/* 推理 */}
             <div style={{
-              width: '300px',
+              width: '320px',
               marginRight: '8px',
               whiteSpace: 'normal', // 允许文本换行
               overflowWrap: 'break-word', // 在长单词处换行
