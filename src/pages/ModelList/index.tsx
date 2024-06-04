@@ -2,7 +2,6 @@ import React, { FC, useEffect, useState } from 'react'
 import ModelCard from './ModelCard'
 import ModelSearch from './ModelSearch'
 import { Button, Select, Space, Spin, Tabs } from 'antd'
-import './index.less'
 
 interface Props {
   [key: string]: any
@@ -87,10 +86,10 @@ const ModelList: FC<Props> = () => {
   const [items, setItems] = useState<any[]>([])
   const [focused, setFocused] = useState<string>('all')
   const [loading, setLoading] = useState<boolean>(false)
-  const [orderType, setOrderType] = useState<string | number>(1)
-  const [orderOptions, setOrderOptions] = useState<string | number>(1)
+  const [orderType, setOrderType] = useState<string>('trainDatasetNum')
+  const [orderOptions, setOrderOptions] = useState<string>('desc')
   const [total, setTotal] = useState<number>(1)
-  const [dataSource, setDataSource] = useState<any[]>([])
+  const [dataSource, setDataSource] = useState<ModelList.modeldetailParam[]>([])
 
   const fetchItems = () => {
     setItems([
@@ -154,13 +153,14 @@ const ModelList: FC<Props> = () => {
               style={{ width: 100 }}
               placeholder="请选择"
               onChange={c => setOrderOptions(c)}
+
             />
           </Space>
         } />
       </Tabs>
       <Spin spinning={loading}>
         {
-          dataSource.map((item: ModelList.modeldetailParam) => {
+          dataSource?.length > 0 && dataSource.map((item: ModelList.modeldetailParam) => {
             return <ModelCard data={item} refresh={fetchItems} key={item.modelFolderId} />
           })
         }

@@ -6,6 +6,7 @@ interface Props {
 const TrainSet: FC<Props> = () => {
   return (
     <svg
+      style={{ marginRight: '8px' }}
       className="icon"
       viewBox="0 0 1024 1024"
       version="1.1"

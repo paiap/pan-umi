@@ -1,6 +1,6 @@
 export const WoStatus = [
   {
-    name: '待处理',
+    name: '待审批',
     color: 'cyan',
   },
   {

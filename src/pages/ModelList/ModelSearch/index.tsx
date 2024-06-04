@@ -36,7 +36,6 @@ const ModelSearch = (props: {
         message.warning(msg)
         return
       }
-      console.log(data?.data)
       setDataSource(data?.data || [])
       setTotal(data?.total || 0)
     } catch (error) {
