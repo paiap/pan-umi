@@ -1,3 +1,11 @@
+/*
+ * @creater: panan
+ * @message: 
+ * @since: 2024-05-29 17:00:15
+ * @LastAuthor: panan panan2001@outlook.com
+ * @lastTime: 2024-06-05 16:24:57
+ * @文件相对于项目的路径: /pan-umi/src/pages/Home/index.tsx
+ */
 import { PageContainer } from '@ant-design/pro-components';
 import styles from './index.less';
 import { useEffect, useState } from 'react';
@@ -29,7 +37,7 @@ const HomePage: React.FC = () => {
     <PageContainer
       ghost
       header={{
-        title: '根据路由、权限渲染出所有目录页面卡片: 百变小工具',
+        title: '百变小工具',
       }}
     >
       <div className={styles.cardContainer}>

@@ -1,51 +1,64 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import MonacoEditor from '@monaco-editor/react';
 import { Col, Row } from 'antd';
+import { PageContainer } from '@ant-design/pro-components';
 interface Props {
   [key: string]: any
 }
 
 const ReactEditor: FC<Props> = () => {
 
-  const [content, setContent] = useState('{"name":"John","age":30,"city":"New York"}');
+  const [content, setContent] = useState('');
   const [formattedContent, setFormattedContent] = useState('');
 
-  const handleEditorChange = (value: any) => {
-    setContent(value);
+  useEffect(() => {
+    setContent('{"name":"John","age":30,"city":"New York"}')
+  }, [])
+
+  useEffect(() => {
+    if (!content) return
     try {
-      const jsonObject = JSON.parse(value);
+      const jsonObject = JSON.parse(content);
       const formatted = JSON.stringify(jsonObject, null, 4);
       setFormattedContent(formatted);
     } catch (e) {
       setFormattedContent('Invalid JSON string');
     }
+  }, [content])
+
+  const handleEditorChange = (value: any) => {
+    setContent(value);
   };
 
   return (
-    <Row>
-      <Col span={12}>
-        <MonacoEditor
-          height="400px"
-          defaultLanguage="json"
-          theme="vs-dark"
-          defaultValue={content}
-          onChange={handleEditorChange}
-        />
-      </Col>
-      <Col span={12}>
-        <MonacoEditor
-          height="400px"
-          defaultLanguage="json"
-          theme="vs-dark"
-          options={{
-            readOnly: true,
-          }}
-          value={formattedContent}
-          onChange={handleEditorChange}
-        />
-      </Col>
+    <PageContainer ghost header={{
+      title: 'json格式化校验——vscode代码编辑器',
+    }}>
+      <Row>
+        <Col span={12}>
+          <MonacoEditor
+            height="800px"
+            defaultLanguage="json"
+            theme="vs-dark"
+            defaultValue={content}
+            onChange={handleEditorChange}
+          />
+        </Col>
+        <Col span={12}>
+          <MonacoEditor
+            height="800px"
+            defaultLanguage="json"
+            theme="vs-dark"
+            options={{
+              readOnly: true,
+            }}
+            value={formattedContent}
+            onChange={handleEditorChange}
+          />
+        </Col>
 
-    </Row>
+      </Row>
+    </PageContainer>
 
   )
 }
