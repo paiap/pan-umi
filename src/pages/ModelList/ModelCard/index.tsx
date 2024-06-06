@@ -16,7 +16,7 @@ interface Props {
   refresh: () => void
 }
 
-const ModelCard: FC<Props> = ({ data }) => {
+const ModelCard: FC<Props> = ({ data, refresh }) => {
   const [item, setItem] = useState<ModelList.modeldetailParam>()
   const [woc, setWoc] = useState<ModelList.WoStatusParam>()
 
@@ -26,6 +26,28 @@ const ModelCard: FC<Props> = ({ data }) => {
     setWoc(curWoc)
     setItem(data)
   }, [data])
+
+  /**
+   *
+   * @param focus 
+   * @returns 收藏、取消收藏接口调用
+   */
+  const fetchFocused = async (focus: boolean) => {
+    if (!item) return
+    setItem({
+      ...item,
+      focused: focus
+    })
+    setTimeout(() => {
+      refresh()
+    }, 1000)
+  }
+
+  const handleFocuse = (focused: boolean) => {
+    console.log(focused)
+    // 调用收藏、取消收藏接口
+    fetchFocused(focused)
+  }
 
   return (
     <div style={{ marginBottom: '8px' }} className='modelListContainer'>
@@ -37,9 +59,11 @@ const ModelCard: FC<Props> = ({ data }) => {
               <span>{item?.modelVersion}</span>
               {
                 item?.focused ? (
-                  <span style={{ cursor: 'pointer' }}><Collection /></span>
+                  // 已收藏
+                  <span style={{ cursor: 'pointer' }} onClick={() => handleFocuse(false)}><Collection /></span>
                 ) : (
-                  <span style={{ cursor: 'pointer' }}><UnCollection /></span>
+                  // 未收藏
+                  <span style={{ cursor: 'pointer' }} onClick={() => handleFocuse(true)}><UnCollection /></span>
                 )
               }
             </Space>
@@ -50,7 +74,7 @@ const ModelCard: FC<Props> = ({ data }) => {
             },
             body: {
               padding: '8px',
-              overflowX:'auto',
+              overflowX: 'auto',
             }
           }}
         >

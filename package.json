@@ -14,12 +14,16 @@
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
     "@ant-design/pro-components": "^2.4.4",
+    "@bytemd/plugin-gfm": "^1.21.0",
+    "@bytemd/react": "^1.21.0",
     "@monaco-editor/react": "^4.6.0",
     "@types/lodash": "^4.17.4",
     "@umijs/max": "^4.2.5",
     "antd": "^5.4.0",
+    "bytemd": "^1.21.0",
     "lodash": "^4.17.21",
-    "monaco-editor": "^0.49.0"
+    "monaco-editor": "^0.49.0",
+    "react-resizable-panels": "^2.0.19"
   },
   "devDependencies": {
     "@types/react": "^18.0.33",

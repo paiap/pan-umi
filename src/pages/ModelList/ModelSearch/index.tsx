@@ -16,12 +16,14 @@ const ModelSearch = (props: {
   setLoading: (c: boolean) => void,
   setDataSource: (c: any[]) => void
   setTotal: (c: number) => void;
+  setFocusedNum: (c: number) => void;
+  refreshParam:number;
   pages:{
     page: number,
     pageSize: number
   }
 }) => {
-  const { focused, setLoading, orderType, orderOptions, setDataSource, setTotal, pages } = props
+  const { focused, setLoading, orderType, orderOptions, setDataSource, setTotal, setFocusedNum, refreshParam, pages } = props
   const [form] = Form.useForm();
   const [expand, setExpand] = useState(false);
 
@@ -42,6 +44,7 @@ const ModelSearch = (props: {
       }
       setDataSource(data?.data || [])
       setTotal(data?.total || 0)
+      setFocusedNum(data?.focusedNum || 0)
     } catch (error) {
       console.log(error)
     } finally {
@@ -72,7 +75,7 @@ const ModelSearch = (props: {
 
 
   useEffect(() => {
-    if (!focused || !orderType || !orderOptions || !pages) return
+    if (!focused || !orderType || !orderOptions || !pages || !refreshParam) return
     const formValues = form.getFieldsValue();
     handleChange({
       focused,
@@ -81,7 +84,7 @@ const ModelSearch = (props: {
       ...pages,
       ...formValues
     }, false);
-  }, [focused, orderType, orderOptions, pages]);
+  }, [focused, orderType, orderOptions, pages, refreshParam]);
 
   /**
    * 

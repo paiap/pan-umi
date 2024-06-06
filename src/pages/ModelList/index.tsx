@@ -99,25 +99,32 @@ const ModelList: FC<Props> = () => {
   const [orderType, setOrderType] = useState<string>('trainDatasetNum')
   const [orderOptions, setOrderOptions] = useState<string>('desc')
   const [total, setTotal] = useState<number>(1)
+  const [refreshParam, setRefreshParam] = useState<number>(1)
+  const [focusedNum, setFocusedNum] = useState<number>(1)
   const [dataSource, setDataSource] = useState<ModelList.modeldetailParam[]>([])
   const [pages, setPages] = useState<INITPAGE>(INITPAGE)
 
   const fetchItems = () => {
     setItems([
       {
-        label: '全部(123)',
+        label: `全部(${total})`,
         key: 'all'
       },
       {
-        label: '收藏(24)',
+        label: `收藏(${focusedNum})`,
         key: 'focused'
       }
     ])
   }
 
   useEffect(() => {
+    if (!total || !focusedNum) return
     fetchItems()
-  }, [])
+  }, [total, focusedNum])
+
+  const refresh = () => {
+    setRefreshParam(pre => pre + 1)
+  }
 
   const handlePageChange = (page: number, pageSize: number) => {
     setPages({
@@ -136,6 +143,8 @@ const ModelList: FC<Props> = () => {
         setLoading={setLoading}
         setDataSource={setDataSource}
         setTotal={setTotal}
+        setFocusedNum={setFocusedNum}
+        refreshParam={refreshParam}
         pages={pages}
       />
       <Tabs
@@ -180,7 +189,7 @@ const ModelList: FC<Props> = () => {
       <Spin spinning={loading}>
         {
           dataSource?.length > 0 && dataSource.map((item: ModelList.modeldetailParam) => {
-            return <ModelCard data={item} refresh={fetchItems} key={item.modelFolderId} />
+            return <ModelCard data={item} refresh={refresh} key={item.modelFolderId} />
           })
         }
       </Spin>
@@ -193,7 +202,6 @@ const ModelList: FC<Props> = () => {
           total={total}
           pageSize={10} // 每页显示10条
           onChange={handlePageChange}
-          showTotal={(total) => `共 ${total} 条`} // 显示总条数
         />
       </div>
 
