@@ -1,5 +1,15 @@
+/*
+ * @creater: panan
+ * @message: 
+ * @since: 2024-05-29 14:04:49
+ * @LastAuthor: panan panan2001@outlook.com
+ * @lastTime: 2024-06-11 16:34:09
+ * @文件相对于项目的路径: /pan-umi/src/components/Guide/index.tsx
+ */
 import { Layout, Row, Typography } from 'antd';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import Typed from 'typed.js';
+
 import styles from './Guide.less';
 
 interface Props {
@@ -9,11 +19,25 @@ interface Props {
 // 脚手架示例组件
 const Guide: React.FC<Props> = (props) => {
   const { name } = props;
+  const el = useRef(null);
+
+  useEffect(() => {
+    if (!name) return
+    const typed = new Typed(el.current, {
+      strings: [`欢迎使用, <strong>${name}</strong> ！`],
+      typeSpeed: 50,
+    });
+
+    return () => {
+      // Destroy Typed instance during cleanup to stop animation
+      typed.destroy();
+    };
+  }, [name]);
   return (
     <Layout>
       <Row>
         <Typography.Title level={3} className={styles.title}>
-          欢迎使用 <strong>{name}</strong> ！
+          <span ref={el}></span>
         </Typography.Title>
       </Row>
     </Layout>
