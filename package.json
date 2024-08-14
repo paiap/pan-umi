@@ -13,7 +13,9 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
+    "@ant-design/plots": "^2.2.5",
     "@ant-design/pro-components": "^2.4.4",
+    "@antv/g2plot": "^2.4.31",
     "@bytemd/plugin-gfm": "^1.21.0",
     "@bytemd/react": "^1.21.0",
     "@monaco-editor/react": "^4.6.0",
