@@ -3,7 +3,7 @@
  * @message: 
  * @since: 2024-05-29 14:04:49
  * @LastAuthor: panan panan2001@outlook.com
- * @lastTime: 2024-06-11 16:34:09
+ * @lastTime: 2024-08-28 21:25:20
  * @文件相对于项目的路径: /pan-umi/src/components/Guide/index.tsx
  */
 import { Layout, Row, Typography } from 'antd';
@@ -34,7 +34,7 @@ const Guide: React.FC<Props> = (props) => {
     };
   }, [name]);
   return (
-    <Layout>
+    <Layout style={{ height: '100vh' }}>
       <Row>
         <Typography.Title level={3} className={styles.title}>
           <span ref={el}></span>
