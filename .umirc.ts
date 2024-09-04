@@ -6,14 +6,12 @@
  * @lastTime: 2024-06-05 17:22:47
  * @文件相对于项目的路径: /pan-umi/.umirc.ts
  */
-import { routes } from './src/pages/route';
 import { defineConfig } from '@umijs/max';
+import { routes } from './src/pages/route';
 
 export default defineConfig({
   publicPath: './',
-  antd: {
-    // dark: true,
-  },
+  antd: {},
   access: {},
   model: {},
   initialState: {},
@@ -21,10 +19,10 @@ export default defineConfig({
   layout: {
     title: 'panan-umi',
   },
-  mfsu:{},
+  mfsu: {},
   runtimePublicPath: false,
   hash: true,
-  fastRefresh:true,
+  fastRefresh: true,
   esbuildMinifyIIFE: true,
   clientLoader: {}, //路由数据加载
   // qiankun: {

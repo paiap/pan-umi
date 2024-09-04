@@ -11,8 +11,8 @@
     "prepare": "husky",
     "setup": "max setup",
     "start": "npm run dev",
-    "predeploy": "yarn run build",
-    "deploy": "gh-pages -d dist"
+    "predeploy": "umi build",
+    "deploy": "yarn run build && gh-pages -d dist"
   },
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
@@ -33,7 +33,8 @@
     "monaco-editor": "^0.49.0",
     "react-fast-marquee": "^1.6.5",
     "react-resizable-panels": "^2.0.19",
-    "typed.js": "^2.1.0"
+    "typed.js": "^2.1.0",
+    "umi-plugin-gh-pages": "^1.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.33",
