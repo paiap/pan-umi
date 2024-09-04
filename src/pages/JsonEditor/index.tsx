@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from 'react'
 import MonacoEditor from '@monaco-editor/react';
+
 import { Col, Row } from 'antd';
 import { PageContainer } from '@ant-design/pro-components';
 interface Props {
@@ -15,15 +16,114 @@ const ReactEditor: FC<Props> = () => {
     setContent('{"name":"John","age":30,"city":"New York"}')
   }, [])
 
+  const parseAndFormatJson = (content: any) => {
+    let position = 0;
+    const formattedJsonObjects = [];
+
+    while (position < content.length) {
+      let found = false;
+      for (let end = position + 1; end <= content.length; end++) {
+        try {
+          // 提取子字符串
+          let substring = content.substring(position, end);
+
+          // 将最外层的单引号转换为双引号
+          substring = substring.replace(/'([^']*)'(?=:)|(?<=:)'([^']*)'/g, '"$1$2"');
+
+          // 尝试解析 JSON
+          const json = JSON.parse(substring);
+
+          // 确保 JSON 对象是完整的
+          if (end < content.length && content[end] !== ',' && content[end] !== ']' && content[end] !== '}') {
+            continue;
+          }
+
+          // 将 JSON 对象转换为单行字符串
+          formattedJsonObjects.push(JSON.stringify(json));
+          position = end;
+          found = true;
+          break; // 成功解析，跳出循环
+        } catch (e) {
+          // 解析失败，尝试更长的字符串
+        }
+      }
+      if (!found) {
+        // 如果在当前位置无法解析出有效的 JSON，可能是非 JSON 内容，跳过一个字符
+        position++;
+      }
+    }
+    return formattedJsonObjects.join('\n');
+  }
+
   useEffect(() => {
     if (!content) return
     try {
-      const jsonObject = JSON.parse(content);
-      const formatted = JSON.stringify(jsonObject, null, 4);
-      setFormattedContent(formatted);
+      const formattedJsonObjects = [];
+      let buffer = '';
+
+      const lines = content.split('\n');
+      for (let line of lines) {
+        buffer += line;
+
+        try {
+          // 将最外层的单引号转换为双引号
+          const doubleQuotedBuffer = buffer.replace(/'([^']*)'(?=:)|(?<=:)'([^']*)'/g, '"$1$2"');
+          // 尝试解析 JSON
+          const jsonObject = JSON.parse(doubleQuotedBuffer);
+          // 将 JSON 对象转换为单行字符串
+          formattedJsonObjects.push(JSON.stringify(jsonObject));
+          // 清空缓冲区
+          buffer = '';
+        } catch (e) {
+          // 如果解析失败，继续累积缓冲区
+          buffer += '\n';
+        }
+      }
+
+      if (buffer.trim() !== '') {
+        throw new Error('Invalid JSON string');
+      }
+
+      // 将所有格式化后的 JSON 对象合并为多行字符串
+      setFormattedContent(formattedJsonObjects.join('\n'));
     } catch (e) {
+      // 如果解析或转换失败，设置错误信息
       setFormattedContent('Invalid JSON string');
     }
+    // try {
+    //   const jsonObject = JSON.parse(content);
+    //   const formatted = JSON.stringify(jsonObject, null, 4);
+    //   setFormattedContent(formatted);
+    // } catch (e) {
+    //   setFormattedContent('Invalid JSON string');
+    // }
+
+    // try {
+    //   // 直接解析content字符串为JSON对象
+    //   const jsonObject = JSON.parse(content);
+    //   // 将JSON对象转换为单行字符串
+    //   const formatted = JSON.stringify(jsonObject);
+    //   // 设置转换后的内容
+    //   setFormattedContent(formatted);
+    // } catch (e) {
+    //   // 如果解析或转换失败，设置错误信息
+    //   setFormattedContent('Invalid JSON string');
+    // }
+
+    // try {
+    //   // 将单引号替换为双引号，但不替换值内部的单引号
+    //   const doubleQuotedContent = content.replace(/'([^']*)'(?=:)|(?<=:)'([^']*)'/g, '"$1$2"');
+    //   // 直接解析替换后的content字符串为JSON对象
+    //   const jsonObject = JSON.parse(doubleQuotedContent);
+    //   // 将JSON对象转换为单行字符串
+    //   const formatted = JSON.stringify(jsonObject);
+    //   // 设置转换后的内容
+    //   setFormattedContent(formatted);
+    // } catch (e) {
+    //   // 如果解析或转换失败，设置错误信息
+    //   setFormattedContent('Invalid JSON string');
+    // }
+
   }, [content])
 
   const handleEditorChange = (value: any) => {

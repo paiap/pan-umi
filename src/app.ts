@@ -1,3 +1,11 @@
+/*
+ * @creater: panan
+ * @message: 
+ * @since: 2024-05-29 17:00:15
+ * @LastAuthor: panan panan2001@outlook.com
+ * @lastTime: 2024-08-28 21:18:19
+ * @文件相对于项目的路径: /pan-umi/src/app.ts
+ */
 // 运行时配置
 
 // 全局初始化数据配置，用于 Layout 用户信息和权限初始化
@@ -20,6 +28,5 @@ export const layout = () => {
     menu: {
       locale: false,
     },
-    
   };
 };

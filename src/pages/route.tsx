@@ -3,7 +3,7 @@
  * @message: route
  * @since: 2024-05-30 20:14:26
  * @LastAuthor: panan panan2001@outlook.com
- * @lastTime: 2024-06-05 17:18:11
+ * @lastTime: 2024-08-31 12:40:41
  * @文件相对于项目的路径: /pan-umi/src/pages/route.tsx
  */
 export const routes = [
@@ -52,6 +52,51 @@ export const routes = [
     name: 'Ahooks',
     path: '/ahooks',
     component: './Ahooks',
+  },
+  {
+    name: '文件预览',
+    path: '/fileviewer',
+    component: './Fileviewer',
+  },
+  {
+    name: '评估报告',
+    path: '/assessment',
+    component: './AssessmentReport',
+  },
+  {
+    name: '模型表现',
+    path: '/modelperformance',
+    component: './ModelPerformance',
+  },
+  {
+    name: 'test',
+    path: '/test',
+    component: './Test',
+  },
+  {
+    name: 'form',
+    path: '/formtest',
+    component: './FormTest',
+  },
+  {
+    name: '交互式建模',
+    path: '/interactive',
+    component: './InteractiveModel',
+  },
+  {
+    name: '新建交互式建模',
+    path: '/addinteractive',
+    component: './InteractiveModel/AddInteractive',
+  },
+  {
+    name: '网络拓扑图',
+    path: '/networktopologydiagram',
+    component: './NetworkTopologyDiagram',
+  },
+  {
+    name: '网络拓扑图-新',
+    path: '/network',
+    component: './NetWork',
   },
 
 ]

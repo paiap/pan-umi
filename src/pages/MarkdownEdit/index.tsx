@@ -3,7 +3,7 @@
  * @message: MarkdownEdit
  * @since: 2024-06-05 14:59:05
  * @LastAuthor: panan panan2001@outlook.com
- * @lastTime: 2024-06-05 16:25:35
+ * @lastTime: 2024-06-11 14:33:27
  * @文件相对于项目的路径: /pan-umi/src/pages/MarkdownEdit/index.tsx
  */
 
@@ -13,6 +13,7 @@ import { Editor } from '@bytemd/react'
 import 'bytemd/dist/index.css'
 import initData from './index'
 import { PageContainer } from '@ant-design/pro-components'
+import './index.less'
 
 const plugins = [
   gfm(),
