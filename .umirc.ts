@@ -10,7 +10,7 @@ import { routes } from './src/pages/route';
 import { defineConfig } from '@umijs/max';
 
 export default defineConfig({
-  // publicPath: './',
+  publicPath: './',
   antd: {
     // dark: true,
   },
@@ -21,11 +21,15 @@ export default defineConfig({
   layout: {
     title: 'panan-umi',
   },
+  mfsu:{},
+  runtimePublicPath: false,
+  hash: true,
+  fastRefresh:true,
+  esbuildMinifyIIFE: true,
   clientLoader: {}, //路由数据加载
   // qiankun: {
   //   slave: {},
   // },
   routes,
   npmClient: 'yarn',
-  esbuildMinifyIIFE: true
 });
