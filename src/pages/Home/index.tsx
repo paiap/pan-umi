@@ -3,7 +3,7 @@
  * @message: 
  * @since: 2024-05-29 17:00:15
  * @LastAuthor: panan panan2001@outlook.com
- * @lastTime: 2024-06-05 16:24:57
+ * @lastTime: 2024-09-05 15:00:40
  * @文件相对于项目的路径: /pan-umi/src/pages/Home/index.tsx
  */
 import { PageContainer } from '@ant-design/pro-components';
@@ -16,7 +16,7 @@ const HomePage: React.FC = () => {
   const [dataSource, setDataSource] = useState<any[]>([])
 
   useEffect(() => {
-    const data = routes.filter(c => !c?.redirect && c?.path !== '/access' && c?.path !== '/home')
+    const data = routes.filter(c => c?.path !== '/access' && c?.path !== '/home')
     console.log(data)
     setDataSource(data)
   }, [])
@@ -60,6 +60,7 @@ const HomePage: React.FC = () => {
 
 export default HomePage;
 
+// 路由预加载
 export const clientLoader = async () => {
   return {
     name: 'panan-clientLoader',
