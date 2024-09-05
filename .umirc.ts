@@ -25,9 +25,9 @@ export default defineConfig({
   fastRefresh: true,
   esbuildMinifyIIFE: true,
   clientLoader: {}, //路由数据加载
-  // qiankun: {
-  //   slave: {},
-  // },
+  qiankun: {
+    slave: {},
+  },
   routes,
   npmClient: 'yarn',
 });
