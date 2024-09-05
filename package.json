@@ -11,8 +11,8 @@
     "prepare": "husky",
     "setup": "max setup",
     "start": "npm run dev",
-    "predeploy": "umi build",
-    "deploy": "yarn run build && gh-pages -d dist"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
