@@ -34,7 +34,7 @@ const Guide: React.FC<Props> = (props) => {
     };
   }, [name]);
   return (
-    <Layout style={{ height: '100vh' }}>
+    <Layout >
       <Row>
         <Typography.Title level={3} className={styles.title}>
           <span ref={el}></span>
