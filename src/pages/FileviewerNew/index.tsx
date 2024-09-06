@@ -4,7 +4,7 @@
  * @message: Fileviewer
  * @since: 2024-07-04 14:58:42
  * @LastAuthor: panan panan2001@outlook.com
- * @lastTime: 2024-09-06 16:44:10
+ * @lastTime: 2024-09-06 16:47:26
  * @文件相对于项目的路径: /pan-umi/src/pages/FileviewerNew/index.tsx
  */
 
@@ -47,14 +47,7 @@ const FileviewerNew: FC<Props> = () => {
         }
       })
       if (!isChild) {
-        setTreeData([{
-          id: '/a/b/c',
-          pId: 0,
-          value: '/a/b/c',
-          title: 'c',
-          isLeaf: true,
-          alias: 'b/c'
-        },...curData])
+        setTreeData(curData)
       }
       return new Promise((resolve) => {
         resolve(curData)
