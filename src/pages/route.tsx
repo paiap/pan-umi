@@ -3,7 +3,7 @@
  * @message: route
  * @since: 2024-05-30 20:14:26
  * @LastAuthor: panan panan2001@outlook.com
- * @lastTime: 2024-08-31 12:40:41
+ * @lastTime: 2024-09-06 14:09:06
  * @文件相对于项目的路径: /pan-umi/src/pages/route.tsx
  */
 export const routes = [
@@ -57,6 +57,11 @@ export const routes = [
     name: '文件预览',
     path: '/fileviewer',
     component: './Fileviewer',
+  },
+  {
+    name: '文件预览-新交互',
+    path: '/fileviewerNew',
+    component: './FileviewerNew',
   },
   {
     name: '评估报告',
