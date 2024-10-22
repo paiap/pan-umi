@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect, useRef } from 'react'
 import G6, { ExtensionCategory, Graph, NodeEvent, EdgeEvent, Cubic, register } from '@antv/g6';
-import { mockData } from './mock'
+import { mock } from './mock'
 import { createRoot } from 'react-dom/client';
 import normalHost from '@/assets/正常主机.png'
 import warnningHost from '@/assets/告警主机.png'
@@ -99,7 +99,7 @@ const Network: FC<Props> = () => {
     if (mountNodeRef.current) {
       setTimeout(() => {
         setLoading(false);
-        mountNodeRef.current.updateData(mockData)
+        mountNodeRef.current.updateData(mock)
         mountNodeRef.current.render()
       }, 2000)
       return
@@ -109,7 +109,7 @@ const Network: FC<Props> = () => {
       // div的dom节点
       container: 'NetworkTopologyDiagram2',
       // 数据源
-      data: mockData,
+      data: mock,
       // 宽度
       width: width,
       // 高度
@@ -229,6 +229,9 @@ const Network: FC<Props> = () => {
       // 插件
       plugins: [
         {
+          type: "minimap"
+        },
+        {
           key: 'tooltip',
           type: 'tooltip',
           trigger: 'click',//默认为hover
@@ -281,7 +284,7 @@ const Network: FC<Props> = () => {
 
     setTimeout(() => {
       setLoading(false);
-      graph.fitCenter();
+      graph.fitView();
     }, 2000)
 
     // graph.on(NodeEvent.POINTER_UP, (e: any) => {

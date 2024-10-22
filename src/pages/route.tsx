@@ -3,7 +3,7 @@
  * @message: route
  * @since: 2024-05-30 20:14:26
  * @LastAuthor: panan panan2001@outlook.com
- * @lastTime: 2024-09-06 14:09:06
+ * @lastTime: 2024-10-22 15:51:53
  * @文件相对于项目的路径: /pan-umi/src/pages/route.tsx
  */
 export const routes = [
@@ -103,5 +103,15 @@ export const routes = [
     path: '/network',
     component: './NetWork',
   },
-
+  {
+    name: '数据挖掘',
+    path: '/dataminer',
+    component: './Dataminer',
+  },
+  {
+    path: '/dataminer/config/:id',
+    name: '配置详情',
+    component: './Dataminer/Config',
+    menu: false
+  },
 ]
