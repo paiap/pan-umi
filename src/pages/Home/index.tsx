@@ -3,7 +3,7 @@
  * @message: 
  * @since: 2024-05-29 17:00:15
  * @LastAuthor: panan panan2001@outlook.com
- * @lastTime: 2024-09-05 15:00:40
+ * @lastTime: 2024-09-10 09:58:15
  * @文件相对于项目的路径: /pan-umi/src/pages/Home/index.tsx
  */
 import { PageContainer } from '@ant-design/pro-components';
@@ -11,6 +11,7 @@ import styles from './index.less';
 import { useEffect, useState } from 'react';
 import { routes } from '../route';
 import { Card } from 'antd';
+// import { prettyLog } from '@/utils/console';
 
 const HomePage: React.FC = () => {
   const [dataSource, setDataSource] = useState<any[]>([])

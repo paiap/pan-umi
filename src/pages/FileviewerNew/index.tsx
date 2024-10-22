@@ -4,11 +4,11 @@
  * @message: Fileviewer
  * @since: 2024-07-04 14:58:42
  * @LastAuthor: panan panan2001@outlook.com
- * @lastTime: 2024-09-06 15:07:52
+ * @lastTime: 2024-10-15 17:28:23
  * @文件相对于项目的路径: /pan-umi/src/pages/FileviewerNew/index.tsx
  */
 
-import { Button, Select, Space, TreeSelect, TreeSelectProps, message } from 'antd';
+import { Button, Space, TreeSelect, TreeSelectProps, message } from 'antd';
 import React, { FC, useState, useEffect } from 'react'
 // import FileIcon from './icons/FileIcon';
 // import DocumentIcon from './icons/DocumentIcon';
@@ -43,9 +43,10 @@ const FileviewerNew: FC<Props> = () => {
           value: item?.path,
           title: item?.name,
           isLeaf: !(item?.isDirectory === true),
+          alias: handlePath(item?.path, path)
         }
       })
-      if(!isChild) {
+      if (!isChild) {
         setTreeData(curData)
       }
       return new Promise((resolve) => {
@@ -59,7 +60,17 @@ const FileviewerNew: FC<Props> = () => {
 
   useEffect(() => {
     fetchData(id, path, false)
+    // console.log(handlePath('/a', '/'))
+    // console.log(handlePath('/a/b/c', '/a'))
   }, [])
+
+  const handlePath = (path: string, prePath: string): string => {
+    if (path.startsWith(prePath)) {
+      return path.slice(prePath.length).replace(/^\//, '');
+    }
+    const lastSlashIndex = path.lastIndexOf('/');
+    return lastSlashIndex !== -1 ? path.slice(lastSlashIndex + 1) : path;
+  }
 
 
   const onLoadData: TreeSelectProps['loadData'] = async ({ id: parentPath }) => {
@@ -73,12 +84,10 @@ const FileviewerNew: FC<Props> = () => {
       }
     })
     return new Promise((resolve) => {
-      setTimeout(() => {
-        setTreeData(
-          treeData.concat(curData),
-        );
-        resolve(undefined);
-      }, 300);
+      setTreeData(
+        treeData.concat(curData),
+      );
+      resolve(undefined);
     })
   };
 
@@ -104,6 +113,7 @@ const FileviewerNew: FC<Props> = () => {
         multiple
         treeCheckable={true}
         showCheckedStrategy={'SHOW_PARENT'}
+        treeNodeLabelProp='alias'
       />
       <Button type='primary' onClick={() => fetchData(id, path)}>刷新</Button>
     </Space>

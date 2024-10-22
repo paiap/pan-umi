@@ -3,7 +3,7 @@
  * @message: mock
  * @since: 2024-08-29 17:00:35
  * @LastAuthor: panan panan2001@outlook.com
- * @lastTime: 2024-09-03 17:03:04
+ * @lastTime: 2024-09-10 11:24:49
  * @文件相对于项目的路径: /pan-umi/src/pages/NetWork/mock.tsx
  */
 
@@ -1476,893 +1476,463 @@ export const mockData = {
 
 
 export const mock = {
-    nodes: [
+    "nodes": [
         {
-            type: "normalHost",
-            id: "1",
-            // combo: "server",
-            properties: {
-                name: "H100-1"
-            }
+            "type": "normalHost",
+            "id": "csva2ait-k8snode-72-43",
+            "properties": {
+                "name": "csva2ait-k8snode-72-43"
+            },
+            "style": {}
         },
         {
-            type: "errorHost",
-            id: "2",
-            // combo: "server",
-            properties: {
-                name: "H100-2"
-            }
+            "type": "normalSwitch",
+            "id": "SW1-400G",
+            "properties": {
+                "name": "SW1-400G"
+            },
+            "style": {
+                "x": -648.53515625,
+                "y": -86.3203125
+            },
+            "combo": "compute"
         },
         {
-            type: "warnningHost",
-            id: "3",
-            // combo: "server",
-            properties: {
-                name: "H100-3"
-            }
+            "type": "normalSwitch",
+            "id": "SW2-400G",
+            "properties": {
+                "name": "SW2-400G"
+            },
+            "style": {
+                "x": 648.53515625,
+                "y": 86.3203125
+            },
+            "combo": "compute"
         },
         {
-            type: "normalSwitch",
-            id: "5",
-            combo: "compute",
-            properties: {
-                name: "SW1-100G",
-            }
+            "type": "normalHost",
+            "id": "csva2ait-k8snode-72-44",
+            "properties": {
+                "name": "csva2ait-k8snode-72-44"
+            },
+            "style": {}
         },
         {
-            type: "normalSwitch",
-            id: "6",
-            combo: "compute",
-            properties: {
-                name: "SW2-200G",
-            }
-        },
-        {
-            type: "warnningSwitch",
-            id: "7",
-            combo: "compute",
-            properties: {
-                name: "SW3-300G",
-            }
-        },
-        {
-            type: "errorSwitch",
-            id: "8",
-            combo: "compute",
-            properties: {
-                name: "SW4-400G",
-            }
-        },
-        {
-            type: "normalSwitch",
-            id: "9",
-            combo: "storage",
-            properties: {
-                name: "SW5-500G",
-            }
-        },
-        {
-            type: "normalSwitch",
-            id: "10",
-            combo: "paas",
-            properties: {
-                name: "SW5-500G",
-            }
-        },
-        {
-            type: "normalSwitch",
-            id: "11",
-            combo: "management",
-            properties: {
-                name: "SW6-600G",
-            }
-        },
-        {
-            type: "normalSwitch",
-            id: "12",
-            combo: "management",
-            properties: {
-                name: "SW7-700G",
-            }
-        },
-        {
-            type: "normalHost",
-            id: "13",
-            properties: {
-                name: "H100-4"
-            }
-        },
-        {
-            type: "normalHost",
-            id: "14",
-            properties: {
-                name: "H100-5"
-            }
-        },
-        {
-            type: "normalHost",
-            id: "15",
-            properties: {
-                name: "H100-6"
-            }
-        },
-        {
-            type: "normalHost",
-            id: "16",
-            properties: {
-                name: "H100-7"
-            }
-        },
-        {
-            type: "normalHost",
-            id: "17",
-            properties: {
-                name: "H100-8"
-            }
-        },
-        {
-            type: "normalHost",
-            id: "18",
-            properties: {
-                name: "H100-9"
-            }
-        },
-        {
-            type: "normalHost",
-            id: "19",
-            properties: {
-                name: "H100-10"
-            }
-        },
-        {
-            type: "normalHost",
-            id: "20",
-            properties: {
-                name: "H100-11"
-            }
-        },
-        {
-            type: "normalHost",
-            id: "21",
-            properties: {
-                name: "H100-12"
-            }
-        },
-        {
-            type: "normalHost",
-            id: "22",
-            properties: {
-                name: "H100-13"
-            }
-        },
-        {
-            type: "normalHost",
-            id: "23",
-            properties: {
-                name: "H100-14"
-            }
-        },
-        {
-            type: "normalHost",
-            id: "24",
-            properties: {
-                name: "H100-15"
-            }
-        },
-        {
-            type: "normalHost",
-            id: "25",
-            properties: {
-                name: "H100-16"
-            }
-        },
-        {
-            type: "normalHost",
-            id: "26",
-            properties: {
-                name: "H100-17"
-            }
-        },
-        {
-            type: "normalHost",
-            id: "27",
-            properties: {
-                name: "H100-18"
-            }
-        },
-        // {
-        //     type: "normalHost",
-        //     id: "28",
-        //     properties: {
-        //         name: "H100-19"
-        //     }
-        // },
-        // {
-        //     type: "normalHost",
-        //     id: "29",
-        //     properties: {
-        //         name: "H100-20"
-        //     }
-        // },
-        // {
-        //     type: "normalHost",
-        //     id: "30",
-        //     properties: {
-        //         name: "H100-21"
-        //     }
-        // },
-        // {
-        //     type: "normalHost",
-        //     id: "31",
-        //     properties: {
-        //         name: "H100-22"
-        //     }
-        // },
-        // {
-        //     type: "normalHost",
-        //     id: "32",
-        //     properties: {
-        //         name: "H100-23"
-        //     }
-        // },
-        // {
-        //     type: "normalHost",
-        //     id: "33",
-        //     properties: {
-        //         name: "H100-24"
-        //     }
-        // },
-        // {
-        //     type: "normalHost",
-        //     id: "34",
-        //     properties: {
-        //         name: "H100-25"
-        //     }
-        // },
-        // {
-        //     type: "normalHost",
-        //     id: "35",
-        //     properties: {
-        //         name: "H100-26"
-        //     }
-        // },
-        // {
-        //     type: "normalHost",
-        //     id: "36",
-        //     properties: {
-        //         name: "H100-27"
-        //     }
-        // },
-        // {
-        //     type: "normalHost",
-        //     id: "37",
-        //     properties: {
-        //         name: "H100-28"
-        //     }
-        // },
-        // {
-        //     type: "normalHost",
-        //     id: "38",
-        //     properties: {
-        //         name: "H100-29"
-        //     }
-        // },
-        // {
-        //     type: "normalHost",
-        //     id: "39",
-        //     properties: {
-        //         name: "H100-30"
-        //     }
-        // },
-        // {
-        //     type: "normalHost",
-        //     id: "40",
-        //     properties: {
-        //         name: "H100-31"
-        //     }
-        // },
-        // {
-        //     type: "normalHost",
-        //     id: "41",
-        //     properties: {
-        //         name: "H100-32"
-        //     }
-        // },
-        // {
-        //     type: "normalHost",
-        //     id: "42",
-        //     properties: {
-        //         name: "H100-33"
-        //     }
-        // },
-        // {
-        //     type: "normalHost",
-        //     id: "43",
-        //     properties: {
-        //         name: "H100-34"
-        //     }
-        // },
-
+            "type": "normalSwitch",
+            "id": "SW3-10G",
+            "properties": {
+                "name": "SW3-10G"
+            },
+            "style": {},
+            "combo": "paas"
+        }
     ],
-    edges: [
-        {
-            id: "e1",
-            status: "normal",
-            source: "1",
-            target: "5",
-            properties: {}
-        },
-        {
-            id: "e2",
-            status: "warnning",
-            source: "1",
-            target: "5",
-            properties: {}
-        },
-        {
-            id: "e3",
-            status: "error",
-            source: "1",
-            target: "5",
-            properties: {}
-        },
-        {
-            id: "e4",
-            status: "normal",
-            source: "1",
-            target: "6",
-            properties: {}
-        },
-        {
-            id: "e5",
-            status: "normal",
-            source: "1",
-            target: "6",
-            properties: {}
-        },
-        {
-            id: "e6",
-            status: "normal",
-            source: "1",
-            target: "7",
-            properties: {}
-        },
-        {
-            id: "e7",
-            status: "normal",
-            source: "1",
-            target: "7",
-            properties: {}
-        },
-        {
-            id: "e8",
-            status: "normal",
-            source: "1",
-            target: "8",
-            properties: {}
-        },
-        {
-            id: "e9",
-            status: "normal",
-            source: "1",
-            target: "8",
-            properties: {}
-        },
-        {
-            id: "e10",
-            status: "normal",
-            source: "2",
-            target: "5",
-            properties: {}
-        },
-        {
-            id: "e11",
-            status: "error",
-            source: "2",
-            target: "5",
-            properties: {}
-        },
-        {
-            id: "e12",
-            status: "normal",
-            source: "2",
-            target: "6",
-            properties: {}
-        },
-        {
-            id: "e13",
-            status: "normal",
-            source: "2",
-            target: "6",
-            properties: {}
-        },
-        {
-            id: "e14",
-            status: "normal",
-            source: "2",
-            target: "7",
-            properties: {}
-        },
-        {
-            id: "e15",
-            status: "normal",
-            source: "2",
-            target: "7",
-            properties: {}
-        },
-        {
-            id: "e16",
-            status: "normal",
-            source: "2",
-            target: "8",
-            properties: {}
-        },
-        {
-            id: "e17",
-            status: "normal",
-            source: "2",
-            target: "8",
-            properties: {}
-        },
-        {
-            id: "e18",
-            status: "normal",
-            source: "3",
-            target: "5",
-            properties: {}
-        },
-        {
-            id: "e19",
-            status: "error",
-            source: "3",
-            target: "5",
-            properties: {}
-        },
-        {
-            id: "e20",
-            status: "normal",
-            source: "3",
-            target: "6",
-            properties: {}
-        },
-        {
-            id: "e21",
-            status: "normal",
-            source: "3",
-            target: "6",
-            properties: {}
-        },
-        {
-            id: "e22",
-            status: "normal",
-            source: "3",
-            target: "7",
-            properties: {}
-        },
-        {
-            id: "e23",
-            status: "normal",
-            source: "3",
-            target: "7",
-            properties: {}
-        },
-        {
-            id: "e24",
-            status: "normal",
-            source: "3",
-            target: "8",
-            properties: {}
-        },
-        {
-            id: "e25",
-            status: "normal",
-            source: "3",
-            target: "8",
-            properties: {}
-        },
-        {
-            id: "e26",
-            status: "normal",
-            source: "1",
-            target: "9",
-            properties: {}
-        },
-        {
-            id: "e27",
-            status: "normal",
-            source: "2",
-            target: "9",
-            properties: {}
-        },
-        {
-            id: "e28",
-            status: "error",
-            source: "3",
-            target: "9",
-            properties: {}
-        },
-        {
-            id: "e30",
-            status: "normal",
-            source: "1",
-            target: "10",
-            properties: {}
-        },
-        {
-            id: "e31",
-            status: "normal",
-            source: "2",
-            target: "10",
-            properties: {}
-        },
-        {
-            id: "e32",
-            status: "normal",
-            source: "3",
-            target: "10",
-            properties: {}
-        },
-        {
-            id: "e34",
-            status: "normal",
-            source: "11",
-            target: "12",
-            properties: {}
-        },
-        {
-            id: "e35",
-            status: "normal",
-            source: "12",
-            target: "11",
-            properties: {}
-        },
-        {
-            id: "e36",
-            status: "normal",
-            source: "10",
-            target: "11",
-            properties: {}
-        },
-        {
-            id: "e37",
-            status: "normal",
-            source: "10",
-            target: "12",
-            properties: {}
-        },
-        {
-            id: "e38",
-            status: "normal",
-            source: "1",
-            target: "11",
-            properties: {}
-        },
-        {
-            id: "e39",
-            status: "normal",
-            source: "2",
-            target: "11",
-            properties: {}
-        },
-        {
-            id: "e40",
-            status: "normal",
-            source: "3",
-            target: "11",
-            properties: {}
-        },
-        {
-            id: "e42",
-            status: "normal",
-            source: "1",
-            target: "12",
-            properties: {}
-        },
-        {
-            id: "e43",
-            status: "normal",
-            source: "2",
-            target: "12",
-            properties: {}
-        },
-        {
-            id: "e44",
-            status: "normal",
-            source: "3",
-            target: "12",
-            properties: {}
-        },
-        // {
-        //     id: "e45",
-        //     status: "normal",
-        //     source: "4",
-        //     target: "13",
-        //     properties: {}
-        // },
-        {
-            id: "e46",
-            status: "normal",
-            source: "5",
-            target: "13",
-            properties: {}
-        },
-        {
-            id: "e47",
-            status: "normal",
-            source: "6",
-            target: "13",
-            properties: {}
-        },
-        {
-            id: "e48",
-            status: "normal",
-            source: "7",
-            target: "13",
-            properties: {}
-        },
-        {
-            id: "e49",
-            status: "normal",
-            source: "8",
-            target: "13",
-            properties: {}
-        },
-        {
-            id: "e50",
-            status: "normal",
-            source: "9",
-            target: "13",
-            properties: {}
-        },
-        {
-            id: "e51",
-            status: "normal",
-            source: "10",
-            target: "13",
-            properties: {}
-        },
-        {
-            id: "e52",
-            status: "normal",
-            source: "11",
-            target: "13",
-            properties: {}
-        },
-        {
-            id: "e53",
-            status: "normal",
-            source: "12",
-            target: "13",
-            properties: {}
-        },
-        // {
-        //     id: "e54",
-        //     status: "normal",
-        //     source: "4",
-        //     target: "14",
-        //     properties: {}
-        // },
-        {
-            id: "e55",
-            status: "normal",
-            source: "5",
-            target: "14",
-            properties: {}
-        },
-        {
-            id: "e56",
-            status: "normal",
-            source: "6",
-            target: "14",
-            properties: {}
-        },
-        {
-            id: "e57",
-            status: "normal",
-            source: "7",
-            target: "14",
-            properties: {}
-        },
-        {
-            id: "e58",
-            status: "normal",
-            source: "8",
-            target: "14",
-            properties: {}
-        },
-        {
-            id: "e59",
-            status: "normal",
-            source: "9",
-            target: "14",
-            properties: {}
-        },
-        {
-            id: "e60",
-            status: "normal",
-            source: "10",
-            target: "14",
-            properties: {}
-        },
-        {
-            id: "e61",
-            status: "normal",
-            source: "11",
-            target: "14",
-            properties: {}
-        },
-        {
-            id: "e62",
-            status: "normal",
-            source: "12",
-            target: "14",
-            properties: {}
-        },
-        // {
-        //     id: "e63",
-        //     status: "normal",
-        //     source: "4",
-        //     target: "15",
-        //     properties: {}
-        // },
-        {
-            id: "e64",
-            status: "normal",
-            source: "5",
-            target: "15",
-            properties: {}
-        },
-        {
-            id: "e65",
-            status: "normal",
-            source: "6",
-            target: "15",
-            properties: {}
-        },
-        {
-            id: "e66",
-            status: "normal",
-            source: "7",
-            target: "15",
-            properties: {}
-        },
-        {
-            id: "e67",
-            status: "normal",
-            source: "8",
-            target: "15",
-            properties: {}
-        },
-        {
-            id: "e68",
-            status: "normal",
-            source: "9",
-            target: "15",
-            properties: {}
-        },
-        {
-            id: "e69",
-            status: "normal",
-            source: "10",
-            target: "15",
-            properties: {}
-        },
-        {
-            id: "e70",
-            status: "normal",
-            source: "11",
-            target: "15",
-            properties: {}
-        },
-        {
-            id: "e71",
-            status: "normal",
-            source: "11",
-            target: "15",
-            properties: {}
-        },
-        {
-            id: "e73",
-            status: "normal",
-            source: "12",
-            target: "15",
-            properties: {}
-        },
-        // source加1，id加1，直到source到12
-        // {
-        //     id: "e74",
-        //     status: "normal",
-        //     source: "4",
-        //     target: "16",
-        //     properties: {}
-        // },
-        {
-            id: "e75",
-            status: "normal",
-            source: "5",
-            target: "16",
-            properties: {}
-        },
-        {
-            id: "e76",
-            status: "normal",
-            source: "6",
-            target: "16",
-            properties: {}
-        },
-        {
-            id: "e77",
-            status: "normal",
-            source: "7",
-            target: "16",
-            properties: {}
-        },
-        {
-            id: "e78",
-            status: "normal",
-            source: "8",
-            target: "16",
-            properties: {}
-        },
-        {
-            id: "e79",
-            status: "normal",
-            source: "9",
-            target: "16",
-            properties: {}
-        },
-        {
-            id: "e80",
-            status: "normal",
-            source: "10",
-            target: "16",
-            properties: {}
-        },
-        {
-            id: "e81",
-            status: "normal",
-            source: "11",
-            target: "16",
-            properties: {}
-        },
-        {
-            id: "e82",
-            status: "normal",
-            source: "12",
-            target: "16",
-            properties: {}
-        },
+    "edges": [
+        {
+            "id": "FourHundredGigE1/0/5:SW1-400G:csva2ait-k8snode-72-43:ens108",
+            "status": "normal",
+            "source": "csva2ait-k8snode-72-43",
+            "target": "SW1-400G",
+            "bandwidth": "",
+            "properties": {
+                "gpu": "gpu0",
+                "netType": "compute",
+                "source": {
+                    "name": "csva2ait-k8snode-72-43",
+                    "portName": "ens108"
+                },
+                "target": {
+                    "name": "SW1-400G",
+                    "portName": "FourHundredGigE1/0/5"
+                }
+            }
+        },
+        {
+            "id": "FourHundredGigE1/0/6:SW1-400G:csva2ait-k8snode-72-43:ens109",
+            "status": "normal",
+            "source": "csva2ait-k8snode-72-43",
+            "target": "SW1-400G",
+            "bandwidth": "",
+            "properties": {
+                "gpu": "gpu1",
+                "netType": "compute",
+                "source": {
+                    "name": "csva2ait-k8snode-72-43",
+                    "portName": "ens109"
+                },
+                "target": {
+                    "name": "SW1-400G",
+                    "portName": "FourHundredGigE1/0/6"
+                }
+            }
+        },
+        {
+            "id": "FourHundredGigE1/0/7:SW1-400G:csva2ait-k8snode-72-43:ens110",
+            "status": "normal",
+            "source": "csva2ait-k8snode-72-43",
+            "target": "SW1-400G",
+            "bandwidth": "",
+            "properties": {
+                "gpu": "gpu2",
+                "netType": "compute",
+                "source": {
+                    "name": "csva2ait-k8snode-72-43",
+                    "portName": "ens110"
+                },
+                "target": {
+                    "name": "SW1-400G",
+                    "portName": "FourHundredGigE1/0/7"
+                }
+            }
+        },
+        {
+            "id": "FourHundredGigE1/0/8:SW1-400G:csva2ait-k8snode-72-43:ens111",
+            "status": "normal",
+            "source": "csva2ait-k8snode-72-43",
+            "target": "SW1-400G",
+            "bandwidth": "",
+            "properties": {
+                "gpu": "gpu3",
+                "netType": "compute",
+                "source": {
+                    "name": "csva2ait-k8snode-72-43",
+                    "portName": "ens111"
+                },
+                "target": {
+                    "name": "SW1-400G",
+                    "portName": "FourHundredGigE1/0/8"
+                }
+            }
+        },
+        {
+            "id": "FourHundredGigE1/0/5:SW2-400G:csva2ait-k8snode-72-43:ens112",
+            "status": "normal",
+            "source": "csva2ait-k8snode-72-43",
+            "target": "SW2-400G",
+            "bandwidth": "",
+            "properties": {
+                "gpu": "gpu4",
+                "netType": "compute",
+                "source": {
+                    "name": "csva2ait-k8snode-72-43",
+                    "portName": "ens112"
+                },
+                "target": {
+                    "name": "SW2-400G",
+                    "portName": "FourHundredGigE1/0/5"
+                }
+            }
+        },
+        {
+            "id": "FourHundredGigE1/0/6:SW2-400G:csva2ait-k8snode-72-43:ens113",
+            "status": "normal",
+            "source": "csva2ait-k8snode-72-43",
+            "target": "SW2-400G",
+            "bandwidth": "",
+            "properties": {
+                "gpu": "gpu5",
+                "netType": "compute",
+                "source": {
+                    "name": "csva2ait-k8snode-72-43",
+                    "portName": "ens113"
+                },
+                "target": {
+                    "name": "SW2-400G",
+                    "portName": "FourHundredGigE1/0/6"
+                }
+            }
+        },
+        {
+            "id": "FourHundredGigE1/0/7:SW2-400G:csva2ait-k8snode-72-43:ens114",
+            "status": "normal",
+            "source": "csva2ait-k8snode-72-43",
+            "target": "SW2-400G",
+            "bandwidth": "",
+            "properties": {
+                "gpu": "gpu6",
+                "netType": "compute",
+                "source": {
+                    "name": "csva2ait-k8snode-72-43",
+                    "portName": "ens114"
+                },
+                "target": {
+                    "name": "SW2-400G",
+                    "portName": "FourHundredGigE1/0/7"
+                }
+            }
+        },
+        {
+            "id": "FourHundredGigE1/0/8:SW2-400G:csva2ait-k8snode-72-43:ens115",
+            "status": "normal",
+            "source": "csva2ait-k8snode-72-43",
+            "target": "SW2-400G",
+            "bandwidth": "",
+            "properties": {
+                "gpu": "gpu7",
+                "netType": "compute",
+                "source": {
+                    "name": "csva2ait-k8snode-72-43",
+                    "portName": "ens115"
+                },
+                "target": {
+                    "name": "SW2-400G",
+                    "portName": "FourHundredGigE1/0/8"
+                }
+            }
+        },
+        {
+            "id": "FourHundredGigE1/0/18:SW2-400G:csva2ait-k8snode-72-43:ens12",
+            "status": "normal",
+            "source": "csva2ait-k8snode-72-43",
+            "target": "SW2-400G",
+            "bandwidth": "",
+            "properties": {
+                "gpu": "-",
+                "netType": "storage",
+                "source": {
+                    "name": "csva2ait-k8snode-72-43",
+                    "portName": "ens12"
+                },
+                "target": {
+                    "name": "SW2-400G",
+                    "portName": "FourHundredGigE1/0/18"
+                }
+            }
+        },
+        {
+            "id": "FourHundredGigE1/0/1:SW1-400G:csva2ait-k8snode-72-44:ens108",
+            "status": "normal",
+            "source": "csva2ait-k8snode-72-44",
+            "target": "SW1-400G",
+            "bandwidth": "",
+            "properties": {
+                "gpu": "gpu0",
+                "netType": "compute",
+                "source": {
+                    "name": "csva2ait-k8snode-72-44",
+                    "portName": "ens108"
+                },
+                "target": {
+                    "name": "SW1-400G",
+                    "portName": "FourHundredGigE1/0/1"
+                }
+            }
+        },
+        {
+            "id": "FourHundredGigE1/0/2:SW1-400G:csva2ait-k8snode-72-44:ens109",
+            "status": "normal",
+            "source": "csva2ait-k8snode-72-44",
+            "target": "SW1-400G",
+            "bandwidth": "",
+            "properties": {
+                "gpu": "gpu1",
+                "netType": "compute",
+                "source": {
+                    "name": "csva2ait-k8snode-72-44",
+                    "portName": "ens109"
+                },
+                "target": {
+                    "name": "SW1-400G",
+                    "portName": "FourHundredGigE1/0/2"
+                }
+            }
+        },
+        {
+            "id": "FourHundredGigE1/0/3:SW1-400G:csva2ait-k8snode-72-44:ens110",
+            "status": "normal",
+            "source": "csva2ait-k8snode-72-44",
+            "target": "SW1-400G",
+            "bandwidth": "",
+            "properties": {
+                "gpu": "gpu2",
+                "netType": "compute",
+                "source": {
+                    "name": "csva2ait-k8snode-72-44",
+                    "portName": "ens110"
+                },
+                "target": {
+                    "name": "SW1-400G",
+                    "portName": "FourHundredGigE1/0/3"
+                }
+            }
+        },
+        {
+            "id": "FourHundredGigE1/0/4:SW1-400G:csva2ait-k8snode-72-44:ens111",
+            "status": "normal",
+            "source": "csva2ait-k8snode-72-44",
+            "target": "SW1-400G",
+            "bandwidth": "",
+            "properties": {
+                "gpu": "gpu3",
+                "netType": "compute",
+                "source": {
+                    "name": "csva2ait-k8snode-72-44",
+                    "portName": "ens111"
+                },
+                "target": {
+                    "name": "SW1-400G",
+                    "portName": "FourHundredGigE1/0/4"
+                }
+            }
+        },
+        {
+            "id": "FourHundredGigE1/0/1:SW2-400G:csva2ait-k8snode-72-44:ens112",
+            "status": "normal",
+            "source": "csva2ait-k8snode-72-44",
+            "target": "SW2-400G",
+            "bandwidth": "",
+            "properties": {
+                "gpu": "gpu4",
+                "netType": "compute",
+                "source": {
+                    "name": "csva2ait-k8snode-72-44",
+                    "portName": "ens112"
+                },
+                "target": {
+                    "name": "SW2-400G",
+                    "portName": "FourHundredGigE1/0/1"
+                }
+            }
+        },
+        {
+            "id": "FourHundredGigE1/0/2:SW2-400G:csva2ait-k8snode-72-44:ens113",
+            "status": "normal",
+            "source": "csva2ait-k8snode-72-44",
+            "target": "SW2-400G",
+            "bandwidth": "",
+            "properties": {
+                "gpu": "gpu5",
+                "netType": "compute",
+                "source": {
+                    "name": "csva2ait-k8snode-72-44",
+                    "portName": "ens113"
+                },
+                "target": {
+                    "name": "SW2-400G",
+                    "portName": "FourHundredGigE1/0/2"
+                }
+            }
+        },
+        {
+            "id": "FourHundredGigE1/0/3:SW2-400G:csva2ait-k8snode-72-44:ens114",
+            "status": "normal",
+            "source": "csva2ait-k8snode-72-44",
+            "target": "SW2-400G",
+            "bandwidth": "",
+            "properties": {
+                "gpu": "gpu6",
+                "netType": "compute",
+                "source": {
+                    "name": "csva2ait-k8snode-72-44",
+                    "portName": "ens114"
+                },
+                "target": {
+                    "name": "SW2-400G",
+                    "portName": "FourHundredGigE1/0/3"
+                }
+            }
+        },
+        {
+            "id": "FourHundredGigE1/0/4:SW2-400G:csva2ait-k8snode-72-44:ens115",
+            "status": "normal",
+            "source": "csva2ait-k8snode-72-44",
+            "target": "SW2-400G",
+            "bandwidth": "",
+            "properties": {
+                "gpu": "gpu7",
+                "netType": "compute",
+                "source": {
+                    "name": "csva2ait-k8snode-72-44",
+                    "portName": "ens115"
+                },
+                "target": {
+                    "name": "SW2-400G",
+                    "portName": "FourHundredGigE1/0/4"
+                }
+            }
+        },
+        {
+            "id": "FourHundredGigE1/0/17:SW2-400G:csva2ait-k8snode-72-44:ens12",
+            "status": "normal",
+            "source": "csva2ait-k8snode-72-44",
+            "target": "SW2-400G",
+            "bandwidth": "",
+            "properties": {
+                "gpu": "-",
+                "netType": "storage",
+                "source": {
+                    "name": "csva2ait-k8snode-72-44",
+                    "portName": "ens12"
+                },
+                "target": {
+                    "name": "SW2-400G",
+                    "portName": "FourHundredGigE1/0/17"
+                }
+            }
+        },
+        {
+            "id": "SW3-10G:Ten-GigabitEthernet1/0/1:csva2ait-k8snode-72-44:ens20f0",
+            "status": "normal",
+            "source": "csva2ait-k8snode-72-44",
+            "target": "SW3-10G",
+            "bandwidth": "",
+            "properties": {
+                "gpu": "-",
+                "netType": "paas",
+                "source": {
+                    "name": "csva2ait-k8snode-72-44",
+                    "portName": "ens20f0"
+                },
+                "target": {
+                    "name": "SW3-10G",
+                    "portName": "Ten-GigabitEthernet1/0/1"
+                }
+            }
+        },
+        {
+            "id": "SW3-10G:Ten-GigabitEthernet1/0/2:csva2ait-k8snode-72-44:ens20f1",
+            "status": "normal",
+            "source": "csva2ait-k8snode-72-44",
+            "target": "SW3-10G",
+            "bandwidth": "",
+            "properties": {
+                "gpu": "-",
+                "netType": "paas",
+                "source": {
+                    "name": "csva2ait-k8snode-72-44",
+                    "portName": "ens20f1"
+                },
+                "target": {
+                    "name": "SW3-10G",
+                    "portName": "Ten-GigabitEthernet1/0/2"
+                }
+            }
+        }
     ],
-    combos: [
+    "combos": [
         {
-            id: "storage",
-            data: {
-                label: "存储网络"
+            "id": "compute",
+            "data": {
+                "label": "compute"
             }
         },
         {
-            id: "paas",
-            data: {
-                label: "数据/PAAS网络"
+            "id": "storage",
+            "data": {
+                "label": "storage"
             }
         },
         {
-            id: "management",
-            data: {
-                "label": "带外管理网络"
+            "id": "paas",
+            "data": {
+                "label": "paas"
             }
         },
         {
-            id: "compute",
-            data: {
-                label: "计算机网络"
+            "id": "out-band",
+            "data": {
+                "label": "out-band"
             }
-        },
-        // {
-        //     id: "server",
-        //     data: {
-        //         label: "服务器"
-        //     }
-        // }
+        }
     ]
 }
