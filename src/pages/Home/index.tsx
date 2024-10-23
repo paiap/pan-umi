@@ -3,7 +3,7 @@
  * @message: 
  * @since: 2024-05-29 17:00:15
  * @LastAuthor: panan panan2001@outlook.com
- * @lastTime: 2024-09-10 09:58:15
+ * @lastTime: 2024-10-22 19:34:12
  * @文件相对于项目的路径: /pan-umi/src/pages/Home/index.tsx
  */
 import { PageContainer } from '@ant-design/pro-components';
@@ -17,7 +17,7 @@ const HomePage: React.FC = () => {
   const [dataSource, setDataSource] = useState<any[]>([])
 
   useEffect(() => {
-    const data = routes.filter(c => c?.path !== '/access' && c?.path !== '/home')
+    const data = routes.filter(c => c?.path !== '/access' && c?.path !== '/home' && c?.menu !== false)
     console.log(data)
     setDataSource(data)
   }, [])
