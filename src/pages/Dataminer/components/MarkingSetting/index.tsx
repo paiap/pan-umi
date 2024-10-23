@@ -3,7 +3,7 @@
  * @message: 多样性打标配置
  * @since: 2024-10-22 21:40:52
  * @LastAuthor: panan panan2001@outlook.com
- * @lastTime: 2024-10-23 10:48:45
+ * @lastTime: 2024-10-23 13:55:09
  * @文件相对于项目的路径: /pan-umi/src/pages/Dataminer/components/MarkingSetting/index.tsx
  */
 
@@ -20,9 +20,10 @@ interface Props {
   description: string;
   defaultValue: boolean;
   onChange: (value: string[] | boolean) => void;
+  disabled?: boolean;
 }
 
-const MarkingSetting: FC<Props> = ({ title, description, data, defaultValue, onChange }) => {
+const MarkingSetting: FC<Props> = ({ title, description, data, defaultValue, onChange, disabled }) => {
   const [status, setStatus] = useState<boolean>(defaultValue)
   const [selectTags, setSelectTags] = useState<string[]>([])
   return (
@@ -51,18 +52,24 @@ const MarkingSetting: FC<Props> = ({ title, description, data, defaultValue, onC
         }}
         bordered={false}
         extra={
-          <Switch
-            value={status}
-            checkedChildren='开'
-            unCheckedChildren='关'
-            onChange={(openStatus: boolean) => {
-              setStatus(openStatus)
-              if (openStatus) {
-                onChange(selectTags)
-              } else {
-                onChange(false)
-              }
-            }} />
+          <>
+            {
+              !disabled && (
+                <Switch
+                  value={status}
+                  checkedChildren='开'
+                  unCheckedChildren='关'
+                  onChange={(openStatus: boolean) => {
+                    setStatus(openStatus)
+                    if (openStatus) {
+                      onChange(selectTags)
+                    } else {
+                      onChange(false)
+                    }
+                  }} />
+              )
+            }
+          </>
         }
       />
       {
@@ -82,23 +89,29 @@ const MarkingSetting: FC<Props> = ({ title, description, data, defaultValue, onC
                 }
               }}
               extra={
-                <Switch
-                  disabled={!status}
-                  checkedChildren='开'
-                  unCheckedChildren='关'
-                  onChange={(openStatus: boolean) => {
-                    if (!status) {
-                      onChange(false)
-                      return
-                    }
-                    if (openStatus) {
-                      setSelectTags([...selectTags, item.key])
-                      onChange([...selectTags, item.key])
-                    } else {
-                      setSelectTags(selectTags.filter((tag) => tag !== item.key))
-                      onChange(selectTags.filter((tag) => tag !== item.key))
-                    }
-                  }} />
+                <>
+                  {
+                    !disabled && (
+                      <Switch
+                        disabled={!status}
+                        checkedChildren='开'
+                        unCheckedChildren='关'
+                        onChange={(openStatus: boolean) => {
+                          if (!status) {
+                            onChange(false)
+                            return
+                          }
+                          if (openStatus) {
+                            setSelectTags([...selectTags, item.key])
+                            onChange([...selectTags, item.key])
+                          } else {
+                            setSelectTags(selectTags.filter((tag) => tag !== item.key))
+                            onChange(selectTags.filter((tag) => tag !== item.key))
+                          }
+                        }} />
+                    )
+                  }
+                </>
               }
             >
               <p style={{ margin: '0' }}>{item.description}</p>
