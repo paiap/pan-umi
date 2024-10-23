@@ -3,7 +3,7 @@
  * @message: 多样性打标
  * @since: 2024-10-22 17:15:28
  * @LastAuthor: panan panan2001@outlook.com
- * @lastTime: 2024-10-23 11:26:24
+ * @lastTime: 2024-10-23 20:17:52
  * @文件相对于项目的路径: /pan-umi/src/pages/Dataminer/Config/DiversityMarking/index.tsx
  */
 
@@ -11,6 +11,7 @@ import React, { FC, useState, useEffect, useRef } from 'react'
 import MarkingSetting from '../../components/MarkingSetting'
 import { Button, Card, Space } from 'antd'
 interface Props {
+  item: any;
   [key: string]: any
 }
 
@@ -53,11 +54,12 @@ const mockData = [
 
 const createText = '卡梅隆峰(Cameron Peak)和东部(East Troublesome)山火在周日(10月25日)和周壹(10月26日)被寒冷天气所控制，风暴带来的暂停使消防员和其他紧急反应人员得以进入禁区进行结构破坏评估。'
 
-const DiversityMarking: FC<Props> = () => {
+const DiversityMarking: FC<Props> = ({ item }) => {
   const [dataSource, setDataSource] = useState<any[]>([])
   const [selectTgs, setSelectTags] = useState<string[] | boolean>(false)
 
   useEffect(() => {
+    console.log(item)
     setDataSource(mockData)
   }, [])
 

@@ -3,17 +3,18 @@
  * @message: 过滤（人工）
  * @since: 2024-10-22 17:16:58
  * @LastAuthor: panan panan2001@outlook.com
- * @lastTime: 2024-10-23 16:35:58
+ * @lastTime: 2024-10-23 20:27:42
  * @文件相对于项目的路径: /pan-umi/src/pages/Dataminer/Config/Filtration/index.tsx
  */
 
 import React, { FC, useState, useEffect, useRef } from 'react'
 import MarkingSetting from '../../components/MarkingSetting'
-import { Button, Card, Form, Input, Popconfirm, Radio, Select, Space, Table, Tooltip } from 'antd'
+import { Button, Card, Form, Input, Radio, Select, Space, Table, Tooltip } from 'antd'
 import { Column } from '@antv/g2plot';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
 interface Props {
+  item: any;
   [key: string]: any
 }
 
@@ -177,7 +178,7 @@ const mockClusteringData = [
   }
 ]
 
-const Filtration: FC<Props> = () => {
+const Filtration: FC<Props> = ({ item }) => {
   const [dataSource, setDataSource] = useState<any[]>([])
   const [selectTgs, setSelectTags] = useState<string[] | boolean>(false)
   const [selectClustering, setSelectClustering] = useState<string | null>(null)
@@ -190,6 +191,7 @@ const Filtration: FC<Props> = () => {
   const [showType, setShowType] = useState<string>('all')
 
   useEffect(() => {
+    console.log(item)
     setDataSource(mockData)
   }, [])
 
