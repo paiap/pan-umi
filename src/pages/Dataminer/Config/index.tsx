@@ -3,7 +3,7 @@
  * @message: 数据挖掘配置入口文件
  * @since: 2024-10-22 15:47:34
  * @LastAuthor: panan panan2001@outlook.com
- * @lastTime: 2024-10-22 17:23:44
+ * @lastTime: 2024-10-22 19:42:49
  * @文件相对于项目的路径: /pan-umi/src/pages/Dataminer/Config/index.tsx
  */
 
@@ -102,12 +102,11 @@ const DataMinerConfig: FC<Props> = () => {
         <Card
           styles={{
             body: {
-              padding: '8px',
               margin: '0',
             }
           }}
         >
-          <div style={{ flex: 1, overflow: 'auto', height: '100%', }}>
+          <div style={{ overflow: 'auto', height: 'calc(100vh - 280px)', }}>
             {
               stepsMap[stepsData[curSteps] as keyof typeof stepsMap]
             }
