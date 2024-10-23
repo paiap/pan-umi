@@ -3,7 +3,7 @@
  * @message: 数据挖掘配置入口文件
  * @since: 2024-10-22 15:47:34
  * @LastAuthor: panan panan2001@outlook.com
- * @lastTime: 2024-10-22 19:42:49
+ * @lastTime: 2024-10-23 20:15:05
  * @文件相对于项目的路径: /pan-umi/src/pages/Dataminer/Config/index.tsx
  */
 
@@ -21,25 +21,63 @@ interface Props {
   [key: string]: any
 }
 
-const resultData = ['选择数据', '预处理', '多样性打标', '过滤(人工)', '质量打分', '采样(人工)']
+const resultData = [
+  {
+    "id": "b004adefd8664a609248c5e16ef2727a",
+    "type": "DOWNLOAD",
+  },
+  {
+    "id": "2400e2ea436449bb92b27d7c154dade0",
+    "type": "PREPROCESS",
+  },
+  {
+    "id": "033a5973450c4f6a8b07c72089776fda",
+    "type": "TAGGING",
+  },
+  {
+    "id": "033a5973450c4f6a8b07c58392376fda",
+    "type": "FILTER",
+  },
+  {
+    "id": "033a597cfeweitrtgiwfr58392376fda",
+    "type": "SCORE",
+  },
+  {
+    "id": "erfefr43450c4f6a8b07c58392376fda",
+    "type": "SAMPLING",
+  }
+]
+
+const resultMap = {
+  DOWNLOAD: '选择数据',
+  PREPROCESS: '预处理',
+  TAGGING: '多样性打标',
+  FILTER: '过滤(人工)',
+  SCORE: '质量打分',
+  SAMPLING: '采样(人工)',
+}
 
 const DataMinerConfig: FC<Props> = () => {
   const { id } = useParams()
-  const [stepsData, setStepsData] = useState<string[]>([])
   const [stepsItems, setStepsItems] = useState<any[]>([])
   const [curSteps, setCurSteps] = useState<number>(0)
+  const [dataSource, setDataSource] = useState<{
+    id: string,
+    type: string,
+    [key: string]: any
+  }[]>([])
 
   const stepsMap = {
-    '选择数据': <SelectionData />,
-    '预处理': <Pretreatment />,
-    '多样性打标': <DiversityMarking />,
-    '过滤(人工)': <Filtration />,
-    '质量打分': <QualityScoring />,
-    '采样(人工)': <ManualSampling />,
+    'DOWNLOAD': <SelectionData item={dataSource?.find(item => item.type === 'DOWNLOAD')} />,
+    'PREPROCESS': <Pretreatment item={dataSource?.find(item => item.type === 'PREPROCESS')} />,
+    'TAGGING': <DiversityMarking item={dataSource?.find(item => item.type === 'TAGGING')} />,
+    'FILTER': <Filtration item={dataSource?.find(item => item.type === 'FILTER')} />,
+    'SCORE': <QualityScoring item={dataSource?.find(item => item.type === 'SCORE')} />,
+    'SAMPLING': <ManualSampling item={dataSource?.find(item => item.type === 'SAMPLING')} />,
   }
 
   const fetchStepsData = async () => {
-    setStepsData(resultData)
+    setDataSource(resultData)
   }
 
   useEffect(() => {
@@ -49,13 +87,13 @@ const DataMinerConfig: FC<Props> = () => {
 
 
   useEffect(() => {
-    const curSteps = stepsData.map((item: string) => {
+    const curSteps = dataSource.map((item) => {
       return {
-        title: item,
+        title: item?.type ? resultMap[item.type as keyof typeof resultMap] : '',
       }
     })
     setStepsItems(curSteps)
-  }, [stepsData])
+  }, [dataSource])
 
   return (
     <Row gutter={[0, 16]}>
@@ -108,7 +146,7 @@ const DataMinerConfig: FC<Props> = () => {
         >
           <div style={{ overflow: 'auto', height: 'calc(100vh - 280px)', }}>
             {
-              stepsMap[stepsData[curSteps] as keyof typeof stepsMap]
+              stepsMap[dataSource[curSteps]?.type as keyof typeof stepsMap]
             }
           </div>
         </Card>
