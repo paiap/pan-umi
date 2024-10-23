@@ -3,7 +3,7 @@
  * @message: 过滤（人工）
  * @since: 2024-10-22 17:16:58
  * @LastAuthor: panan panan2001@outlook.com
- * @lastTime: 2024-10-23 15:58:16
+ * @lastTime: 2024-10-23 16:35:58
  * @文件相对于项目的路径: /pan-umi/src/pages/Dataminer/Config/Filtration/index.tsx
  */
 
@@ -180,20 +180,36 @@ const mockClusteringData = [
 const Filtration: FC<Props> = () => {
   const [dataSource, setDataSource] = useState<any[]>([])
   const [selectTgs, setSelectTags] = useState<string[] | boolean>(false)
-  const [selectClustering, setSelectClustering] = useState<string>()
+  const [selectClustering, setSelectClustering] = useState<string | null>(null)
   const [selectedRowKeys, setSelectRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [columns, setColumns] = useState<any[]>([])
   const [clusteringData, setClusteringData] = useState<any[]>([])
   const [form] = Form.useForm()
   const distributionRef = useRef<any>(null)
+  const [showType, setShowType] = useState<string>('all')
 
   useEffect(() => {
     setDataSource(mockData)
   }, [])
 
   useEffect(() => {
-    if (!selectClustering) return
+    if (!selectClustering) {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      fetchClusteringList()
+      // 获取所有数据
+      const curData = mockClusteringData.map((item: any, index: number) => {
+        return {
+          ...item,
+          index: index + 1,
+          key: index + 1,
+        }
+      })
+      setClusteringData(curData)
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      getColumns()
+      return
+    }
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     fetchClusteringList()
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -284,14 +300,9 @@ const Filtration: FC<Props> = () => {
           key: item.key,
           render: (_: any, record: any) => {
             return (
-              <Popconfirm
-                title='确定要过滤选中的数据吗？'
-                onConfirm={() => {
-                  console.log(record)
-                }}
-              >
-                <Button type='link' >过滤</Button>
-              </Popconfirm>
+              <Button type='link' onClick={() => {
+                console.log(record)
+              }}>过滤</Button>
             )
           }
         }
@@ -367,53 +378,47 @@ const Filtration: FC<Props> = () => {
             }
             style={{ width: 'calc(100vw - 720px)' }}
           >
-            <div id="distributionRef" style={{ height: '200px' }}></div>
+            <div id="distributionRef" style={{ height: '160px' }}></div>
           </Card>
 
-          {
-            selectClustering && (
-              <Card
-                title={
-                  <Space>
-                    <span>{selectClustering}-结果预览( <span style={{ color: 'red' }}>33</span> 条)</span>
-                  </Space>
+          <Card
+            title={
+              <Space>
+                <span>{selectClustering || 'All'}-结果预览( <span style={{ color: 'red' }}>33</span> 条)</span>
+              </Space>
+            }
+            style={{ width: 'calc(100vw - 720px)' }}
+            loading={loading}
+            extra={
+              <Button type='primary' onClick={() => setSelectClustering(null)}>查看所有数据</Button>
+            }
+          >
+            <div style={{ marginBottom: '8px' }}>
+              <Space>
+                <Radio.Group optionType='button' value={showType} onChange={(e) => setShowType(e.target.value)}>
+                  <Radio.Button value='all'>全部</Radio.Button>
+                  <Radio.Button value='filtered'>已过滤</Radio.Button>
+                  <Radio.Button value='unfiltered'>未过滤</Radio.Button>
+                </Radio.Group>
+                <Button type='primary' disabled={selectedRowKeys.length === 0} onClick={() => {
+                  console.log(selectedRowKeys)
+                }}>批量过滤</Button>
+              </Space>
+            </div>
+            <Table
+              dataSource={clusteringData}
+              columns={columns}
+              size='small'
+              // 批量选择
+              rowSelection={{
+                type: 'checkbox',
+                onChange: (selectedRowKeys, selectedRows) => {
+                  console.log(selectedRowKeys, selectedRows)
+                  setSelectRowKeys(selectedRowKeys)
                 }
-                style={{ width: 'calc(100vw - 720px)' }}
-                loading={loading}
-              >
-                <div style={{ marginBottom: '8px' }}>
-                  <Space>
-                    <Radio.Group optionType='button'>
-                      <Radio.Button value='all'>全部</Radio.Button>
-                      <Radio.Button value='filtered'>已过滤</Radio.Button>
-                      <Radio.Button value='unfiltered'>未过滤</Radio.Button>
-                    </Radio.Group>
-                    <Popconfirm
-                      title='确定要过滤选中的数据吗？'
-                      onConfirm={() => {
-                        console.log(selectedRowKeys)
-                      }}
-                    >
-                      <Button type='primary' disabled={selectedRowKeys.length === 0}>批量过滤</Button>
-                    </Popconfirm>
-                  </Space>
-                </div>
-                <Table
-                  dataSource={clusteringData}
-                  columns={columns}
-                  size='small'
-                  // 批量选择
-                  rowSelection={{
-                    type: 'checkbox',
-                    onChange: (selectedRowKeys, selectedRows) => {
-                      console.log(selectedRowKeys, selectedRows)
-                      setSelectRowKeys(selectedRowKeys)
-                    }
-                  }}
-                />
-              </Card>
-            )
-          }
+              }}
+            />
+          </Card>
 
         </Space>
       </div>
