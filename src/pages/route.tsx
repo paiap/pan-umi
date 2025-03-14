@@ -3,7 +3,7 @@
  * @message: route
  * @since: 2024-05-30 20:14:26
  * @LastAuthor: panan panan2001@outlook.com
- * @lastTime: 2024-11-18 16:33:55
+ * @lastTime: 2025-03-14 16:03:26
  * @文件相对于项目的路径: /pan-umi/src/pages/route.tsx
  */
 export const routes = [
@@ -119,4 +119,44 @@ export const routes = [
     name: '小组件',
     component: './Conpoments',
   },
+  {
+    path: '/filterSetting',
+    name: '筛选条件配置',
+    component: './FilterSetting',
+  },
+  {
+    path: '/assessmentdetail',
+    name: '评估详情',
+    component: './AssessmentDetail',
+  },
+  {
+    path: '/qualityscoring',
+    name: '评估详情',
+    component: './QualityScoring',
+  },
+  {
+    path: '/pantabs',
+    name: '可编辑tabs',
+    component: './PanTabs',
+  },
+  {
+    path: '/monacoEditor',
+    name: '编辑器',
+    component: './MonacoEditor',
+  },
+  {
+    path: '/baseTable',
+    name: '基础表格',
+    component: './BaseTable',
+  },
+  {
+    path: '/createModel',
+    name: '创建模型',
+    component: './CreateModel',
+  },
+  {
+    path: '/createForm',
+    name: '创建模型表单',
+    component: './CreateModel/CreateForm',
+  }
 ]
