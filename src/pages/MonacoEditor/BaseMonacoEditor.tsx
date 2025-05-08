@@ -3,14 +3,13 @@
  * @message: BaseMonacoEditor
  * @since: 2025-03-07 16:30:00
  * @LastAuthor: panan panan2001@outlook.com
- * @lastTime: 2025-03-11 13:45:00
+ * @lastTime: 2025-04-16 11:42:42
  * @文件相对于项目的路径: /pan-umi/src/pages/MonacoEditor/BaseMonacoEditor.tsx
  */
 
 import React, { FC, useState } from 'react';
 import MonacoEditor, { DiffEditor, loader } from '@monaco-editor/react';
-import { PageContainer } from '@ant-design/pro-components';
-import { Select, Space, Spin } from 'antd';
+import { Card, Select, Space, Spin } from 'antd';
 
 // 加载状态组件
 const LoadingComponent = () => (
@@ -32,6 +31,7 @@ interface BaseMonacoEditorProps {
   original?: string;
   modified?: string;
   title?: string;
+  showEditor?: boolean
 }
 
 const BaseMonacoEditor: FC<BaseMonacoEditorProps> = ({
@@ -45,7 +45,8 @@ const BaseMonacoEditor: FC<BaseMonacoEditorProps> = ({
   width = '100%',
   original,
   modified,
-  title = mode === 'edit' ? '代码编辑器' : 'JSON数据对比'
+  showEditor = false,
+  title = !showEditor && (mode === 'edit' ? '代码编辑器' : 'JSON数据对比'),
 }) => {
   const [currentLanguage, setCurrentLanguage] = useState(language);
   const [currentTheme, setCurrentTheme] = useState(theme);
@@ -81,6 +82,8 @@ const BaseMonacoEditor: FC<BaseMonacoEditorProps> = ({
     folding: true,
     renderIndentGuides: true,
     matchBrackets: 'always',
+    formatOnPaste: true,
+    formatOnType: true,
   };
 
   const diffEditorOptions = {
@@ -126,9 +129,15 @@ const BaseMonacoEditor: FC<BaseMonacoEditorProps> = ({
   }
 
   return (
-    <PageContainer ghost header={{
-      title,
-      extra: [
+    <Card
+      title={title}
+      styles={{
+        body: {
+          padding: '0px',
+          margin: '0px'
+        }
+      }}
+      extra={showEditor ? undefined : (
         <Space key="controls">
           {mode === 'edit' && (
             <Select
@@ -147,10 +156,10 @@ const BaseMonacoEditor: FC<BaseMonacoEditorProps> = ({
             placeholder="选择主题"
           />
         </Space>
-      ],
-    }}>
+      )
+      }>
       {renderEditor()}
-    </PageContainer>
+    </Card>
   );
 };
 

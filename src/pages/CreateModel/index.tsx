@@ -10,7 +10,7 @@ import React, { useState } from 'react';
 import { Modal, Card, Button } from 'antd';
 import { CodeOutlined, CloudOutlined } from '@ant-design/icons';
 
-export const CreateModel = () => {
+const CreateModel = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modelType, setModelType] = useState('self');
 
@@ -96,3 +96,6 @@ export const CreateModel = () => {
     </div>
   );
 };
+
+
+export default CreateModel;
