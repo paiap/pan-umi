@@ -3,7 +3,7 @@
  * @message: route
  * @since: 2024-05-30 20:14:26
  * @LastAuthor: panan panan2001@outlook.com
- * @lastTime: 2025-04-22 15:29:15
+ * @lastTime: 2025-05-08 11:37:18
  * @文件相对于项目的路径: /pan-umi/src/pages/route.tsx
  */
 export const routes = [
@@ -184,4 +184,9 @@ export const routes = [
   //   name: '实验组',
   //   component: './ExperimentalConclusion',
   // },
+  {
+    path: '/ModalTableTest',
+    name: '表格弹窗组件',
+    component: './ModalTableTest',
+  },
 ]
