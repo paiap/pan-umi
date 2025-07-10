@@ -1,0 +1,43 @@
+/*
+ * @creater: panan
+ * @message: TagsProgress-标签数据可视化组件样式
+ * @since: 2025-05-14 10:00:00
+ * @LastAuthor: 潘安 panan2001@outlook.com
+ * @lastTime: 2025-05-13 11:20:09
+ * @文件相对于项目的路径: /pan-umi/src/components/TagsProgress/index.less
+ */
+
+.tagsProgressContainer {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.progressBar {
+  display: flex;
+  width: 100%;
+  border-radius: 4px;
+  height:'10px';
+  overflow: hidden;
+}
+
+.progressSegment {
+  height: 100%;
+  transition: width 0.3s ease;
+  min-width: 4px; /* 确保即使百分比很小的标签也能显示 */
+}
+
+.tagsList {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* 标签样式 */
+.tagsList :global(.ant-tag) {
+  margin-right: 8px;
+  margin-bottom: 8px;
+  border-radius: 2px;
+  padding: 0 8px 0 6px;
+  display: flex;
+  align-items: center;
+}
