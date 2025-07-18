@@ -14,7 +14,7 @@ const { Text } = Typography;
 
 interface ScoreRowProps {
   title: string;
-  value: number;
+  value?: number; // 支持undefined
   onChange: (value: number) => void;
   disabled?: boolean;
 }
