@@ -1,0 +1,68 @@
+/* ComparisonChart 表格样式优化 */
+.comparison-table {
+  /* 确保表格在容器内正确显示 */
+}
+
+.comparison-table .ant-table-container {
+  height: 100%;
+}
+
+/* 优化滚动条样式 */
+.comparison-table .ant-table-body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.comparison-table .ant-table-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.comparison-table .ant-table-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.comparison-table .ant-table-body::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* 表格行样式优化 */
+.comparison-table .ant-table-tbody > tr:hover > td {
+  background-color: #f5f7fa !important;
+}
+
+/* 固定列阴影优化 */
+.comparison-table .ant-table-cell-fix-left-last::after {
+  box-shadow: 1px 0 6px 0 rgba(0, 0, 0, 10%) !important;
+}
+
+/* 表头样式优化 */
+.comparison-table .ant-table-thead > tr > th {
+  background-color: #fafafa;
+  font-weight: 600;
+  border-bottom: 2px solid #e8e8e8;
+}
+
+/* 数据单元格样式 */
+.comparison-table .ant-table-tbody > tr > td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* 响应式处理 */
+@media (max-width: 1200px) {
+  .comparison-table .ant-table-tbody > tr > td {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+}
+
+/* 确保Card容器的样式 */
+.ant-card-body .comparison-table {
+  height: 100%;
+}
+
+.ant-card-body .comparison-table .ant-table {
+  height: 100%;
+}

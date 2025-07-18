@@ -1,0 +1,189 @@
+/* AssessmentMultiCompareDetail 页面样式 */
+.multi-compare-detail-root {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.multi-compare-detail-root .ant-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 6%);
+  border-radius: 8px;
+}
+
+.multi-compare-detail-root .ant-card-body {
+  background-color: #fff;
+}
+
+/* 确保内容区域适当的间距 */
+.multi-compare-detail-root .ant-row {
+  margin-bottom: 0;
+}
+
+/* 底部操作区域居中对齐 */
+.multi-compare-detail-root .ant-card:last-child .ant-row {
+  justify-content: center !important;
+}
+
+/* 选项按钮样式优化 */
+.multi-compare-detail-root .ant-btn {
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.multi-compare-detail-root .ant-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 10%);
+}
+
+.multi-compare-detail-root .ant-btn-primary {
+  box-shadow: 0 2px 4px rgba(24, 144, 255, 20%);
+}
+
+.multi-compare-detail-root .ant-btn-primary:hover {
+  box-shadow: 0 4px 16px rgba(24, 144, 255, 30%);
+}
+
+/* 全屏模态框内容样式 */
+.multi-compare-detail-root .ant-modal-content {
+  border-radius: 8px;
+}
+
+/* 对比说明组件样式 */
+.comparison-comment .ant-input {
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.comparison-comment .ant-input:focus,
+.comparison-comment .ant-input:hover {
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 10%);
+}
+
+.comparison-comment .comment-images {
+  margin-top: 8px;
+}
+
+.comparison-comment .comment-images img {
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.comparison-comment .comment-images img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 15%);
+}
+
+/* 选项描述区域样式 */
+.multi-compare-detail-root .option-description {
+  background: linear-gradient(135deg, #f6f8fa 0%, #e9ecef 100%);
+  border-left: 4px solid #1890ff;
+}
+
+/* 评估维度区域滚动条样式 */
+.multi-compare-detail-root .ant-card-body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.multi-compare-detail-root .ant-card-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.multi-compare-detail-root .ant-card-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.multi-compare-detail-root .ant-card-body::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* 确保评估维度容器的高度和滚动 */
+.multi-compare-detail-evaluation-container {
+  max-height: 100%;
+  overflow-y: auto !important;
+}
+
+/* 评估维度项目间距优化 */
+.multi-compare-detail-dimension-item {
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.multi-compare-detail-dimension-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+/* 强制滚动条显示 */
+.multi-compare-detail-root .ant-card[title="评估维度"] .ant-card-body {
+  overflow-y: scroll !important;
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+/* 评估维度卡片专用样式 */
+.evaluation-dimension-card .ant-card-body {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  max-height: 400px !important;
+}
+
+.evaluation-dimension-card .ant-card-body::-webkit-scrollbar {
+  width: 8px !important;
+}
+
+.evaluation-dimension-card .ant-card-body::-webkit-scrollbar-track {
+  background: #f1f1f1 !important;
+  border-radius: 4px !important;
+}
+
+.evaluation-dimension-card .ant-card-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1 !important;
+  border-radius: 4px !important;
+}
+
+.evaluation-dimension-card .ant-card-body::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8 !important;
+}
+
+/* 评估维度高亮效果 */
+.dimension-highlight {
+  background-color: #fff2e8 !important;
+  border: 2px solid #ff7a45 !important;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgb(255 122 69 / 70%);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgb(255 122 69 / 0%);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgb(255 122 69 / 0%);
+  }
+}
+
+/* 评估维度标题样式 */
+.dimension-title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.dimension-items-list {
+  font-size: 12px;
+  color: #666;
+  font-weight: normal;
+  max-width: 60%;
+  word-break: break-all;
+  text-align: right;
+}

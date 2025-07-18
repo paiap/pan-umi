@@ -7,26 +7,31 @@
  * @文件相对于项目的路径: /pan-umi/src/pages/ManualAssessment/index.tsx
  */
 
-import React, { useState, useEffect } from 'react';
-import { Table, Pagination, Space, Input, message, Button, Tag, Typography, Tooltip } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import React, { useState, useEffect, useRef } from 'react';
+import { Table, Pagination, Space, Input, message, Button, Tag, Typography, Tooltip, Card } from 'antd';
+import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
+import { useNavigate } from 'umi';
 import { initColumns } from './columns';
+import { getManualAssessmentList, ManualAssessmentQueryParams, ManualAssessmentItem } from './service';
 
 const { Text } = Typography;
 
 const ManualAssessment: React.FC = () => {
-  const [dataSource, setDataSource] = useState<any[]>([]);
+  const navigate = useNavigate();
+  const [dataSource, setDataSource] = useState<ManualAssessmentItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
     pageNum: 1,
-    pageSize: 10,
+    pageSize: 20,
     total: 0,
   });
-  const [searchParams, setSearchParams] = useState<any>({});
+  const [searchParams, setSearchParams] = useState<ManualAssessmentQueryParams>({});
   const [columns, setColumns] = useState<any[]>([]);
   const [searchValues, setSearchValues] = useState<any>({}); // 存储所有列的搜索值
+  const [tableHeight, setTableHeight] = useState<number>(400); // 表格高度
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleearch = (selectedKeys: any[], confirm: any, columnKey: string) => {
+  const handleSearch = (selectedKeys: any[], confirm: any, columnKey: string) => {
     confirm();
 
     // 更新当前列的搜索值
@@ -64,7 +69,7 @@ const ManualAssessment: React.FC = () => {
 
     // 更新搜索参数状态
     const newSearchParams = { ...searchParams };
-    delete newSearchParams[columnKey];
+    delete (newSearchParams as any)[columnKey];
     setSearchParams(newSearchParams);
 
     // 重置到第一页
@@ -77,9 +82,9 @@ const ManualAssessment: React.FC = () => {
 
   // 获取列配置
   const getColumns = () => {
-    const searchableColumns = ['taskName', 'taskType', 'evaluationBody', 'comparisonTarget', 'testSet', 'creator'];
+    const searchableColumns = ['name', 'taskType', 'modelA', 'modelB', 'createByName'];
     // 需要显示 Tooltip 的文本列（排除序号和操作列）
-    const textColumns = ['taskName', 'taskType', 'evaluationBody', 'comparisonTarget', 'testSet', 'evaluationProcess', 'evaluationResult', 'creator', 'createTime'];
+    const textColumns = ['name', 'taskType', 'taskTypeDesc', 'modelA', 'modelB', 'statusDesc', 'createByName', 'createTime'];
 
     const curColumns = initColumns.map((item: any) => {
       let columnConfig = { ...item };
@@ -88,7 +93,7 @@ const ManualAssessment: React.FC = () => {
       if (textColumns.includes(item.key)) {
         columnConfig.render = (text: string, record: any) => {
           // 如果是状态列，使用原有的 render 逻辑
-          if (item.key === 'successStatus' && item.render) {
+          if (item.key === 'status' && item.render) {
             const statusElement = item.render(text, record);
             return (
               <Tooltip title={text} placement="top">
@@ -177,17 +182,49 @@ const ManualAssessment: React.FC = () => {
         };
       }
 
+      // 为序号列添加计算逻辑
+      if (item.key === 'index' && item.title === '序号') {
+        columnConfig = {
+          ...columnConfig,
+          render: (_: any, __: any, index: number) => {
+            return (pagination.pageNum - 1) * pagination.pageSize + index + 1;
+          },
+        };
+      }
+
       // 操作列渲染
       if (item.key === 'action') {
         columnConfig = {
           ...columnConfig,
-          render: () => (
-            <Space>
-              <Button type="link" size="small">详情</Button>
-              <Button type="link" size="small">编辑</Button>
-              <Button type="link" size="small" danger>删除</Button>
-            </Space>
-          ),
+          render: (_: any, record: any) => {
+            const isSingleComparison = record.taskType === '单个对比评估';
+            return (
+              <Space>
+                <Button
+                  type="link"
+                  size="small"
+                  onClick={() => {
+                    if (isSingleComparison) {
+                      navigate(`/ManualAssessment/detail/${record.id}`);
+                    } else {
+                      navigate(`/ManualAssessment/multiDetail/${record.id}`);
+                    }
+                  }}
+                  title={isSingleComparison ? '查看单个对比详情' : '查看多个对比详情'}
+                >
+                  详情
+                </Button>
+                <Button
+                  type="link"
+                  size="small"
+                  onClick={() => navigate(`/manual-assessment/edit/${record.id}`)}
+                >
+                  编辑
+                </Button>
+                <Button type="link" size="small" danger>删除</Button>
+              </Space>
+            );
+          },
         };
       }
 
@@ -201,45 +238,72 @@ const ManualAssessment: React.FC = () => {
     setLoading(true);
     try {
       // 调用API获取数据
-      const allParams = {
+      const allParams: ManualAssessmentQueryParams = {
         ...searchParams,
         pageNum: pagination.pageNum,
         pageSize: pagination.pageSize,
         ...params,
       };
       console.log('所有搜索参数:', allParams);
-      console.log('当前所有列的搜索值:', searchValues);
+      console.log('当前所有列的搜索值:', searchValues);      // 调用真实API
+      const response = await getManualAssessmentList(allParams);
 
-      // 模拟API调用，实际项目中应替换为真实API
-      const mockData = Array(10).fill(0).map((_, i) => ({
-        key: (pagination.pageNum - 1) * pagination.pageSize + i + 1,
-        taskName: `pre_training_data_curation_task_${i + 1}_with_very_long_name_to_show_tooltip`,
-        taskType: i % 2 === 0 ? '单个对比评估' : '两个对比评估',
-        evaluationBody: 'V260',
-        comparisonTarget: i % 2 === 0 ? '-' : 'qwen_v2.5_with_long_description',
-        testSet: '保存测试集 | V0.0.1 | 非常长的测试集名称用于展示提示框功能',
-        evaluationProcess: `50/80`,
-        evaluationResult: '正确率：80分，评估结果详细描述信息',
-        successStatus: i % 2 === 0 ? '已完成' : '进行中',
-        creator: '张三',
-        createTime: '2025-06-16 15:15:51',
-      }));
-
-      setDataSource(mockData);
-      setPagination({
-        ...pagination,
-        total: 100, // 模拟总数据量为100
-      });
+      if (response.code === 0 && response.data) {
+        setDataSource(response.data.data);
+        setPagination({
+          ...pagination,
+          total: response.data.total,
+        });
+      } else {
+        message.error(response.msg || '获取数据失败');
+      }
     } catch (error) {
+      console.error('获取数据失败:', error);
       message.error('获取数据失败');
     } finally {
       setLoading(false);
     }
   };
 
+  // 计算表格应该显示的高度
+  const calculateTableHeight = () => {
+    // 获取视窗高度
+    const viewportHeight = window.innerHeight;
+
+    // 估算其他元素的高度
+    const containerPadding = 32; // 容器内边距 (16px * 2)
+    const buttonAreaHeight = 56; // 创建按钮区域高度
+    const searchAreaHeight = searchParams && Object.keys(searchParams).length > 0 ? 80 : 0; // 搜索条件显示区域
+    const paginationHeight = 64; // 分页器高度
+    const paginationMargin = 16; // 分页器上方的paddingTop
+
+    // 计算表格可用高度，确保分页器恰好在屏幕底部
+    const availableHeight = viewportHeight - containerPadding - buttonAreaHeight - searchAreaHeight - paginationHeight - paginationMargin - 100;
+
+    // 最小高度300px，确保至少能显示几行数据
+    const calculatedHeight = Math.max(300, availableHeight);
+
+    setTableHeight(calculatedHeight);
+  };
+
+  // 监听窗口大小变化
+  useEffect(() => {
+    calculateTableHeight();
+
+    const handleResize = () => {
+      calculateTableHeight();
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [searchParams]);
+
   useEffect(() => {
     getColumns();
-  }, [searchValues]);
+  }, [searchValues, pagination.pageNum, pagination.pageSize]);
 
   useEffect(() => {
     fetchData();
@@ -256,81 +320,123 @@ const ManualAssessment: React.FC = () => {
   };
 
   return (
-    <Space direction="vertical" style={{ width: '100%' }}>
-      {/* 搜索条件显示区域 */}
-      {Object.keys(searchParams).length > 0 && (
-        <div style={{
-          background: '#f5f5f5',
-          padding: '12px',
-          borderRadius: '6px',
-          marginBottom: '16px'
-        }}>
-          <Space wrap>
-            <Text strong>当前搜索条件：</Text>
-            {Object.entries(searchParams).map(([key, value]: any) => {
-              const columnTitle = initColumns.find(col => col.key === key)?.title || key;
-              return (
-                <Tag
-                  key={key}
-                  color="blue"
-                  closable
-                  onClose={() => {
-                    const newSearchValues = { ...searchValues };
-                    delete newSearchValues[key];
-                    setSearchValues(newSearchValues);
-
-                    const newSearchParams = { ...searchParams };
-                    delete newSearchParams[key];
-                    setSearchParams(newSearchParams);
-
-                    setPagination({
-                      ...pagination,
-                      pageNum: 1,
-                    });
-                  }}
-                >
-                  {columnTitle}: {value}
-                </Tag>
-              );
-            })}
-            <Button
-              type="text"
-              size="small"
-              onClick={clearAllSearch}
-              style={{ color: '#1890ff' }}
-            >
-              清除所有
-            </Button>
-          </Space>
-        </div>
-      )}
-
-      <Table
-        key={JSON.stringify(searchValues)} // 强制重新渲染表格
-        columns={columns}
-        dataSource={dataSource}
-        loading={loading}
-        pagination={false}
-        rowKey="key"
-        scroll={{ x: 1200 }}
-      />
-      <Pagination
-        style={{ textAlign: 'right', width: '100%', display: 'block' }}
-        total={pagination.total}
-        current={pagination.pageNum}
-        pageSize={pagination.pageSize}
-        showSizeChanger
-        showQuickJumper
-        onChange={(page, pageSize) => {
-          setPagination({
-            ...pagination,
-            pageNum: page,
-            pageSize: pageSize || pagination.pageSize,
-          });
+    <Card
+      styles={{
+        body: {
+          padding: 0,
+          margin: 0,
+        }
+      }}
+    >
+      <div
+        ref={containerRef}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '16px',
+          overflow: 'hidden'
         }}
-        showTotal={(total) => `共 ${total} 条`}
-      />
-    </Space>
+      >
+        {/* 操作按钮区域 */}
+        <div style={{ marginBottom: 16, flexShrink: 0 }}>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => navigate('/manual-assessment/create')}
+          >
+            创建人工评估任务
+          </Button>
+        </div>
+
+        {/* 搜索条件显示区域 */}
+        {Object.keys(searchParams).length > 0 && (
+          <div style={{
+            background: '#f5f5f5',
+            padding: '12px',
+            borderRadius: '6px',
+            marginBottom: '16px',
+            flexShrink: 0
+          }}>
+            <Space wrap>
+              <Text strong>当前搜索条件：</Text>
+              {Object.entries(searchParams).map(([key, value]: any) => {
+                const columnTitle = initColumns.find(col => col.key === key)?.title || key;
+                return (
+                  <Tag
+                    key={key}
+                    color="blue"
+                    closable
+                    onClose={() => {
+                      const newSearchValues = { ...searchValues };
+                      delete newSearchValues[key];
+                      setSearchValues(newSearchValues);
+
+                      const newSearchParams = { ...searchParams };
+                      delete (newSearchParams as any)[key];
+                      setSearchParams(newSearchParams);
+
+                      setPagination({
+                        ...pagination,
+                        pageNum: 1,
+                      });
+                    }}
+                  >
+                    {columnTitle}: {value}
+                  </Tag>
+                );
+              })}
+              <Button
+                type="text"
+                size="small"
+                onClick={clearAllSearch}
+                style={{ color: '#1890ff' }}
+              >
+                清除所有
+              </Button>
+            </Space>
+          </div>
+        )}
+
+        {/* 表格和分页器容器 - 占用剩余空间 */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          {/* 表格容器 */}
+          <div style={{ flex: 1, overflow: 'hidden' }}>
+            <Table
+              key={JSON.stringify(searchValues)} // 强制重新渲染表格
+              columns={columns}
+              dataSource={dataSource}
+              loading={loading}
+              pagination={false}
+              rowKey="id"
+              scroll={{ x: 1200, y: tableHeight }}
+            />
+          </div>
+
+          {/* 分页器紧贴表格下方 */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            paddingTop: 16
+          }}>
+            <Pagination
+              total={pagination.total}
+              current={pagination.pageNum}
+              pageSize={pagination.pageSize}
+              showSizeChanger
+              showQuickJumper
+              onChange={(page, pageSize) => {
+                setPagination({
+                  ...pagination,
+                  pageNum: page,
+                  pageSize: pageSize || pagination.pageSize,
+                });
+              }}
+              showTotal={(total) => `共 ${total} 条`}
+            />
+          </div>
+        </div>
+      </div>
+    </Card>
   );
 };
 
