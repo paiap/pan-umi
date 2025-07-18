@@ -3,7 +3,7 @@
  * @message: route
  * @since: 2024-05-30 20:14:26
  * @LastAuthor: 潘安 panan2001@outlook.com
- * @lastTime: 2025-07-09 15:10:19
+ * @lastTime: 2025-07-15 20:28:58
  * @文件相对于项目的路径: /pan-umi/src/pages/route.tsx
  */
 export const routes = [
@@ -22,6 +22,47 @@ export const routes = [
     name: '人工评估',
     path: '/ManualAssessment',
     component: './ManualAssessment',
+  },
+  {
+    path: '/ManualAssessment/detail/:id',
+    name: '人工评估详情',
+    component: './ManualAssessment/pages/AssessmentDetail',
+    menu: false
+  },
+  {
+    path: '/ManualAssessment/multiDetail/:id',
+    name: '人工评估多对比详情',
+    component: './ManualAssessment/pages/AssessmentMultiDetail',
+    menu: false
+  },
+  {
+    path: '/ManualAssessment/multiDetail/:assessmentId/content/:contentId',
+    component: './ManualAssessment/pages/AssessmentMultiCompareDetail',
+    name: '多对比内容详情',
+    menu: false
+  },
+  {
+    path: '/ManualAssessment/multiDetail/task_1/content/:lineId',
+    component: './ManualAssessment/pages/AssessmentMultiCompareDetail',
+    name: '多对比内容详情(旧版)',
+    menu: false
+  },
+  {
+    path: '/manual-assessment/create',
+    name: '创建人工评估任务',
+    component: './ManualAssessment/pages/CreateEvaluationTask',
+    menu: false
+  },
+  {
+    path: '/manual-assessment/edit/:id',
+    name: '编辑人工评估任务',
+    component: './ManualAssessment/pages/CreateEvaluationTask',
+    menu: false
+  },
+  {
+    path: '/manual-assessment/metrics',
+    name: '评估指标管理',
+    component: './ManualAssessment/EvaluationMetricsPage',
   },
   {
     name: '镜像管理',

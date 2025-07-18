@@ -12,15 +12,15 @@ import { Tag } from "antd";
 export const initColumns = [
   {
     title: '序号',
-    dataIndex: 'key',
-    key: 'key',
+    dataIndex: 'index',
+    key: 'index',
     width: 60,
     ellipsis: true,
   },
   {
     title: '任务名称',
-    dataIndex: 'taskName',
-    key: 'taskName',
+    dataIndex: 'name',
+    key: 'name',
     width: 150,
     ellipsis: true,
   },
@@ -32,61 +32,56 @@ export const initColumns = [
     ellipsis: true,
   },
   {
-    title: '评估主体',
-    dataIndex: 'evaluationBody',
-    key: 'evaluationBody',
+    title: '任务类型描述',
+    dataIndex: 'taskTypeDesc',
+    key: 'taskTypeDesc',
+    width: 140,
+    ellipsis: true,
+  },
+  {
+    title: '模型A',
+    dataIndex: 'modelA',
+    key: 'modelA',
     width: 120,
     ellipsis: true,
   },
   {
-    title: '比对对象',
-    dataIndex: 'comparisonTarget',
-    key: 'comparisonTarget',
+    title: '模型B',
+    dataIndex: 'modelB',
+    key: 'modelB',
     width: 120,
     ellipsis: true,
+    render: (text: string) => text || '-',
   },
   {
-    title: '测试集',
-    dataIndex: 'testSet',
-    key: 'testSet',
-    width: 150,
-    ellipsis: true,
-  },
-  {
-    title: '评估流程',
-    dataIndex: 'evaluationProcess',
-    key: 'evaluationProcess',
+    title: '评估进度',
+    dataIndex: 'progressPercent',
+    key: 'progressPercent',
     width: 120,
     ellipsis: true,
+    render: (text: number, record: any) => `${record.completedItems}/${record.totalItems} (${text}%)`,
   },
   {
-    title: '评估结果',
-    dataIndex: 'evaluationResult',
-    key: 'evaluationResult',
-    width: 120,
-    ellipsis: true,
-  },
-  {
-    title: '成功状态',
-    dataIndex: 'successStatus',
-    key: 'successStatus',
-    render: (text: any) => {
-      if (text === '已完成') {
-        return <Tag color='green'>已完成</Tag>;
-      } else if (text === '进行中') {
-        return <Tag color='cyan'>进行中</Tag>;
-      } else if (text === '失败') {
-        return <Tag color='red'>失败</Tag>;
+    title: '任务状态',
+    dataIndex: 'statusDesc',
+    key: 'status',
+    render: (text: any, record: any) => {
+      if (record.status === 'completed') {
+        return <Tag color='green'>{text}</Tag>;
+      } else if (record.status === 'running') {
+        return <Tag color='cyan'>{text}</Tag>;
+      } else if (record.status === 'failed') {
+        return <Tag color='red'>{text}</Tag>;
       } else {
-        return <Tag>等待中</Tag>;
+        return <Tag>{text}</Tag>;
       }
     },
     width: 100,
   },
   {
     title: '创建人',
-    dataIndex: 'creator',
-    key: 'creator',
+    dataIndex: 'createByName',
+    key: 'createByName',
     width: 100,
     ellipsis: true,
   },

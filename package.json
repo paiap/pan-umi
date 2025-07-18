@@ -25,6 +25,8 @@
     "@antv/g6-react-node": "^1.4.8",
     "@bytemd/plugin-gfm": "^1.21.0",
     "@bytemd/react": "^1.21.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@monaco-editor/react": "^4.6.0",
     "@types/lodash": "^4.17.4",
     "@umijs/max": "^4.2.5",
