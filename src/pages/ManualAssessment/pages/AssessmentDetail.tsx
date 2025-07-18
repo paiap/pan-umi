@@ -613,11 +613,11 @@ const AssessmentDetail: React.FC = () => {
                           </div>
                         }
                         style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-                        bodyStyle={{ padding: '16px', display: 'flex', flexDirection: 'column', height: '100%' }}
+                        bodyStyle={{ padding: '8px', display: 'flex', flexDirection: 'column', height: '100%' }}
                       >
                         {/* 评估效果区域 */}
                         <div style={{ marginBottom: '8px' }}>
-                          <div id="score-row-usability" style={{ transition: 'all 0.3s ease', borderRadius: '6px', padding: '8px' }}>
+                          <div id="score-row-usability" style={{ transition: 'all 0.3s ease', borderRadius: '6px', padding: '0 8px' }}>
                             <ScoreRow
                               title="可用性"
                               value={currentScores.usability ?? 0}
@@ -628,7 +628,7 @@ const AssessmentDetail: React.FC = () => {
                               disabled={contentData?.status === 'COMPARED'}
                             />
                           </div>
-                          <div id="score-row-truthfulness" style={{ transition: 'all 0.3s ease', borderRadius: '6px', padding: '8px' }}>
+                          <div id="score-row-truthfulness" style={{ transition: 'all 0.3s ease', borderRadius: '6px', padding: '0 8px' }}>
                             <ScoreRow
                               title="真实性"
                               value={currentScores.truthfulness ?? 0}
@@ -639,7 +639,7 @@ const AssessmentDetail: React.FC = () => {
                               disabled={contentData?.status === 'COMPARED'}
                             />
                           </div>
-                          <div id="score-row-consistency" style={{ transition: 'all 0.3s ease', borderRadius: '6px', padding: '8px' }}>
+                          <div id="score-row-consistency" style={{ transition: 'all 0.3s ease', borderRadius: '6px', padding: '0 8px' }}>
                             <ScoreRow
                               title="一致性"
                               value={currentScores.consistency ?? 0}
