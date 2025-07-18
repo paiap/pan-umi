@@ -8,6 +8,8 @@
  */
 
 import { request } from 'umi';
+import { shouldUseMock, getApiBaseUrl } from '../../../config/env';
+import { ApiDebugger } from '../../../utils/apiDebug';
 
 // 新增多版本对比评估接口类型定义
 export interface VersionComparisonData {
@@ -701,7 +703,39 @@ export async function getContentList(
 
   console.log('📤 [getContentList] 请求参数:', requestData);
 
-  // Mock 实现
+  // 记录API调试信息
+  ApiDebugger.logRequest('getContentList', requestData);
+
+  // 判断是否使用Mock数据
+  if (!shouldUseMock()) {
+    // 生产环境调用真实API
+    try {
+      const apiUrl = `${getApiBaseUrl()}/api/manual/assessment/${taskId}/content`;
+      console.log('🌐 [getContentList] 调用真实API:', apiUrl);
+
+      const response = await request(apiUrl, {
+        method: 'GET',
+        params: requestData,
+      });
+
+      ApiDebugger.logResponse('getContentList', response);
+      return response;
+    } catch (error) {
+      console.error('🚨 [getContentList] API调用失败:', error);
+      ApiDebugger.logError('getContentList', error);
+
+      // 如果API调用失败，返回错误信息
+      const errorMessage = error instanceof Error ? error.message : '网络错误';
+      return {
+        code: -1,
+        msg: `API调用失败: ${errorMessage}`,
+        data: null
+      };
+    }
+  }
+
+  // 开发环境或启用Mock时使用Mock数据
+  console.log('🎭 [getContentList] 使用Mock数据');
   return new Promise((resolve) => {
     setTimeout(() => {
       // 生成多条数据用于分页测试
