@@ -8,7 +8,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Row, Col, Space, Spin, message, Typography, Avatar } from 'antd';
+import { Button, Card, Row, Col, Space, Spin, message, Typography, Avatar, Radio } from 'antd';
 import { ArrowLeftOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useNavigate, useParams } from 'umi';
 import ContentDisplay from '../components/ContentDisplay';
@@ -167,12 +167,18 @@ const AssessmentMultiCompareDetail: React.FC = () => {
           if (taskLineData.primaryTargetScore && taskLineData.primaryTargetScore.length > 0) {
             const selections: Record<string, string> = {};
             taskLineData.primaryTargetScore.forEach((score: any) => {
-              // 只要分数存在就回显选择（已完成状态下的分数都是有效的）
+              // 通过metricScore匹配对应的选项按钮（-2, 0, 2）
               if (score.metricScore !== undefined && score.metricScore !== null) {
-                selections[score.metricId] = score.metricScore.toString();
+                // 确保metricScore是有效的选项值（-2, 0, 2）
+                const validScore = [-2, 0, 2].includes(score.metricScore) ? score.metricScore : null;
+                if (validScore !== null) {
+                  selections[score.metricId] = validScore.toString();
+                  console.log(`✅ [分数回显] 维度 ${score.metricName} (${score.metricId}) -> 分数: ${validScore}`);
+                }
               }
             });
             setDimensionSelections(selections);
+            console.log('🎯 [分数回显] 最终选择状态:', selections);
           }
         } else {
           // 未完成状态，清空数据
@@ -299,20 +305,41 @@ const AssessmentMultiCompareDetail: React.FC = () => {
     // 验证所有维度都已选择
     const unselectedDimensions = data.primaryTargetScore.filter((metric: any) => !dimensionSelections[metric.metricId]);
     if (unselectedDimensions.length > 0) {
-      // 滚动到第一个未打分的维度
+      // 滚动到第一个未打分的维度 - 只在评估维度卡片内部滚动
       const firstUnselectedMetricId = unselectedDimensions[0].metricId;
       const targetElement = document.getElementById(`dimension-${firstUnselectedMetricId}`);
-      if (targetElement) {
-        targetElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
+      const scrollContainer = document.getElementById('dimension-scroll-container');
+
+      if (targetElement && scrollContainer) {
+        // 计算目标元素相对于滚动容器的位置
+        const containerRect = scrollContainer.getBoundingClientRect();
+        const targetRect = targetElement.getBoundingClientRect();
+        const relativeTop = targetRect.top - containerRect.top + scrollContainer.scrollTop;
+
+        // 在卡片内部滚动，让目标元素居中显示
+        const scrollPosition = relativeTop - (containerRect.height - targetRect.height) / 2;
+        scrollContainer.scrollTo({
+          top: Math.max(0, scrollPosition),
+          behavior: 'smooth'
         });
+
+        console.log('🎯 [滚动定位] 容器信息:', {
+          containerHeight: containerRect.height,
+          targetTop: relativeTop,
+          scrollPosition: scrollPosition,
+          targetElement: targetElement.id
+        });
+
         // 添加高亮效果
         targetElement.style.backgroundColor = '#fff2e8';
         targetElement.style.border = '2px solid #ff7a45';
+        targetElement.style.borderRadius = '6px';
+        targetElement.style.transition = 'all 0.3s ease';
         setTimeout(() => {
           targetElement.style.backgroundColor = '';
           targetElement.style.border = '';
+          targetElement.style.borderRadius = '';
+          targetElement.style.transition = '';
         }, 3000);
       }
 
@@ -534,6 +561,7 @@ const AssessmentMultiCompareDetail: React.FC = () => {
                   {/* 评估维度区域 - 自动撑满剩余空间 */}
                   {data.primaryTargetScore && data.primaryTargetScore.length > 0 && (
                     <div
+                      id="dimension-scroll-container"
                       style={{
                         height: '100%',
                         overflowY: 'auto',
@@ -571,32 +599,48 @@ const AssessmentMultiCompareDetail: React.FC = () => {
                             </Typography.Text>
                           </Space>
 
-                          {/* 评估选项 */}
-                          <Row gutter={[12, 12]} style={{ marginTop: 12 }}>
-                            {[
-                              { key: '-2', title: '← A更好', value: -2 },
-                              { key: '0', title: '平局', value: 0 },
-                              { key: '2', title: 'B更好 →', value: 2 }
-                            ].map((option) => {
-                              const colSpan = 8; // 3个选项，每个占8/24
-                              const isSelected = dimensionSelections[metric.metricId] === option.key;
-                              const isCompleted = data.status === 'COMPARED';
+                          {/* 评估选项 - 使用 Radio.Button 形式 */}
+                          <div style={{ marginTop: 12 }}>
+                            <Radio.Group
+                              value={dimensionSelections[metric.metricId]}
+                              onChange={(e) => {
+                                const isCompleted = data.status === 'COMPARED';
+                                if (!isCompleted) {
+                                  handleSelectOption(metric.metricId, e.target.value);
+                                }
+                              }}
+                              disabled={data.status === 'COMPARED'}
+                              style={{ width: '100%' }}
+                            >
+                              <Row gutter={[12, 12]}>
+                                {[
+                                  { key: '-2', title: '← A更好', value: '-2' },
+                                  { key: '0', title: '平局', value: '0' },
+                                  { key: '2', title: 'B更好 →', value: '2' }
+                                ].map((option) => {
+                                  const colSpan = 8; // 3个选项，每个占8/24
 
-                              return (
-                                <Col span={colSpan} key={option.key}>
-                                  <Button
-                                    block
-                                    type={isSelected ? 'primary' : 'default'}
-                                    disabled={isCompleted}
-                                    onClick={() => !isCompleted && handleSelectOption(metric.metricId, option.key)}
-                                    style={{ height: 36 }}
-                                  >
-                                    {option.title}
-                                  </Button>
-                                </Col>
-                              );
-                            })}
-                          </Row>
+                                  return (
+                                    <Col span={colSpan} key={option.key}>
+                                      <Radio.Button
+                                        value={option.value}
+                                        style={{
+                                          width: '100%',
+                                          height: 36,
+                                          textAlign: 'center',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center'
+                                        }}
+                                      >
+                                        {option.title}
+                                      </Radio.Button>
+                                    </Col>
+                                  );
+                                })}
+                              </Row>
+                            </Radio.Group>
+                          </div>
                         </div>
                       ))}
                     </div>

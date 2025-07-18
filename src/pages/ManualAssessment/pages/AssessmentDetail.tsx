@@ -93,7 +93,7 @@ interface ContentData {
     images: string[];
   } | null;
   primaryTargetScore: Array<{
-    metricId: string;
+    metricId: number; // 改为number类型，与Mock数据保持一致
     metricName: string;
     metricDescription: string;
     metricScore: number;
@@ -112,6 +112,7 @@ const AssessmentDetail: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState<'all' | 'NOT_COMPARE' | 'COMPARED'>('NOT_COMPARE');
   const [fullscreenData, setFullscreenData] = useState<{ title: string, content: string } | null>(null);
+  const [highlightedElement, setHighlightedElement] = useState<HTMLElement | null>(null); // 跟踪高亮元素
 
   // 分页相关状态
   const [currentPage, setCurrentPage] = useState(1);
@@ -125,6 +126,17 @@ const AssessmentDetail: React.FC = () => {
     consistency?: number;
   }>({});
   const [evaluationComment, setEvaluationComment] = useState<{ text?: string; images?: string[] }>({});
+
+  // 清除高亮效果的函数
+  const clearHighlight = () => {
+    if (highlightedElement) {
+      highlightedElement.style.backgroundColor = '';
+      highlightedElement.style.border = '';
+      highlightedElement.style.borderRadius = '';
+      highlightedElement.style.transition = '';
+      setHighlightedElement(null);
+    }
+  };
 
   // 加载内容详情（新的分页方式）
   async function loadContentDetail(pageNum: number = currentPage) {
@@ -162,44 +174,57 @@ const AssessmentDetail: React.FC = () => {
           setCurrentPage(data.pageNum);
           setTotalPages(data.pages);
 
-          // 回显评分，优先从primaryTargetScore获取，如果没有则使用scores
+          // 回显评分，从primaryTargetScore的metricScore字段获取
           let scores: {
             truthfulness?: number;
             usability?: number;
             consistency?: number;
           } = {};
 
-          // 从primaryTargetScore中获取分数（使用中文维度名）
+          // 从primaryTargetScore中获取分数（重点使用metricScore字段）
           if (transformedContent.primaryTargetScore && transformedContent.primaryTargetScore.length > 0) {
+            console.log('🔍 [分数回显] primaryTargetScore原始数据:', transformedContent.primaryTargetScore);
+
             const truthfulnessMetric = transformedContent.primaryTargetScore.find(item => item.metricName === '真实性');
-            if (truthfulnessMetric && truthfulnessMetric.metricScore !== undefined) {
+            if (truthfulnessMetric && truthfulnessMetric.metricScore !== undefined && truthfulnessMetric.metricScore !== null) {
               scores.truthfulness = truthfulnessMetric.metricScore;
+              console.log('✅ [分数回显] 真实性分数:', truthfulnessMetric.metricScore);
             }
 
             const usabilityMetric = transformedContent.primaryTargetScore.find(item => item.metricName === '可用性');
-            if (usabilityMetric && usabilityMetric.metricScore !== undefined) {
+            if (usabilityMetric && usabilityMetric.metricScore !== undefined && usabilityMetric.metricScore !== null) {
               scores.usability = usabilityMetric.metricScore;
+              console.log('✅ [分数回显] 可用性分数:', usabilityMetric.metricScore);
             }
 
             const consistencyMetric = transformedContent.primaryTargetScore.find(item => item.metricName === '一致性');
-            if (consistencyMetric && consistencyMetric.metricScore !== undefined) {
+            if (consistencyMetric && consistencyMetric.metricScore !== undefined && consistencyMetric.metricScore !== null) {
               scores.consistency = consistencyMetric.metricScore;
+              console.log('✅ [分数回显] 一致性分数:', consistencyMetric.metricScore);
             }
           } else if (transformedContent.scores) {
-            // 回退到scores字段 - 只有在值存在且有效时才设置
-            if (transformedContent.scores.truthfulness !== undefined) {
+            // 回退到scores字段 - 只有在值存在时才设置
+            console.log('⚠️ [分数回显] 使用备用scores字段:', transformedContent.scores);
+            if (transformedContent.scores.truthfulness !== undefined && transformedContent.scores.truthfulness !== null) {
               scores.truthfulness = transformedContent.scores.truthfulness;
             }
-            if (transformedContent.scores.usability !== undefined) {
+            if (transformedContent.scores.usability !== undefined && transformedContent.scores.usability !== null) {
               scores.usability = transformedContent.scores.usability;
             }
-            if (transformedContent.scores.consistency !== undefined) {
+            if (transformedContent.scores.consistency !== undefined && transformedContent.scores.consistency !== null) {
               scores.consistency = transformedContent.scores.consistency;
             }
           }
 
           setCurrentScores(scores);
-          console.log('🎯 [getContentList] 回显评分:', scores);
+          console.log('🎯 [分数回显] 最终设置的评分:', scores);
+          console.log('🔍 [分数回显] primaryTargetScore详细信息:', transformedContent.primaryTargetScore?.map(item => ({
+            metricName: item.metricName,
+            metricScore: item.metricScore,
+            metricId: item.metricId
+          })));
+          console.log('🔍 [分数回显] scores字段:', transformedContent.scores);
+          console.log('🔍 [分数回显] 内容状态:', transformedContent.status, transformedContent.evaluationStatus);
 
           // 加载已有的评估说明，优先从comment字段获取
           if (transformedContent.comment) {
@@ -304,24 +329,43 @@ const AssessmentDetail: React.FC = () => {
     if (currentScores.consistency === undefined) uncompletedScores.push('consistency');
 
     if (uncompletedScores.length > 0) {
+      // 先清除之前的高亮
+      clearHighlight();
+
       // 滚动到第一个未打分的维度
       const firstUncompletedScore = uncompletedScores[0];
       const targetElement = document.getElementById(`score-row-${firstUncompletedScore}`);
       if (targetElement) {
-        targetElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        });
+        // 找到评估效果区域的容器，只在这个容器内滚动
+        const scoreContainer = document.getElementById('score-container');
+        if (scoreContainer) {
+          // 获取目标元素相对于容器的位置
+          const containerRect = scoreContainer.getBoundingClientRect();
+          const targetRect = targetElement.getBoundingClientRect();
+          const relativeTop = targetRect.top - containerRect.top + scoreContainer.scrollTop;
+
+          // 滚动到目标位置，让元素在容器中居中显示
+          const scrollPosition = relativeTop - (containerRect.height - targetRect.height) / 2;
+          scoreContainer.scrollTo({
+            top: Math.max(0, scrollPosition),
+            behavior: 'smooth'
+          });
+        }
+
         // 添加高亮效果
         targetElement.style.backgroundColor = '#fff2e8';
         targetElement.style.border = '2px solid #ff7a45';
-        setTimeout(() => {
-          targetElement.style.backgroundColor = '';
-          targetElement.style.border = '';
-        }, 3000);
-      }
+        targetElement.style.borderRadius = '6px';
+        targetElement.style.transition = 'all 0.3s ease';
 
-      message.warning('请完成所有维度的评分');
+        // 保存当前高亮的元素
+        setHighlightedElement(targetElement);
+
+        // 3秒后自动清除高亮
+        setTimeout(() => {
+          clearHighlight();
+        }, 3000);
+      } message.warning('请完成所有维度的评分');
       return;
     }
 
@@ -350,7 +394,7 @@ const AssessmentDetail: React.FC = () => {
 
           if (score !== undefined) {
             scoreArray.push({
-              metricId: metric.metricId,
+              metricId: String(metric.metricId), // 转换为字符串
               score: score
             });
             console.log(`✅ [单个评估] 匹配到维度: ${metric.metricName} -> metricId: ${metric.metricId}, score: ${score}`);
@@ -464,8 +508,12 @@ const AssessmentDetail: React.FC = () => {
 
   // Tab切换时重新加载数据
   const handleTabChange = (key: string) => {
+    console.log('🔄 [Tab切换] 从', activeTab, '切换到', key);
     setActiveTab(key as 'all' | 'NOT_COMPARE' | 'COMPARED');
     setCurrentPage(1); // 重置到第一页
+    // 清除当前评分状态，让新数据能正确回显
+    setCurrentScores({});
+    setEvaluationComment({});
     // 延迟加载，让tab切换动画完成
     setTimeout(() => {
       loadContentDetail(1);
@@ -613,40 +661,49 @@ const AssessmentDetail: React.FC = () => {
                           </div>
                         }
                         style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-                        bodyStyle={{ padding: '16px', display: 'flex', flexDirection: 'column', height: '100%' }}
+                        bodyStyle={{ padding: '8px', display: 'flex', flexDirection: 'column', height: '100%' }}
                       >
                         {/* 评估效果区域 */}
-                        <div style={{ marginBottom: '8px' }}>
-                          <div id="score-row-usability" style={{ transition: 'all 0.3s ease', borderRadius: '6px', padding: '8px' }}>
+                        <div id="score-container" style={{ marginBottom: '8px', maxHeight: '200px', overflowY: 'auto' }}>
+                          <div id="score-row-usability" style={{ transition: 'all 0.3s ease', borderRadius: '6px', padding: '0 8px' }}>
                             <ScoreRow
                               title="可用性"
-                              value={currentScores.usability ?? 0}
-                              onChange={(value) => setCurrentScores({
-                                ...currentScores,
-                                usability: value
-                              })}
+                              value={currentScores.usability}
+                              onChange={(value) => {
+                                clearHighlight(); // 清除高亮
+                                setCurrentScores({
+                                  ...currentScores,
+                                  usability: value
+                                });
+                              }}
                               disabled={contentData?.status === 'COMPARED'}
                             />
                           </div>
-                          <div id="score-row-truthfulness" style={{ transition: 'all 0.3s ease', borderRadius: '6px', padding: '8px' }}>
+                          <div id="score-row-truthfulness" style={{ transition: 'all 0.3s ease', borderRadius: '6px', padding: '0 8px' }}>
                             <ScoreRow
                               title="真实性"
-                              value={currentScores.truthfulness ?? 0}
-                              onChange={(value) => setCurrentScores({
-                                ...currentScores,
-                                truthfulness: value
-                              })}
+                              value={currentScores.truthfulness}
+                              onChange={(value) => {
+                                clearHighlight(); // 清除高亮
+                                setCurrentScores({
+                                  ...currentScores,
+                                  truthfulness: value
+                                });
+                              }}
                               disabled={contentData?.status === 'COMPARED'}
                             />
                           </div>
-                          <div id="score-row-consistency" style={{ transition: 'all 0.3s ease', borderRadius: '6px', padding: '8px' }}>
+                          <div id="score-row-consistency" style={{ transition: 'all 0.3s ease', borderRadius: '6px', padding: '0 8px' }}>
                             <ScoreRow
                               title="一致性"
-                              value={currentScores.consistency ?? 0}
-                              onChange={(value) => setCurrentScores({
-                                ...currentScores,
-                                consistency: value
-                              })}
+                              value={currentScores.consistency}
+                              onChange={(value) => {
+                                clearHighlight(); // 清除高亮
+                                setCurrentScores({
+                                  ...currentScores,
+                                  consistency: value
+                                });
+                              }}
                               disabled={contentData?.status === 'COMPARED'}
                             />
                           </div>

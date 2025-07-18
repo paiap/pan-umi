@@ -37,6 +37,7 @@ import {
 import EvaluationObjectConfig from '../components/EvaluationObjectConfig';
 import EvaluationMetrics from '../components/EvaluationMetrics';
 import TaskTypeCardSelect from '../components/TaskTypeCardSelect';
+import MetricFormItem from '../components/EvaluationMetrics/MetricFormItem';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -47,7 +48,7 @@ const CreateEvaluationTask: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const copyId = searchParams.get('copyId');
-  
+
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -55,7 +56,7 @@ const CreateEvaluationTask: React.FC = () => {
   const [datasetVersions, setDatasetVersions] = useState<DatasetVersion[]>([]);
   const [loadingDatasets, setLoadingDatasets] = useState(false);
   const [loadingVersions, setLoadingVersions] = useState(false);
-  
+
   // 判断是否为编辑模式
   const isEditMode = !!id;
   const isCopyMode = !!copyId;
@@ -122,12 +123,12 @@ const CreateEvaluationTask: React.FC = () => {
       const response: any = await getEvaluationTaskDetail(taskId);
       if (response.code === 0) {
         const data: TaskDetail = response.data;
-        
+
         // 先加载测试集版本数据
         if (data.datasetId) {
           await fetchDatasetVersions(data.datasetId);
         }
-        
+
         // 延迟一下确保状态更新完成
         setTimeout(() => {
           // 然后设置表单值
@@ -157,7 +158,7 @@ const CreateEvaluationTask: React.FC = () => {
   // 初始化数据
   useEffect(() => {
     fetchDatasets();
-    
+
     if (isEditMode && id) {
       loadTaskDetail(id);
     } else if (isCopyMode && copyId) {
@@ -180,7 +181,7 @@ const CreateEvaluationTask: React.FC = () => {
     try {
       const values = await form.validateFields();
       setSubmitting(true);
-      
+
       const params: CreateTaskParams = {
         taskName: values.taskName,
         taskDescription: values.taskDescription,
@@ -222,10 +223,10 @@ const CreateEvaluationTask: React.FC = () => {
     <div style={{ padding: '24px', backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
       <div style={{ maxWidth: '100%', margin: '0 auto' }}>
         {/* 页面头部 */}
-        <div style={{ 
-          marginBottom: 24, 
-          padding: '16px 24px', 
-          backgroundColor: '#fff', 
+        <div style={{
+          marginBottom: 24,
+          padding: '16px 24px',
+          backgroundColor: '#fff',
           borderRadius: '8px',
           boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
         }}>
@@ -254,9 +255,9 @@ const CreateEvaluationTask: React.FC = () => {
           <Row gutter={24}>
             <Col span={24}>
               {/* 基本信息 */}
-              <Card 
-                title="基本信息" 
-                style={{ 
+              <Card
+                title="基本信息"
+                style={{
                   marginBottom: 16,
                   borderRadius: '8px',
                   boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
@@ -269,7 +270,7 @@ const CreateEvaluationTask: React.FC = () => {
                 >
                   <Input placeholder="请输入评估任务名称" />
                 </Form.Item>
-                
+
                 <Form.Item
                   label="评估任务描述"
                   name="taskDescription"
@@ -376,9 +377,9 @@ const CreateEvaluationTask: React.FC = () => {
               </Card>
 
               {/* 评估对象配置 */}
-              <Card 
-                title="评估对象" 
-                style={{ 
+              <Card
+                title="评估对象"
+                style={{
                   marginBottom: 16,
                   borderRadius: '8px',
                   boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
@@ -394,9 +395,9 @@ const CreateEvaluationTask: React.FC = () => {
 
               {/* 对比对象配置 */}
               {taskType === 'dual' && (
-                <Card 
-                  title="对比对象" 
-                  style={{ 
+                <Card
+                  title="对比对象"
+                  style={{
                     marginBottom: 16,
                     borderRadius: '8px',
                     boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
@@ -406,8 +407,8 @@ const CreateEvaluationTask: React.FC = () => {
                     name="comparisonTarget"
                     rules={[{ required: true, message: '请配置对比对象' }]}
                   >
-                    <EvaluationObjectConfig 
-                      showModelName 
+                    <EvaluationObjectConfig
+                      showModelName
                       modelName={form.getFieldValue(['comparisonTarget', 'modelName'])}
                       onModelNameChange={(name) => {
                         const currentValue = form.getFieldValue('comparisonTarget') || {};
@@ -419,9 +420,9 @@ const CreateEvaluationTask: React.FC = () => {
               )}
 
               {/* 评估指标配置 */}
-              <Card 
-                title="评估指标" 
-                style={{ 
+              <Card
+                title="评估指标"
+                style={{
                   marginBottom: 16,
                   borderRadius: '8px',
                   boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
@@ -442,12 +443,12 @@ const CreateEvaluationTask: React.FC = () => {
                     }
                   ]}
                 >
-                  <EvaluationMetrics />
+                  <MetricFormItem placeholder="请点击上方按钮选择评估指标" />
                 </Form.Item>
               </Card>
 
               {/* 操作按钮 */}
-              <Card style={{ 
+              <Card style={{
                 borderRadius: '8px',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
               }}>

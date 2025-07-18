@@ -773,14 +773,10 @@ export async function getContentList(
             String((dataIndex * 13) % 60).padStart(2, '0') + ':' +
             String((dataIndex * 17) % 60).padStart(2, '0'), // 模拟不同的创建时间
           scores: isCompleted ? {
-            truthfulness: Math.floor(Math.random() * 5) - 2,
-            usability: Math.floor(Math.random() * 5) - 2,
-            consistency: Math.floor(Math.random() * 5) - 2,
-          } : {
-            truthfulness: -999,
-            usability: -999,
-            consistency: -999,
-          },
+            truthfulness: [-2, 0, 2][Math.floor(Math.random() * 3)],
+            usability: [-2, 0, 2][Math.floor(Math.random() * 3)],
+            consistency: [-2, 0, 2][Math.floor(Math.random() * 3)],
+          } : null, // 未完成时设置为null，而不是-999
           evaluationComment: isCompleted ? {
             text: '模型A的回答更加准确和详细，在特征工程方法的介绍上更为全面，提供了具体的实施步骤',
             screenshots: []
@@ -791,26 +787,26 @@ export async function getContentList(
           } : null,
           primaryTargetScore: isCompleted ? [
             {
-              metricId: 'truthfulness',
+              metricId: 1, // 数字ID，不是字符串
               metricName: '真实性',
               metricDescription: '真实性评估',
-              metricScore: Math.floor(Math.random() * 5) - 2,
+              metricScore: [-2, 0, 2][Math.floor(Math.random() * 3)],
               compareResult: (['win', 'lose', 'draw'][Math.floor(Math.random() * 3)] as 'win' | 'lose' | 'draw'),
               createTime: new Date().toISOString()
             },
             {
-              metricId: 'usability',
+              metricId: 2, // 数字ID，不是字符串
               metricName: '可用性',
               metricDescription: '可用性评估',
-              metricScore: Math.floor(Math.random() * 5) - 2,
+              metricScore: [-2, 0, 2][Math.floor(Math.random() * 3)],
               compareResult: (['win', 'lose', 'draw'][Math.floor(Math.random() * 3)] as 'win' | 'lose' | 'draw'),
               createTime: new Date().toISOString()
             },
             {
-              metricId: 'consistency',
+              metricId: 3, // 数字ID，不是字符串
               metricName: '一致性',
               metricDescription: '一致性评估',
-              metricScore: Math.floor(Math.random() * 5) - 2,
+              metricScore: [-2, 0, 2][Math.floor(Math.random() * 3)],
               compareResult: (['win', 'lose', 'draw'][Math.floor(Math.random() * 3)] as 'win' | 'lose' | 'draw'),
               createTime: new Date().toISOString()
             }
@@ -948,7 +944,7 @@ export async function getTaskLineDetail(
             metricId: 'truthfulness',
             metricName: '真实性',
             metricDescription: '评估回答的真实性和准确性',
-            metricScore: [-2, -1, 0, 1, 2][Math.floor(Math.random() * 5)],
+            metricScore: [-2, 0, 2][Math.floor(Math.random() * 3)],
             compareResult: (['win', 'lose', 'draw'][Math.floor(Math.random() * 3)] as 'win' | 'lose' | 'draw'),
             createTime: new Date().toISOString()
           },
@@ -956,7 +952,7 @@ export async function getTaskLineDetail(
             metricId: 'usability',
             metricName: '可用性',
             metricDescription: '评估回答的实用性和可操作性',
-            metricScore: [-2, -1, 0, 1, 2][Math.floor(Math.random() * 5)],
+            metricScore: [-2, 0, 2][Math.floor(Math.random() * 3)],
             compareResult: (['win', 'lose', 'draw'][Math.floor(Math.random() * 3)] as 'win' | 'lose' | 'draw'),
             createTime: new Date().toISOString()
           },
@@ -964,7 +960,7 @@ export async function getTaskLineDetail(
             metricId: 'consistency',
             metricName: '一致性',
             metricDescription: '评估回答的逻辑一致性',
-            metricScore: [-2, -1, 0, 1, 2][Math.floor(Math.random() * 5)],
+            metricScore: [-2, 0, 2][Math.floor(Math.random() * 3)],
             compareResult: (['win', 'lose', 'draw'][Math.floor(Math.random() * 3)] as 'win' | 'lose' | 'draw'),
             createTime: new Date().toISOString()
           }
