@@ -3,7 +3,7 @@
  * @message: 评估指标表单组件
  * @since: 2025-07-15 15:00:00
  * @LastAuthor: 潘安 panan2001@outlook.com
- * @lastTime: 2025-07-15 20:40:05
+ * @lastTime: 2025-07-18 19:41:51
  * @文件相对于项目的路径: /pan-umi/src/pages/ManualAssessment/components/EvaluationMetrics/MetricForm.tsx
  */
 
@@ -13,8 +13,6 @@ import {
   Input,
   Select,
   InputNumber,
-  Button,
-  Space,
   message,
   Row,
   Col

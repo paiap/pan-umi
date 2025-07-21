@@ -219,9 +219,11 @@ const EvaluationObjectConfig: React.FC<EvaluationObjectConfigProps> = ({
           onChange={(e) => handleChange('inferenceType', e.target.value)}
           disabled={disabled}
           optionType="button"
+          size="small"  // Adjust size to small
+          style={{ display: 'flex', gap: '8px' }}  // Use flex for horizontal arrangement and adjust gap
         >
-          <Radio value="new_data" disabled>新数据（暂不支持）</Radio>
-          <Radio value="existing_data">已有数据</Radio>
+          <Radio.Button value="new_data" disabled>新数据（暂不支持）</Radio.Button>
+          <Radio.Button value="existing_data">已有数据</Radio.Button>
         </Radio.Group>
       </Form.Item>
 

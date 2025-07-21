@@ -3,7 +3,7 @@
  * @message: 对比说明组件 - 支持文本和图片粘贴
  * @since: 2025-07-14 00:00:00
  * @LastAuthor: 潘安 panan2001@outlook.com
- * @lastTime: 2025-07-14 00:00:00
+ * @lastTime: 2025-07-21 14:59:01
  * @文件相对于项目的路径: /pan-umi/src/pages/ManualAssessment/components/ComparisonComment.tsx
  */
 
@@ -50,13 +50,15 @@ const ComparisonComment: React.FC<ComparisonCommentProps> = ({
   const calculateHeight = () => {
     if (!containerRef.current) return;
     const containerHeight = containerRef.current.clientHeight;
-    const headerHeight = 44; // 标题区域高度
-    const footerHeight = 24; // 底部提示区域高度
-    const imageHeight = images.length > 0 ? (Math.ceil(images.length / 4) * 88 + 40) : 0; // 图片区域高度
-    const margins = 32; // 增加间距余量
+    const headerHeight = 36; // 标题区域高度
+    const footerHeight = 18; // 底部提示区域高度
+    const imageHeight = images.length > 0 ? (Math.ceil(images.length / 4) * 86 + 28) : 0; // 恢复80px图片尺寸 (80px + 6px 间距)
+    const margins = 20; // 间距余量
     const availableHeight = containerHeight - headerHeight - footerHeight - imageHeight - margins;
-    const minHeight = 80; // 减小最小高度，避免超出显示
-    const maxHeight = 300; // 减小最大高度
+
+    // 有图片时减小文本框高度
+    const minHeight = 40; // 有图片时更小的最小高度
+    const maxHeight = images.length > 0 ? 40 : 180; // 有图片时更小的最大高度
 
     const newHeight = Math.max(minHeight, Math.min(maxHeight, availableHeight));
     setTextAreaHeight(newHeight);
@@ -171,7 +173,7 @@ const ComparisonComment: React.FC<ComparisonCommentProps> = ({
   };
 
   return (
-    <div ref={containerRef} className="comparison-comment" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <div ref={containerRef} className="comparison-comment" style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
       <div style={{ marginBottom: 12, flexShrink: 0 }}>
         <Space>
           <span style={{ fontWeight: 500 }}>对比说明：</span>
@@ -207,16 +209,16 @@ const ComparisonComment: React.FC<ComparisonCommentProps> = ({
 
       {images.length > 0 && (
         <div className="comment-images" style={{ flexShrink: 0 }}>
-          <div style={{ marginBottom: 8, fontSize: 12, color: '#666' }}>
+          <div style={{ marginBottom: 6, fontSize: 11, color: '#666' }}>
             <PictureOutlined /> 已添加 {images.length}/{MAX_IMAGES} 张图片
           </div>
           <div style={{
             display: 'flex',
             flexWrap: 'wrap',
-            gap: 8,
+            gap: 6,
             border: '1px solid #d9d9d9',
             borderRadius: 4,
-            padding: 8,
+            padding: 6,
             backgroundColor: '#fafafa'
           }}>
             {images.map((img, index) => (
@@ -238,18 +240,19 @@ const ComparisonComment: React.FC<ComparisonCommentProps> = ({
                     onClick={() => handleRemoveImage(index)}
                     style={{
                       position: 'absolute',
-                      top: -8,
-                      right: -8,
+                      top: -6,
+                      right: -6,
                       background: '#ff4d4f',
                       color: 'white',
                       borderRadius: '50%',
-                      minWidth: 20,
-                      height: 20,
+                      minWidth: 18,
+                      height: 18,
                       padding: 0,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                      fontSize: '10px'
                     }}
                   />
                 )}

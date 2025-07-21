@@ -204,8 +204,9 @@ const ManualAssessment: React.FC = () => {
                   type="link"
                   size="small"
                   onClick={() => {
+                    // 两种类型都跳转到同一个列表页，通过URL参数区分类型
                     if (isSingleComparison) {
-                      navigate(`/ManualAssessment/detail/${record.id}`);
+                      navigate(`/ManualAssessment/singleDetail/${record.id}`);
                     } else {
                       navigate(`/ManualAssessment/multiDetail/${record.id}`);
                     }

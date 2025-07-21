@@ -1,10 +1,10 @@
 /*
  * @creater: panan
- * @message: 多个评估详情页 - 对比评估页
- * @since: 2025-07-12 16:30:00
+ * @message: 单个评估详情页 - 列表页
+ * @since: 2025-07-21 10:03:00
  * @LastAuthor: 潘安 panan2001@outlook.com
- * @lastTime: 2025-07-21 09:24:24
- * @文件相对于项目的路径: /pan-umi/src/pages/ManualAssessment/pages/AssessmentMultiDetail.tsx
+ * @lastTime: 2025-07-21 10:03:00
+ * @文件相对于项目的路径: /pan-umi/src/pages/ManualAssessment/pages/AssessmentSingleDetail.tsx
  */
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -17,27 +17,19 @@ import ResultTable from '../components/ResultTable';
 
 const { Title } = Typography;
 
-const AssessmentMultiDetail: React.FC = () => {
+const AssessmentSingleDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<VersionComparisonData | null>(null);
   const [selectedDimension, setSelectedDimension] = useState<string | undefined>();
   const [selectedVersion, setSelectedVersion] = useState<string | undefined>();
-  
-  // 从 URL 参数获取任务类型
-  const searchParams = new URLSearchParams(window.location.search);
-  const taskType = (searchParams.get('taskType') || 'multi') as 'single' | 'multi';
 
-  // 搜索条件状态
+  // 搜索条件状态 - 单个评估只需要状态和评论搜索
   const [searchFilters, setSearchFilters] = useState<{
-    targetId?: number;
-    metricId?: number;
-    compareResult?: string;
+    status?: string;
     comment?: string;
-  }>({
-    compareResult: 'win', // 默认为胜利
-  });
+  }>({});
 
   const resultTableRef = useRef<any>(null);
 
@@ -76,50 +68,14 @@ const AssessmentMultiDetail: React.FC = () => {
     }
   };
 
-  // 获取维度选项（去重）
+  // 获取维度选项（去重）- 单个评估不需要但保持接口一致性
   const getDimensionOptions = () => {
-    const dimensionMap = new Map();
-    rawStatistics.forEach(stat => {
-      if (!dimensionMap.has(stat.metricName)) {
-        dimensionMap.set(stat.metricName, {
-          label: stat.metricName,
-          value: stat.metricId, // 使用 metricId 作为值
-        });
-      }
-    });
-    return Array.from(dimensionMap.values());
+    return [];
   };
 
-  // 获取目标版本选项（去重）
+  // 获取目标版本选项（去重）- 单个评估不需要但保持接口一致性
   const getTargetOptions = () => {
-    const targetMap = new Map();
-    rawStatistics.forEach(stat => {
-      if (!targetMap.has(stat.targetName)) {
-        targetMap.set(stat.targetName, {
-          label: stat.targetName,
-          value: stat.targetId,
-        });
-      }
-    });
-    return Array.from(targetMap.values());
-  };
-
-  // 根据维度名称和版本名称获取对应的ID
-  const getIdsByNames = (dimensionName?: string, versionName?: string) => {
-    let metricId: number | undefined;
-    let targetId: number | undefined;
-
-    if (dimensionName) {
-      const stat = rawStatistics.find(s => s.metricName === dimensionName);
-      metricId = stat?.metricId;
-    }
-
-    if (versionName) {
-      const stat = rawStatistics.find(s => s.targetName === versionName);
-      targetId = stat?.targetId;
-    }
-
-    return { metricId, targetId };
+    return [];
   };
 
   // 刷新数据
@@ -133,45 +89,22 @@ const AssessmentMultiDetail: React.FC = () => {
     navigate('/ManualAssessment');
   };
 
-  // 柱状图点击处理
+  // 柱状图点击处理 - 单个评估暂时不需要，但保持接口一致性
   const handleDimensionClick = (dimensionKey: string, version?: string) => {
-    setSelectedDimension(dimensionKey);
-    setSelectedVersion(version);
-
-    // 获取对应的ID并更新搜索条件
-    const { metricId, targetId } = getIdsByNames(dimensionKey, version);
-    const newFilters = {
-      ...searchFilters,
-      metricId,
-      targetId,
-      compareResult: searchFilters.compareResult || 'win', // 确保对比结果有值
-    };
-    setSearchFilters(newFilters);
-
-    if (version) {
-      message.info(`已选择维度: ${dimensionKey}, 版本: ${version}`);
-    } else {
-      message.info(`已选择维度: ${dimensionKey}`);
-    }
+    // 单个评估不需要维度点击功能，但保持接口一致
+    console.log('Single assessment dimension click:', dimensionKey, version);
   };
 
   // 搜索条件变化处理
   const handleSearchFiltersChange = (newFilters: typeof searchFilters) => {
     setSearchFilters(newFilters);
+  };
 
-    // 根据ID反向查找名称，更新显示状态
-    const dimensionName = rawStatistics.find(s => s.metricId === newFilters.metricId)?.metricName;
-    const versionName = rawStatistics.find(s => s.targetId === newFilters.targetId)?.targetName;
-
-    setSelectedDimension(dimensionName);
-    setSelectedVersion(versionName);
-  };  // 清除筛选条件的处理函数
+  // 清除筛选条件的处理函数
   const handleClearFilters = () => {
     setSelectedDimension(undefined);
     setSelectedVersion(undefined);
-    setSearchFilters({
-      compareResult: 'win', // 保持对比结果为胜利
-    });
+    setSearchFilters({});
 
     // 调用子组件的表单重置方法
     if (resultTableRef.current) {
@@ -248,7 +181,7 @@ const AssessmentMultiDetail: React.FC = () => {
         </Row>
       </Card>
 
-      {/* 选中状态显示 */}
+      {/* 选中状态显示 - 单个评估暂时不需要但保持结构一致 */}
       {(selectedDimension || selectedVersion) && (
         <Card
           size="small"
@@ -293,10 +226,10 @@ const AssessmentMultiDetail: React.FC = () => {
         onClearFilters={handleClearFilters}
         onRefresh={handleRefresh}
         hasFilterCard={!!(selectedDimension || selectedVersion)}
-        evaluationType={taskType} // 传递任务类型
+        evaluationType="single" // 设置为单个评估类型
       />
     </div>
   );
 };
 
-export default AssessmentMultiDetail;
+export default AssessmentSingleDetail;

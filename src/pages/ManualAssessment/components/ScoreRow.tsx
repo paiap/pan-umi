@@ -3,7 +3,7 @@
  * @message: 简化的评分行组件
  * @since: 2025-07-10 13:05:00
  * @LastAuthor: 潘安 panan2001@outlook.com
- * @lastTime: 2025-07-11 11:01:45
+ * @lastTime: 2025-07-21 14:29:36
  * @文件相对于项目的路径: /pan-umi/src/pages/ManualAssessment/components/ScoreRow.tsx
  */
 
@@ -45,21 +45,20 @@ const ScoreRow: React.FC<ScoreRowProps> = ({
   };
 
   return (
-    <Row gutter={[8, 8]} align="middle" style={{ marginBottom: '12px' }}>
-      <Col span={6}>
+    <Row gutter={[4, 8]} align="middle">
+      <Col span={4}>
         <Text strong style={{ fontSize: '14px' }}>{title}:</Text>
       </Col>
-      <Col span={18}>
-        <Row gutter={[8, 8]}>
+      <Col span={20}>
+        <Row gutter={[4, 8]}>
           {scores.map((score) => (
             <Col key={score}>
               <Button
                 type={value === score ? 'primary' : 'default'}
-                size="small"
                 disabled={disabled}
                 onClick={() => onChange(score)}
                 style={{
-                  width: 90, // 减小宽度以适应更多按钮
+                  width: 90, // 恢复宽度
                   height: 36,
                   borderColor: value === score ? getScoreColor(score) : undefined,
                   backgroundColor: value === score ? getScoreColor(score) : undefined,

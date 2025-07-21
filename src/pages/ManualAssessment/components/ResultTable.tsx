@@ -23,6 +23,7 @@ interface ResultTableProps {
     metricId?: number;
     compareResult?: string;
     comment?: string;
+    status?: string;
   };
   dimensionOptions?: Array<{ label: string; value: any }>;
   targetOptions?: Array<{ label: string; value: number }>;
@@ -30,6 +31,7 @@ interface ResultTableProps {
   onClearFilters?: () => void; // 新增清除筛选回调
   onRefresh?: () => void;
   hasFilterCard?: boolean; // 是否有筛选条件卡片
+  evaluationType?: 'single' | 'multi'; // 新增：评估类型
 }
 
 const ResultTable = forwardRef<any, ResultTableProps>(({
@@ -42,6 +44,7 @@ const ResultTable = forwardRef<any, ResultTableProps>(({
   onSearchFiltersChange,
   onClearFilters,
   hasFilterCard = false, // 默认值为false
+  evaluationType = 'multi', // 默认为多个评估
 }, ref) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -196,7 +199,7 @@ const ResultTable = forwardRef<any, ResultTableProps>(({
   // 处理详情点击
   const handleDetailClick = async (rowId: string) => {
     try {
-      // 计算当前数据在当前Tab中的序号
+      // 计算当前数据在当前tab中的序号
       // 需要基于当前页码和数据在页面中的位置计算全局序号
       const currentPageData = data;
       const indexInPage = currentPageData.findIndex(item => item.id === rowId);
@@ -208,8 +211,14 @@ const ResultTable = forwardRef<any, ResultTableProps>(({
         index: globalIndex.toString(), // 在当前tab中的序号
       });
 
-      // 跳转到详情页，携带tab状态和序号信息
-      navigate(`/ManualAssessment/multiDetail/${assessmentId}/content/${rowId}?${queryParams.toString()}`);
+      // 根据评估类型跳转到不同的详情页
+      if (evaluationType === 'single') {
+        // 单个评估跳转到单个评估详情页
+        navigate(`/ManualAssessment/singleCompareDetail/${assessmentId}/content/${rowId}?${queryParams.toString()}`);
+      } else {
+        // 多个评估跳转到多个评估详情页
+        navigate(`/ManualAssessment/multiDetail/${assessmentId}/content/${rowId}?${queryParams.toString()}`);
+      }
     } catch (error) {
       message.error('跳转详情页面失败');
     }
@@ -459,33 +468,53 @@ const ResultTable = forwardRef<any, ResultTableProps>(({
               }
             }}
           >
-            <Form.Item name="metricId" style={{ marginBottom: 0 }}>
-              <Select
-                placeholder="评估维度"
-                allowClear
-                style={{ width: 200 }}
-                options={dimensionOptions}
-              />
-            </Form.Item>
-            <Form.Item name="targetId" style={{ marginBottom: 0 }}>
-              <Select
-                placeholder="对象版本"
-                allowClear
-                style={{ width: 200 }}
-                options={targetOptions}
-              />
-            </Form.Item>
-            <Form.Item name="compareResult" style={{ marginBottom: 0 }}>
-              <Select
-                placeholder="对比结果"
-                style={{ width: 160 }}
-                options={[
-                  { label: '胜利', value: 'win' },
-                  { label: '失败', value: 'lose' },
-                  { label: '平局', value: 'draw' },
-                ]}
-              />
-            </Form.Item>
+            {/* 根据评估类型显示不同的搜索字段 */}
+            {evaluationType === 'multi' && (
+              <>
+                <Form.Item name="metricId" style={{ marginBottom: 0 }}>
+                  <Select
+                    placeholder="评估维度"
+                    allowClear
+                    style={{ width: 200 }}
+                    options={dimensionOptions}
+                  />
+                </Form.Item>
+                <Form.Item name="targetId" style={{ marginBottom: 0 }}>
+                  <Select
+                    placeholder="对象版本"
+                    allowClear
+                    style={{ width: 200 }}
+                    options={targetOptions}
+                  />
+                </Form.Item>
+                <Form.Item name="compareResult" style={{ marginBottom: 0 }}>
+                  <Select
+                    placeholder="对比结果"
+                    style={{ width: 160 }}
+                    options={[
+                      { label: '胜利', value: 'win' },
+                      { label: '失败', value: 'lose' },
+                      { label: '平局', value: 'draw' },
+                    ]}
+                  />
+                </Form.Item>
+              </>
+            )}
+            {evaluationType === 'single' && (
+              <>
+                <Form.Item name="status" style={{ marginBottom: 0 }}>
+                  <Select
+                    placeholder="评估状态"
+                    allowClear
+                    style={{ width: 160 }}
+                    options={[
+                      { label: '已完成', value: 'COMPLETED' },
+                      { label: '未完成', value: 'PENDING' },
+                    ]}
+                  />
+                </Form.Item>
+              </>
+            )}
             <Form.Item name="comment" style={{ marginBottom: 0 }}>
               <Input
                 placeholder="内容搜索"

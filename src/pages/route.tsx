@@ -36,6 +36,18 @@ export const routes = [
     menu: false
   },
   {
+    path: '/ManualAssessment/singleDetail/:id',
+    name: '单个评估详情',
+    component: './ManualAssessment/pages/AssessmentSingleDetail',
+    menu: false
+  },
+  {
+    path: '/ManualAssessment/singleCompareDetail/:assessmentId/content/:contentId',
+    component: './ManualAssessment/pages/AssessmentSingleCompareDetail',
+    name: '单个评估内容详情',
+    menu: false
+  },
+  {
     path: '/ManualAssessment/multiDetail/:assessmentId/content/:contentId',
     component: './ManualAssessment/pages/AssessmentMultiCompareDetail',
     name: '多对比内容详情',

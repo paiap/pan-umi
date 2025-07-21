@@ -107,9 +107,44 @@
 
 /* 评估维度项目间距优化 */
 .multi-compare-detail-dimension-item {
-  padding-bottom: 16px;
-  margin-bottom: 16px;
-  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.multi-compare-detail-dimension-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+/* 优化评估维度卡片的滚动条样式 */
+.multi-compare-detail-root .ant-card-body::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.multi-compare-detail-root .ant-card-body::-webkit-scrollbar-thumb {
+  background: #b0b0b0;
+  border-radius: 6px;
+}
+
+/* 设置合适的最大高度确保滚动条正常显示 */
+.multi-compare-detail-evaluation-container {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .multi-compare-detail-dimension-item {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+
+  .multi-compare-detail-evaluation-container {
+    max-height: 300px;
+  }
 }
 
 .multi-compare-detail-dimension-item:last-child {

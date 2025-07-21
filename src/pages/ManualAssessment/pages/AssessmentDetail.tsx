@@ -104,6 +104,27 @@ interface ContentData {
   hasPrevious: boolean;
 }
 
+// 评分类别配置
+const SCORE_CATEGORIES = [
+  {
+    key: 'usability',
+    title: '可用性',
+    id: 'score-row-usability'
+  },
+  {
+    key: 'truthfulness',
+    title: '真实性',
+    id: 'score-row-truthfulness'
+  },
+  {
+    key: 'consistency',
+    title: '一致性',
+    id: 'score-row-consistency'
+  }
+] as const;
+
+type ScoreKey = typeof SCORE_CATEGORIES[number]['key'];
+
 const AssessmentDetail: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -120,11 +141,7 @@ const AssessmentDetail: React.FC = () => {
 
   const [assessmentData, setAssessmentData] = useState<AssessmentData | null>(null);
   const [contentData, setContentData] = useState<ContentData | null>(null);
-  const [currentScores, setCurrentScores] = useState<{
-    truthfulness?: number;
-    usability?: number;
-    consistency?: number;
-  }>({});
+  const [currentScores, setCurrentScores] = useState<Record<ScoreKey, number | undefined>>({});
   const [evaluationComment, setEvaluationComment] = useState<{ text?: string; images?: string[] }>({});
 
   // 清除高亮效果的函数
@@ -323,10 +340,9 @@ const AssessmentDetail: React.FC = () => {
     if (!contentData) return;
 
     // 检查是否已完成评分（使用 undefined 而不是 -999）
-    const uncompletedScores = [];
-    if (currentScores.truthfulness === undefined) uncompletedScores.push('truthfulness');
-    if (currentScores.usability === undefined) uncompletedScores.push('usability');
-    if (currentScores.consistency === undefined) uncompletedScores.push('consistency');
+    const uncompletedScores = SCORE_CATEGORIES.filter(
+      category => currentScores[category.key] === undefined
+    ).map(category => category.key);
 
     if (uncompletedScores.length > 0) {
       // 先清除之前的高亮
@@ -365,7 +381,8 @@ const AssessmentDetail: React.FC = () => {
         setTimeout(() => {
           clearHighlight();
         }, 3000);
-      } message.warning('请完成所有维度的评分');
+      }
+      message.warning('请完成所有维度的评分');
       return;
     }
 
@@ -621,31 +638,12 @@ const AssessmentDetail: React.FC = () => {
               {/* 主要内容区域 */}
               {contentData && (
                 <div style={{ height: 'calc(100vh - 300px)', marginBottom: '8px', position: 'relative' }}>
-                  {/* 第一行：Prompt 和 预期结果 (37.5% = 3/8) */}
+                  {/* 第一行：问题描述 和 评估效果 (37.5% = 3/8) */}
                   <Row gutter={[8, 8]} style={{ marginBottom: '8px', height: '37.5%' }}>
                     <Col span={12} style={{ height: '100%' }}>
                       <ContentDisplay
                         title="问题描述"
                         content={contentData.query}
-                        height="100%"
-                        onFullscreen={handleFullscreen}
-                      />
-                    </Col>
-                    <Col span={12} style={{ height: '100%' }}>
-                      <ContentDisplay
-                        title="主要目标答案"
-                        content={contentData.primaryTargetAnswer}
-                        height="100%"
-                        onFullscreen={handleFullscreen}
-                      />
-                    </Col>
-                  </Row>
-                  {/* 第二行：模型回答 和 打分栏 (62.5% = 5/8) */}
-                  <Row gutter={[8, 8]} style={{ height: '62.5%', }}>
-                    <Col span={12} style={{ height: '100%' }}>
-                      <ContentDisplay
-                        title="对比目标答案"
-                        content={contentData.comparisonTargetAnswer}
                         height="100%"
                         onFullscreen={handleFullscreen}
                       />
@@ -661,72 +659,78 @@ const AssessmentDetail: React.FC = () => {
                           </div>
                         }
                         style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-                        bodyStyle={{ padding: '8px', display: 'flex', flexDirection: 'column', height: '100%' }}
+                        bodyStyle={{ padding: '12px', display: 'flex', flexDirection: 'column', height: '100%' }}
                       >
-                        {/* 评估效果区域 */}
-                        <div id="score-container" style={{ marginBottom: '8px', maxHeight: '200px', overflowY: 'auto' }}>
-                          <div id="score-row-usability" style={{ transition: 'all 0.3s ease', borderRadius: '6px', padding: '0 8px' }}>
-                            <ScoreRow
-                              title="可用性"
-                              value={currentScores.usability}
-                              onChange={(value) => {
-                                clearHighlight(); // 清除高亮
-                                setCurrentScores({
-                                  ...currentScores,
-                                  usability: value
-                                });
-                              }}
-                              disabled={contentData?.status === 'COMPARED'}
-                            />
-                          </div>
-                          <div id="score-row-truthfulness" style={{ transition: 'all 0.3s ease', borderRadius: '6px', padding: '0 8px' }}>
-                            <ScoreRow
-                              title="真实性"
-                              value={currentScores.truthfulness}
-                              onChange={(value) => {
-                                clearHighlight(); // 清除高亮
-                                setCurrentScores({
-                                  ...currentScores,
-                                  truthfulness: value
-                                });
-                              }}
-                              disabled={contentData?.status === 'COMPARED'}
-                            />
-                          </div>
-                          <div id="score-row-consistency" style={{ transition: 'all 0.3s ease', borderRadius: '6px', padding: '0 8px' }}>
-                            <ScoreRow
-                              title="一致性"
-                              value={currentScores.consistency}
-                              onChange={(value) => {
-                                clearHighlight(); // 清除高亮
-                                setCurrentScores({
-                                  ...currentScores,
-                                  consistency: value
-                                });
-                              }}
-                              disabled={contentData?.status === 'COMPARED'}
-                            />
-                          </div>
-                        </div>
-                        {/* 评估说明区域 */}
-                        <div style={{
-                          flex: 1,
-                          borderTop: '1px solid #f0f0f0',
-                          paddingTop: '12px',
-                          backgroundColor: '#fafafa',
-                          padding: '12px',
-                          borderRadius: '4px',
-                          display: 'flex',
-                          flexDirection: 'column'
-                        }}>
-                          <ComparisonComment
-                            value={evaluationComment}
-                            onChange={setEvaluationComment}
-                            placeholder="请输入评估说明（选填）"
-                            disabled={contentData?.status === 'COMPARED'}
-                          />
-                        </div>
+                        <Row style={{ height: '100%' }} gutter={16}>
+                {/* 左列：评分区域 */}
+                <Col span={12} style={{ height: '100%', padding: '0 16px 0 0', borderRight: '1px solid #f0f0f0' }}>
+                  <div id="score-container" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '12px 0' }}>
+                    {SCORE_CATEGORIES.map((category, index) => (
+                      <div
+                        key={category.key}
+                        id={category.id}
+                        style={{
+                          transition: 'all 0.3s ease',
+                          borderRadius: '6px',
+                          padding: '8px',
+                          marginBottom: index < SCORE_CATEGORIES.length - 1 ? '8px' : '0px'
+                        }}
+                      >
+                        <ScoreRow
+                          title={category.title}
+                          value={currentScores[category.key]}
+                          onChange={(value) => {
+                            clearHighlight();
+                            setCurrentScores({
+                              ...currentScores,
+                              [category.key]: value
+                            });
+                          }}
+                          disabled={contentData?.status === 'COMPARED'}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                          </Col>
+                          {/* 右列：评估说明区域 */}
+                          <Col span={12} style={{ height: '100%' }}>
+                            <div style={{
+                              height: '100%',
+                              backgroundColor: '#fafafa',
+                              padding: '0 0 0 16px',
+                              borderRadius: '8px',
+                              display: 'flex',
+                              flexDirection: 'column'
+                            }}>
+                              <ComparisonComment
+                                value={evaluationComment}
+                                onChange={setEvaluationComment}
+                                placeholder="请输入评估说明（选填）"
+                                disabled={contentData?.status === 'COMPARED'}
+                              />
+                            </div>
+                          </Col>
+                        </Row>
                       </Card>
+                    </Col>
+                  </Row>
+                  {/* 第二行：主要目标答案 和 对比目标答案 (62.5% = 5/8) */}
+                  <Row gutter={[8, 8]} style={{ height: '62.5%', }}>
+                    <Col span={12} style={{ height: '100%' }}>
+                      <ContentDisplay
+                        title="主要目标答案"
+                        content={contentData.primaryTargetAnswer}
+                        height="100%"
+                        onFullscreen={handleFullscreen}
+                      />
+                    </Col>
+                    <Col span={12} style={{ height: '100%' }}>
+                      <ContentDisplay
+                        title="对比目标答案"
+                        content={contentData.comparisonTargetAnswer}
+                        height="100%"
+                        onFullscreen={handleFullscreen}
+                      />
                     </Col>
                   </Row>
                 </div>

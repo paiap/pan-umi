@@ -3,7 +3,7 @@
  * @message: 多对比评估详情页
  * @since: 2025-07-14 00:00:00
  * @LastAuthor: 潘安 panan2001@outlook.com
- * @lastTime: 2025-07-14 16:49:18
+ * @lastTime: 2025-07-21 15:01:28
  * @文件相对于项目的路径: /pan-umi/src/pages/ManualAssessment/pages/AssessmentMultiCompareDetail.tsx
  */
 
@@ -467,7 +467,7 @@ const AssessmentMultiCompareDetail: React.FC = () => {
         <div style={{ flex: 1, overflow: 'hidden', marginBottom: 16 }}>
           <Row gutter={16} style={{ height: '100%' }}>
             {/* 左侧内容区 */}
-            <Col span={18}>
+            <Col span={24}>
               <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                 {/* Query和答案对比区域 - 固定高度 */}
                 <Card
@@ -480,11 +480,11 @@ const AssessmentMultiCompareDetail: React.FC = () => {
                 >
                   {/* Query区域 - 占2/7 */}
                   <div style={{
-                    flex: '0 0 28.57%',
+                    flex: '0 0 25%',
                     marginBottom: 8,
                     minHeight: 80,
                     overflow: 'hidden',
-                    height: '28.57%',
+                    height: '25%',
                   }}>
                     <div style={{ height: '100%' }}>
                       <ContentDisplay
@@ -499,10 +499,10 @@ const AssessmentMultiCompareDetail: React.FC = () => {
 
                   {/* Answer对比区域 - 占5/7 */}
                   <div style={{
-                    flex: '0 0 71.43%',
+                    flex: '0 0 75%',
                     minHeight: 140,
                     overflow: 'hidden',
-                    height: '71.43%',
+                    height: '75%',
                   }}>
                     <Row gutter={0} style={{ height: '100%', margin: '0' }}>
                       <Col span={12} style={{
@@ -534,135 +534,166 @@ const AssessmentMultiCompareDetail: React.FC = () => {
                     </Row>
                   </div>
                 </Card>
+              </div>
+            </Col>
 
-                <Card
-                  title={
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span>评估维度</span>
-                      {data.primaryTargetScore && data.primaryTargetScore.length > 0 && (
-                        <div style={{ fontSize: 12, color: '#666', fontWeight: 'normal' }}>
-                          评估类别：{data.primaryTargetScore.map(metric => metric.metricName).join('、')}
-                        </div>
-                      )}
-                    </div>
-                  }
-                  className="evaluation-dimension-card"
-                  styles={{
-                    body: {
-                      flex: 1,
-                      minHeight: 0,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      height: '300px', // 固定一个较小的高度来测试滚动
-                      margin: '0'
+            <Col span={24}>
+              <Row gutter={8} style={{ height: '100%' }}>
+                <Col span={12} style={{ height: '100%' }}>
+                  <Card
+                    title={
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span>评估维度</span>
+                        {data.primaryTargetScore && data.primaryTargetScore.length > 0 && (
+                          <div style={{ fontSize: 12, color: '#666', fontWeight: 'normal' }}>
+                            评估类别：{data.primaryTargetScore.map(metric => metric.metricName).join('、')}
+                          </div>
+                        )}
+                      </div>
                     }
-                  }}
-                >
-                  {/* 评估维度区域 - 自动撑满剩余空间 */}
-                  {data.primaryTargetScore && data.primaryTargetScore.length > 0 && (
-                    <div
-                      id="dimension-scroll-container"
-                      style={{
-                        height: '100%',
-                        overflowY: 'auto',
-                      }}
-                    >
-                      {data.primaryTargetScore.map((metric, index) => (
-                        <div
-                          key={metric.metricId}
-                          id={`dimension-${metric.metricId}`}
-                          className="multi-compare-detail-dimension-item"
-                          style={{
-                            marginBottom: 24,
-                            transition: 'all 0.3s ease',
-                            borderRadius: '6px',
-                            padding: '12px'
-                          }}
-                        >
-                          <Space style={{ marginBottom: 12 }} align="center">
-                            <Avatar
-                              size={20}
-                              style={{
-                                backgroundColor: '#1890ff',
-                                fontSize: 12,
-                                minWidth: 20,
-                                height: 20
-                              }}
-                            >
-                              {index + 1}
-                            </Avatar>
-                            <Typography.Text strong style={{ fontSize: 15 }}>
-                              {metric.metricName}
-                            </Typography.Text>
-                            <Typography.Text style={{ fontSize: 13, color: '#666' }}>
-                              {metric.metricDescription}
-                            </Typography.Text>
-                          </Space>
+                    className="evaluation-dimension-card"
+                    styles={{
+                      body: {
+                        // flex: 1,
+                        // minHeight: 0,
+                        // display: 'flex',
+                        // flexDirection: 'column',
+                        height: '500px', // 固定一个较小的高度来测试滚动
+                        margin: '0',
+                        overflow: 'auto'
+                      }
+                    }}
+                  >
+                    {/* 评估维度区域 - 自动撑满剩余空间 */}
+                    {data.primaryTargetScore && data.primaryTargetScore.length > 0 && (
+                      <div
+                        id="dimension-scroll-container"
+                        style={{
+                          height: '100%',
+                          overflowY: 'auto',
+                        }}
+                      >
+                        {data.primaryTargetScore.map((metric, index) => (
+                          <div
+                            key={metric.metricId}
+                            id={`dimension-${metric.metricId}`}
+                            className="multi-compare-detail-dimension-item"
+                            style={{
+                              marginBottom: 12,
+                              transition: 'all 0.3s ease',
+                              borderRadius: '6px',
+                              padding: '8px 12px',
+                              border: '1px solid #f0f0f0',
+                              backgroundColor: '#fafafa'
+                            }}
+                          >
+                            {/* 单行横向布局：左侧维度信息，右侧选项按钮 */}
+                            <Row align="middle" gutter={16}>
+                              {/* 左侧：维度标题和描述 */}
+                              <Col flex="1">
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                  <Avatar
+                                    size={24}
+                                    style={{
+                                      backgroundColor: '#1890ff',
+                                      fontSize: 12,
+                                      minWidth: 24,
+                                      height: 24,
+                                      flexShrink: 0
+                                    }}
+                                  >
+                                    {index + 1}
+                                  </Avatar>
+                                  <div style={{ flex: 1, minWidth: 0 }}>
+                                    <Typography.Text strong style={{ fontSize: 14, display: 'block' }}>
+                                      {metric.metricName}
+                                    </Typography.Text>
+                                    <Typography.Text
+                                      style={{
+                                        fontSize: 12,
+                                        color: '#666',
+                                        display: 'block',
+                                        lineHeight: '16px',
+                                        marginTop: 2
+                                      }}
+                                    >
+                                      {metric.metricDescription}
+                                    </Typography.Text>
+                                  </div>
+                                </div>
+                              </Col>
 
-                          {/* 评估选项 - 使用 Radio.Button 形式 */}
-                          <div style={{ marginTop: 12 }}>
-                            <Radio.Group
-                              value={dimensionSelections[metric.metricId]}
-                              onChange={(e) => {
-                                const isCompleted = data.status === 'COMPARED';
-                                if (!isCompleted) {
-                                  handleSelectOption(metric.metricId, e.target.value);
-                                }
-                              }}
-                              disabled={data.status === 'COMPARED'}
-                              style={{ width: '100%' }}
-                            >
-                              <Row gutter={[12, 12]}>
-                                {[
-                                  { key: '-2', title: '← A更好', value: '-2' },
-                                  { key: '0', title: '平局', value: '0' },
-                                  { key: '2', title: 'B更好 →', value: '2' }
-                                ].map((option) => {
-                                  const colSpan = 8; // 3个选项，每个占8/24
-
-                                  return (
-                                    <Col span={colSpan} key={option.key}>
+                              {/* 右侧：评估选项按钮 */}
+                              <Col flex="0 0 240px">
+                                <Radio.Group
+                                  value={dimensionSelections[metric.metricId]}
+                                  onChange={(e) => {
+                                    const isCompleted = data.status === 'COMPARED';
+                                    if (!isCompleted) {
+                                      handleSelectOption(metric.metricId, e.target.value);
+                                    }
+                                  }}
+                                  disabled={data.status === 'COMPARED'}
+                                  style={{ width: '100%' }}
+                                >
+                                  <div style={{ display: 'flex', gap: 8 }}>
+                                    {[
+                                      { key: '-2', title: '← A更好', value: '-2' },
+                                      { key: '0', title: '平局', value: '0' },
+                                      { key: '2', title: 'B更好 →', value: '2' }
+                                    ].map((option) => (
                                       <Radio.Button
+                                        key={option.key}
                                         value={option.value}
                                         style={{
-                                          width: '100%',
-                                          height: 36,
+                                          flex: 1,
+                                          width: 120,
+                                          height: 32,
                                           textAlign: 'center',
                                           display: 'flex',
                                           alignItems: 'center',
-                                          justifyContent: 'center'
+                                          justifyContent: 'center',
+                                          fontSize: 12
                                         }}
                                       >
                                         {option.title}
                                       </Radio.Button>
-                                    </Col>
-                                  );
-                                })}
-                              </Row>
-                            </Radio.Group>
+                                    ))}
+                                  </div>
+                                </Radio.Group>
+                              </Col>
+                            </Row>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </Card>
-              </div>
-            </Col>
-
-            {/* 右侧说明区 */}
-            <Col span={6}>
-              <Card
-                bodyStyle={{ padding: 16, height: '100%', display: 'flex', flexDirection: 'column' }}
-                style={{ height: '100%' }}
-                title="对比说明"
-              >
-                <ComparisonComment
-                  value={comment}
-                  onChange={handleCommentChange}
-                  placeholder="请选择你认为更好的答案并添加评价说明..."
-                  disabled={data.status === 'COMPARED'}
-                />
-              </Card>
+                        ))}
+                      </div>
+                    )}
+                  </Card>
+                </Col>
+                <Col span={12} style={{ height: '100%' }}>
+                  <Card
+                    style={{ height: '100%' }}
+                    title="对比说明"
+                    styles={{
+                      body: {
+                        padding: '8px 16px',
+                        height: '100%',
+                        // display: 'flex',
+                        // flexDirection: 'column',
+                        // backgroundColor: '#fafafa',
+                        borderRadius: '8px',
+                        overflow: 'auto',
+                      }
+                    }}
+                  >
+                    <ComparisonComment
+                      value={comment}
+                      onChange={handleCommentChange}
+                      placeholder="请选择你认为更好的答案并添加评价说明..."
+                      disabled={data.status === 'COMPARED'}
+                    />
+                  </Card>
+                </Col>
+              </Row>
             </Col>
           </Row>
         </div>
