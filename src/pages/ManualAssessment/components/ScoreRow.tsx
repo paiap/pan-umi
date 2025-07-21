@@ -1,14 +1,14 @@
 /*
- * @creater: panan
- * @message: 简化的评分行组件
- * @since: 2025-07-10 13:05:00
- * @LastAuthor: 潘安 panan2001@outlook.com
- * @lastTime: 2025-07-21 14:29:36
- * @文件相对于项目的路径: /pan-umi/src/pages/ManualAssessment/components/ScoreRow.tsx
+ * @Author: 潘安 panan2001@outlook.com
+ * @Date: 2025-07-10 21:05:29
+ * @LastEditors: 潘安 panan2001@outlook.com
+ * @LastEditTime: 2025-07-21 20:06:01
+ * @FilePath: /pan-umi/src/pages/ManualAssessment/components/ScoreRow.tsx
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 
+import { Button, Col, Row, Typography } from 'antd';
 import React from 'react';
-import { Row, Col, Button, Typography } from 'antd';
 
 const { Text } = Typography;
 
@@ -45,12 +45,14 @@ const ScoreRow: React.FC<ScoreRowProps> = ({
   };
 
   return (
-    <Row gutter={[4, 8]} align="middle">
+    <Row gutter={[8, 8]} align="middle">
       <Col span={4}>
-        <Text strong style={{ fontSize: '14px' }}>{title}:</Text>
+        <Text strong style={{ fontSize: '14px' }}>
+          {title}:
+        </Text>
       </Col>
       <Col span={20}>
-        <Row gutter={[4, 8]}>
+        <Row gutter={10}>
           {scores.map((score) => (
             <Col key={score}>
               <Button
@@ -58,10 +60,12 @@ const ScoreRow: React.FC<ScoreRowProps> = ({
                 disabled={disabled}
                 onClick={() => onChange(score)}
                 style={{
-                  width: 90, // 恢复宽度
+                  width: 100, // 恢复宽度
                   height: 36,
-                  borderColor: value === score ? getScoreColor(score) : undefined,
-                  backgroundColor: value === score ? getScoreColor(score) : undefined,
+                  borderColor:
+                    value === score ? getScoreColor(score) : undefined,
+                  backgroundColor:
+                    value === score ? getScoreColor(score) : undefined,
                   fontSize: '12px',
                   fontWeight: 'bold',
                 }}

@@ -8,10 +8,10 @@
  */
 
 import {
-  RollbackOutlined,
   LeftOutlined,
   ReloadOutlined,
   RightOutlined,
+  RollbackOutlined,
 } from '@ant-design/icons';
 import { Button, Card, Col, Row, Space, Spin, Typography, message } from 'antd';
 import React, { useEffect, useState } from 'react';
@@ -65,21 +65,21 @@ const SCORE_CATEGORIES = [
   {
     key: 'usability',
     title: '可用性',
-    id: 'score-row-usability'
+    id: 'score-row-usability',
   },
   {
     key: 'truthfulness',
     title: '真实性',
-    id: 'score-row-truthfulness'
+    id: 'score-row-truthfulness',
   },
   {
     key: 'consistency',
     title: '一致性',
-    id: 'score-row-consistency'
-  }
+    id: 'score-row-consistency',
+  },
 ] as const;
 
-type ScoreKey = typeof SCORE_CATEGORIES[number]['key'];
+type ScoreKey = (typeof SCORE_CATEGORIES)[number]['key'];
 
 const AssessmentSingleCompareDetail: React.FC = () => {
   const params = useParams<{
@@ -104,10 +104,12 @@ const AssessmentSingleCompareDetail: React.FC = () => {
   const [contentData, setContentData] = useState<ContentData | null>(null);
 
   // 评分状态
-  const [currentScores, setCurrentScores] = useState<Record<ScoreKey, number | undefined>>({
+  const [currentScores, setCurrentScores] = useState<
+    Record<ScoreKey, number | undefined>
+  >({
     usability: undefined,
     truthfulness: undefined,
-    consistency: undefined
+    consistency: undefined,
   });
 
   // 评论状态
@@ -193,13 +195,12 @@ const AssessmentSingleCompareDetail: React.FC = () => {
               images: contentItem.comment.images || [],
             });
           }
-
         } else {
           // 未完成状态，清空数据
           setCurrentScores({
             usability: undefined,
             truthfulness: undefined,
-            consistency: undefined
+            consistency: undefined,
           });
           setEvaluationComment({});
         }
@@ -288,8 +289,8 @@ const AssessmentSingleCompareDetail: React.FC = () => {
 
     // 检查是否已完成评分
     const uncompletedScores = SCORE_CATEGORIES.filter(
-      category => currentScores[category.key] === undefined
-    ).map(category => category.key);
+      (category) => currentScores[category.key] === undefined,
+    ).map((category) => category.key);
 
     if (uncompletedScores.length > 0) {
       // 先清除之前的高亮
@@ -396,7 +397,6 @@ const AssessmentSingleCompareDetail: React.FC = () => {
           });
         }
       }
-
       // 构建评论数据
       let commentData: { text?: string; images?: string[] } | undefined;
       if (
@@ -425,10 +425,10 @@ const AssessmentSingleCompareDetail: React.FC = () => {
         setContentData((prev) =>
           prev
             ? {
-              ...prev,
-              evaluationStatus: 'COMPLETED',
-              status: 'COMPARED',
-            }
+                ...prev,
+                evaluationStatus: 'COMPLETED',
+                status: 'COMPARED',
+              }
             : prev,
         );
 
@@ -498,20 +498,29 @@ const AssessmentSingleCompareDetail: React.FC = () => {
 
   return (
     <>
-      <div style={{
-        height: 'calc(100vh - 64px)',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: 16,
-        backgroundColor: '#f5f5f5',
-        overflow: 'hidden'
-      }}>
+      <div
+        style={{
+          height: 'calc(100vh - 64px)',
+          display: 'flex',
+          flexDirection: 'column',
+          padding: 16,
+          backgroundColor: '#f5f5f5',
+          overflow: 'hidden',
+        }}
+      >
         {/* 顶部栏 */}
-        <Card style={{ marginBottom: 16, flexShrink: 0 }} bodyStyle={{ padding: '12px 16px' }}>
+        <Card
+          style={{ marginBottom: 16, flexShrink: 0 }}
+          bodyStyle={{ padding: '12px 16px' }}
+        >
           <Row align="middle">
             <Col>
               <Space>
-                <Button type="text" icon={<RollbackOutlined />} onClick={handleBack} />
+                <Button
+                  type="text"
+                  icon={<RollbackOutlined />}
+                  onClick={handleBack}
+                />
                 <span style={{ fontWeight: 600, fontSize: 18 }}>
                   单个评估任务详情
                 </span>
@@ -537,24 +546,37 @@ const AssessmentSingleCompareDetail: React.FC = () => {
               <Row gutter={16} style={{ height: '100%' }}>
                 {/* 内容区域 */}
                 <Col span={24}>
-                  <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                  <div
+                    style={{
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                    }}
+                  >
                     {/* Query和答案对比区域 - 固定高度 */}
                     <Card
-                      bodyStyle={{ padding: 12, height: '100%', display: 'flex', flexDirection: 'column' }}
+                      bodyStyle={{
+                        padding: 12,
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                      }}
                       style={{
                         height: 600,
                         overflow: 'hidden',
-                        marginBottom: 12
+                        marginBottom: 12,
                       }}
                     >
                       {/* Query区域 - 占25%高度 */}
-                      <div style={{
-                        flex: '0 0 25%',
-                        marginBottom: 8,
-                        minHeight: 80,
-                        overflow: 'hidden',
-                        height: '25%',
-                      }}>
+                      <div
+                        style={{
+                          flex: '0 0 25%',
+                          marginBottom: 8,
+                          minHeight: 80,
+                          overflow: 'hidden',
+                          height: '25%',
+                        }}
+                      >
                         <div style={{ height: '100%' }}>
                           <ContentDisplay
                             title="问题描述"
@@ -567,17 +589,24 @@ const AssessmentSingleCompareDetail: React.FC = () => {
                       </div>
 
                       {/* Answer对比区域 - 占75%高度 */}
-                      <div style={{
-                        flex: '0 0 75%',
-                        minHeight: 140,
-                        overflow: 'hidden',
-                        height: '75%',
-                      }}>
+                      <div
+                        style={{
+                          flex: '0 0 75%',
+                          minHeight: 140,
+                          overflow: 'hidden',
+                          height: '75%',
+                        }}
+                      >
                         <Row gutter={0} style={{ height: '100%', margin: '0' }}>
-                          <Col span={12} style={{
-                            height: '100%',
-                          }}>
-                            <div style={{ height: '100%', margin: '0 5px 0 0' }}>
+                          <Col
+                            span={12}
+                            style={{
+                              height: '100%',
+                            }}
+                          >
+                            <div
+                              style={{ height: '100%', margin: '0 5px 0 0' }}
+                            >
                               <ContentDisplay
                                 title="主要目标答案"
                                 content={contentData.primaryTargetAnswer}
@@ -587,10 +616,15 @@ const AssessmentSingleCompareDetail: React.FC = () => {
                               />
                             </div>
                           </Col>
-                          <Col span={12} style={{
-                            height: '100%',
-                          }}>
-                            <div style={{ height: '100%', margin: '0 0 0 5px' }}>
+                          <Col
+                            span={12}
+                            style={{
+                              height: '100%',
+                            }}
+                          >
+                            <div
+                              style={{ height: '100%', margin: '0 0 0 5px' }}
+                            >
                               <ContentDisplay
                                 title="对比目标答案"
                                 content={contentData.comparisonTargetAnswer}
@@ -612,9 +646,21 @@ const AssessmentSingleCompareDetail: React.FC = () => {
                     <Col span={12} style={{ height: '100%' }}>
                       <Card
                         title={
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                            }}
+                          >
                             <span>评估效果</span>
-                            <div style={{ fontSize: 12, color: '#666', fontWeight: 'normal' }}>
+                            <div
+                              style={{
+                                fontSize: 12,
+                                color: '#666',
+                                fontWeight: 'normal',
+                              }}
+                            >
                               评估项目：可用性、真实性、一致性
                             </div>
                           </div>
@@ -624,8 +670,8 @@ const AssessmentSingleCompareDetail: React.FC = () => {
                           body: {
                             height: '500px',
                             margin: '0',
-                            overflow: 'auto'
-                          }
+                            overflow: 'auto',
+                          },
                         }}
                       >
                         {/* 评估效果区域 */}
@@ -646,14 +692,18 @@ const AssessmentSingleCompareDetail: React.FC = () => {
                                 borderRadius: '6px',
                                 padding: '8px 12px',
                                 border: '1px solid #f0f0f0',
-                                backgroundColor: '#fafafa'
+                                backgroundColor: '#fafafa',
                               }}
                             >
                               <ScoreRow
                                 title={category.title}
                                 value={currentScores[category.key]}
-                                onChange={(value) => handleScoreChange(category.key, value)}
-                                disabled={contentData?.evaluationStatus === 'COMPLETED'}
+                                onChange={(value) =>
+                                  handleScoreChange(category.key, value)
+                                }
+                                disabled={
+                                  contentData?.evaluationStatus === 'COMPLETED'
+                                }
                               />
                             </div>
                           ))}
@@ -670,14 +720,16 @@ const AssessmentSingleCompareDetail: React.FC = () => {
                             height: '500px',
                             borderRadius: '8px',
                             overflow: 'auto',
-                          }
+                          },
                         }}
                       >
                         <ComparisonComment
                           value={evaluationComment}
                           onChange={setEvaluationComment}
                           placeholder="请输入评估说明（选填）"
-                          disabled={contentData?.evaluationStatus === 'COMPLETED'}
+                          disabled={
+                            contentData?.evaluationStatus === 'COMPLETED'
+                          }
                         />
                       </Card>
                     </Col>
@@ -703,10 +755,7 @@ const AssessmentSingleCompareDetail: React.FC = () => {
                 <Text type="secondary">
                   {currentIndex} / {totalCount}
                 </Text>
-                <Button
-                  onClick={handleNext}
-                  disabled={!canNavigateNext}
-                >
+                <Button onClick={handleNext} disabled={!canNavigateNext}>
                   下一条
                   <RightOutlined />
                 </Button>
