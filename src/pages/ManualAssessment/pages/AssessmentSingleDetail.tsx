@@ -3,14 +3,14 @@
  * @message: 单个评估详情页 - 列表页
  * @since: 2025-07-21 10:03:00
  * @LastAuthor: 潘安 panan2001@outlook.com
- * @lastTime: 2025-07-21 10:03:00
+ * @lastTime: 2025-07-21 17:05:27
  * @文件相对于项目的路径: /pan-umi/src/pages/ManualAssessment/pages/AssessmentSingleDetail.tsx
  */
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, message, Spin, Row, Col, Typography, Card, Space } from 'antd';
-import { ArrowLeftOutlined, ReloadOutlined } from '@ant-design/icons';
+import { RollbackOutlined, ReloadOutlined } from '@ant-design/icons';
 import { VersionComparisonData, getAssessmentMultiDetail, getAssessmentInfo } from '../api';
 import ComparisonChart from '../components/ComparisonChart';
 import ResultTable from '../components/ResultTable';
@@ -158,11 +158,9 @@ const AssessmentSingleDetail: React.FC = () => {
             <Space>
               <Button
                 type="text"
-                icon={<ArrowLeftOutlined />}
+                icon={<RollbackOutlined />}
                 onClick={handleBack}
-              >
-                返回
-              </Button>
+              ></Button>
               <Title level={4} style={{ margin: 0 }}>
                 {data.name}
               </Title>

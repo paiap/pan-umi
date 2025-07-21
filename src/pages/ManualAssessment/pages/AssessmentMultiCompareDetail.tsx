@@ -9,7 +9,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button, Card, Row, Col, Space, Spin, message, Typography, Avatar, Radio } from 'antd';
-import { ArrowLeftOutlined, ReloadOutlined } from '@ant-design/icons';
+import { RollbackOutlined, ArrowLeftOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useNavigate, useParams } from 'umi';
 import ContentDisplay from '../components/ContentDisplay';
 import ComparisonComment from '../components/ComparisonComment';
@@ -441,9 +441,7 @@ const AssessmentMultiCompareDetail: React.FC = () => {
           <Row align="middle">
             <Col>
               <Space>
-                <Button type="text" icon={<ArrowLeftOutlined />} onClick={handleBack}>
-                  返回
-                </Button>
+                <Button type="text" icon={<RollbackOutlined />} onClick={handleBack} />
                 <span style={{ fontWeight: 600, fontSize: 18 }}>
                   模型多对比任务详情
                 </span>

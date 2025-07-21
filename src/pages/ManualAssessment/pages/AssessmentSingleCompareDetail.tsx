@@ -1,15 +1,14 @@
 /*
  * @creater: panan
- * @message: 单个评估详情页 - 使用统一交互逻辑但保持单个评估UI布局
+ * @message: 单个评估详情页 - 使用多对比评估详情页的布局结构
  * @since: 2025-07-21 01:29:00
  * @LastAuthor: 潘安 panan2001@outlook.com
- * @lastTime: 2025-07-21 15:23:22
+ * @lastTime: 2025-07-21 17:03:21
  * @文件相对于项目的路径: /pan-umi/src/pages/ManualAssessment/pages/AssessmentSingleCompareDetail.tsx
  */
 
 import {
-  ArrowLeftOutlined,
-  CheckOutlined,
+  RollbackOutlined,
   LeftOutlined,
   ReloadOutlined,
   RightOutlined,
@@ -19,7 +18,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'umi';
 import {
   getContentList,
-  getStatistics,
   submitTaskLineScoring,
   type UnifiedSubmitData,
 } from '../api';
@@ -28,7 +26,7 @@ import ContentDisplay from '../components/ContentDisplay';
 import FullscreenDisplay from '../components/FullscreenDisplay';
 import ScoreRow from '../components/ScoreRow';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 interface ContentData {
   id: string;
@@ -60,24 +58,6 @@ interface ContentData {
   }>;
   hasNext: boolean;
   hasPrevious: boolean;
-}
-
-interface AssessmentData {
-  taskId: number;
-  name: string;
-  description: string;
-  totalLineCount: number;
-  completedLineCount: number;
-  totalCount: number;
-  evaluatedCount: number;
-  unevaluatedCount: number;
-  averageScores: {
-    truthfulness: number | string;
-    usability: number | string;
-    consistency: number | string;
-  };
-  progress: number;
-  firstContentId?: string;
 }
 
 // 评分类别配置
@@ -122,9 +102,6 @@ const AssessmentSingleCompareDetail: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [contentData, setContentData] = useState<ContentData | null>(null);
-  const [assessmentData, setAssessmentData] = useState<AssessmentData | null>(
-    null,
-  );
 
   // 评分状态
   const [currentScores, setCurrentScores] = useState<Record<ScoreKey, number | undefined>>({
@@ -271,26 +248,6 @@ const AssessmentSingleCompareDetail: React.FC = () => {
     }
   }, [assessmentId, contentId]);
 
-  // 更新统计信息
-  const updateStatistics = async () => {
-    if (!assessmentId) return;
-    try {
-      const statsResponse = (await getStatistics(assessmentId)) as any;
-      if (statsResponse.code === 0) {
-        setAssessmentData((prev) =>
-          prev
-            ? {
-              ...prev,
-              ...statsResponse.data,
-            }
-            : null,
-        );
-      }
-    } catch (error) {
-      console.error('更新统计信息失败:', error);
-    }
-  };
-
   // 返回单个评估列表页
   const handleBack = () => {
     navigate(`/ManualAssessment/singleDetail/${assessmentId}`);
@@ -300,11 +257,6 @@ const AssessmentSingleCompareDetail: React.FC = () => {
   const handleRefresh = () => {
     loadContentDetail();
     message.success('刷新成功');
-  };
-
-  // 评论变化
-  const handleCommentChange = (value: { text?: string; images?: string[] }) => {
-    setEvaluationComment(value);
   };
 
   // 评分变化
@@ -480,9 +432,6 @@ const AssessmentSingleCompareDetail: React.FC = () => {
             : prev,
         );
 
-        // 更新统计信息
-        await updateStatistics();
-
         // 延迟一下确保状态更新完成
         setTimeout(async () => {
           if (canNavigateNext) {
@@ -548,126 +497,156 @@ const AssessmentSingleCompareDetail: React.FC = () => {
   }
 
   return (
-    <div style={{ backgroundColor: '#f5f5f5' }}>
-      {/* 顶部区域 */}
-      <Card
-        style={{ marginBottom: '8px' }}
-        bodyStyle={{ padding: '12px 16px' }}
-      >
-        <Row align="middle">
-          <Col>
-            <Space size="middle">
-              <Button
-                type="text"
-                icon={<ArrowLeftOutlined />}
-                onClick={handleBack}
-              >
-                返回
-              </Button>
-              <Title level={4} style={{ margin: 0 }}>
-                单个评估任务详情
-              </Title>
-            </Space>
-          </Col>
-        </Row>
-      </Card>
-
-      {/* 中间导航和统计区域 */}
-      <Card style={{ marginBottom: '8px' }} bodyStyle={{ padding: '0px 16px' }}>
-        <Row align="middle" justify="space-between">
-          <Col>
-            <div style={{ padding: '16px 0' }}>
-              <Space size="large">
+    <>
+      <div style={{
+        height: 'calc(100vh - 64px)',
+        display: 'flex',
+        flexDirection: 'column',
+        padding: 16,
+        backgroundColor: '#f5f5f5',
+        overflow: 'hidden'
+      }}>
+        {/* 顶部栏 */}
+        <Card style={{ marginBottom: 16, flexShrink: 0 }} bodyStyle={{ padding: '12px 16px' }}>
+          <Row align="middle">
+            <Col>
+              <Space>
+                <Button type="text" icon={<RollbackOutlined />} onClick={handleBack} />
+                <span style={{ fontWeight: 600, fontSize: 18 }}>
+                  单个评估任务详情
+                </span>
+              </Space>
+            </Col>
+            <Col flex="auto" />
+            <Col>
+              <Space>
                 <Text type="secondary">
-                  当前进度：{currentIndex} / {totalCount}
+                  {currentIndex} / {totalCount}
                 </Text>
                 <Button icon={<ReloadOutlined />} onClick={handleRefresh}>
                   刷新
                 </Button>
               </Space>
-            </div>
-          </Col>
-        </Row>
-        {/* 主要内容区域 */}
-        <Spin spinning={loading}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div style={{ flex: 1, marginBottom: 16 }}>
-              {/* 主要内容区域 */}
-              {contentData && (
-                <div
-                  style={{
-                    height: 'calc(100vh - 300px)',
-                    marginBottom: '8px',
-                    position: 'relative',
-                  }}
-                >
-                  {/* 第一行：问题描述 和 评估效果 */}
-                  <Row
-                    gutter={[8, 8]}
-                    style={{ marginBottom: '8px', height: '45%' }}
-                  >
-                    <Col span={12} style={{ height: '100%' }}>
-                      <ContentDisplay
-                        title="问题描述"
-                        content={contentData.query}
-                        height="100%"
-                        onFullscreen={handleFullscreen}
-                      />
-                    </Col>
+            </Col>
+          </Row>
+        </Card>
+        {/* 主体区域 */}
+        <div style={{ flex: 1, overflow: 'hidden', marginBottom: 16 }}>
+          <Spin spinning={loading}>
+            {contentData && (
+              <Row gutter={16} style={{ height: '100%' }}>
+                {/* 内容区域 */}
+                <Col span={24}>
+                  <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                    {/* Query和答案对比区域 - 固定高度 */}
+                    <Card
+                      bodyStyle={{ padding: 12, height: '100%', display: 'flex', flexDirection: 'column' }}
+                      style={{
+                        height: 600,
+                        overflow: 'hidden',
+                        marginBottom: 12
+                      }}
+                    >
+                      {/* Query区域 - 占25%高度 */}
+                      <div style={{
+                        flex: '0 0 25%',
+                        marginBottom: 8,
+                        minHeight: 80,
+                        overflow: 'hidden',
+                        height: '25%',
+                      }}>
+                        <div style={{ height: '100%' }}>
+                          <ContentDisplay
+                            title="问题描述"
+                            content={contentData.query}
+                            height="100%"
+                            style={{ height: '100%' }}
+                            onFullscreen={handleFullscreen}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Answer对比区域 - 占75%高度 */}
+                      <div style={{
+                        flex: '0 0 75%',
+                        minHeight: 140,
+                        overflow: 'hidden',
+                        height: '75%',
+                      }}>
+                        <Row gutter={0} style={{ height: '100%', margin: '0' }}>
+                          <Col span={12} style={{
+                            height: '100%',
+                          }}>
+                            <div style={{ height: '100%', margin: '0 5px 0 0' }}>
+                              <ContentDisplay
+                                title="主要目标答案"
+                                content={contentData.primaryTargetAnswer}
+                                height="100%"
+                                style={{ height: '100%' }}
+                                onFullscreen={handleFullscreen}
+                              />
+                            </div>
+                          </Col>
+                          <Col span={12} style={{
+                            height: '100%',
+                          }}>
+                            <div style={{ height: '100%', margin: '0 0 0 5px' }}>
+                              <ContentDisplay
+                                title="对比目标答案"
+                                content={contentData.comparisonTargetAnswer}
+                                height="100%"
+                                style={{ height: '100%' }}
+                                onFullscreen={handleFullscreen}
+                              />
+                            </div>
+                          </Col>
+                        </Row>
+                      </div>
+                    </Card>
+                  </div>
+                </Col>
+
+                {/* 评估维度和评估说明并排 */}
+                <Col span={24}>
+                  <Row gutter={8} style={{ height: '100%' }}>
                     <Col span={12} style={{ height: '100%' }}>
                       <Card
                         title={
-                          <div
-                            style={{
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              alignItems: 'center',
-                            }}
-                          >
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <span>评估效果</span>
-                            <div
-                              style={{
-                                fontSize: 12,
-                                color: '#666',
-                                fontWeight: 'normal',
-                              }}
-                            >
+                            <div style={{ fontSize: 12, color: '#666', fontWeight: 'normal' }}>
                               评估项目：可用性、真实性、一致性
                             </div>
                           </div>
                         }
-                        style={{
-                          height: '100%',
-                          display: 'flex',
-                          flexDirection: 'column',
-                        }}
+                        style={{ height: '100%' }}
                         styles={{
                           body: {
-                            height: '100%',
-                            overflow: 'auto',
+                            height: '500px',
+                            margin: '0',
+                            overflow: 'auto'
                           }
                         }}
-                      // bodyStyle={{ padding: '12px', display: 'flex', flexDirection: 'column', height: '100%' }}
                       >
                         {/* 评估效果区域 */}
                         <div
                           id="score-container"
                           style={{
-                            // marginBottom: '16px',
-                            flex: '0 0 auto',
-                            paddingRight: '16px',
-                            borderRight: '1px solid #f0f0f0',
+                            height: '100%',
+                            overflowY: 'auto',
                           }}
                         >
-                          {SCORE_CATEGORIES.map((category, index) => (
+                          {SCORE_CATEGORIES.map((category) => (
                             <div
                               key={category.key}
                               id={category.id}
                               style={{
+                                marginBottom: 12,
                                 transition: 'all 0.3s ease',
                                 borderRadius: '6px',
-                                padding: '8px',
-                                marginBottom: index < SCORE_CATEGORIES.length - 1 ? '8px' : '0px',
+                                padding: '8px 12px',
+                                border: '1px solid #f0f0f0',
+                                backgroundColor: '#fafafa'
                               }}
                             >
                               <ScoreRow
@@ -679,109 +658,75 @@ const AssessmentSingleCompareDetail: React.FC = () => {
                             </div>
                           ))}
                         </div>
-
-                        {/* 评估说明区域 - 占据剩余空间 */}
-                        <div
-                          style={{
-                            flex: 1,
-                            borderTop: '1px solid #f0f0f0',
-                            paddingTop: '16px',
-                            backgroundColor: '#fafafa',
-                            padding: '16px',
-                            borderRadius: '6px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            minHeight: '200px',
-                          }}
-                        >
-                          <ComparisonComment
-                            value={evaluationComment}
-                            onChange={setEvaluationComment}
-                            placeholder="请输入评估说明（选填）"
-                            disabled={
-                              contentData?.evaluationStatus === 'COMPLETED'
-                            }
-                          />
-                        </div>
+                      </Card>
+                    </Col>
+                    <Col span={12} style={{ height: '100%' }}>
+                      <Card
+                        style={{ height: '100%' }}
+                        title="评估说明"
+                        styles={{
+                          body: {
+                            padding: '8px 16px',
+                            height: '500px',
+                            borderRadius: '8px',
+                            overflow: 'auto',
+                          }
+                        }}
+                      >
+                        <ComparisonComment
+                          value={evaluationComment}
+                          onChange={setEvaluationComment}
+                          placeholder="请输入评估说明（选填）"
+                          disabled={contentData?.evaluationStatus === 'COMPLETED'}
+                        />
                       </Card>
                     </Col>
                   </Row>
-                  {/* 第二行：主要目标答案 和 对比目标答案  */}
-                  <Row gutter={[8, 8]} style={{ height: '55%' }}>
-                    <Col span={12} style={{ height: '100%' }}>
-                      <ContentDisplay
-                        title="主要目标答案"
-                        content={contentData.primaryTargetAnswer}
-                        height="100%"
-                        onFullscreen={handleFullscreen}
-                      />
-                    </Col>
-                    <Col span={12} style={{ height: '100%' }}>
-                      <ContentDisplay
-                        title="对比目标答案"
-                        content={contentData.comparisonTargetAnswer}
-                        height="100%"
-                        onFullscreen={handleFullscreen}
-                      />
-                    </Col>
-                  </Row>
-                </div>
-              )}
-            </div>
-            {/* 底部操作栏 */}
-            <Card bodyStyle={{ padding: '8px 8px' }}>
-              <Row justify="center">
-                <Col>
-                  <Space size="large">
-                    <Button
-                      icon={<LeftOutlined />}
-                      onClick={handlePrev}
-                      disabled={!canNavigatePrev}
-                      size="large"
-                    >
-                      上一条
-                    </Button>
-                    {/* 页面指示器 */}
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        minWidth: '80px',
-                        padding: '0 16px',
-                        fontSize: '14px',
-                        color: '#666',
-                      }}
-                    >
-                      {currentIndex} / {totalCount}
-                    </div>
-                    <Button
-                      icon={<RightOutlined />}
-                      onClick={handleNext}
-                      disabled={!canNavigateNext}
-                      size="large"
-                    >
-                      下一条
-                    </Button>
-                    {/* 只有当状态不是已完成时才显示提交按钮 */}
-                    {contentData?.evaluationStatus !== 'COMPLETED' && (
-                      <Button
-                        type="primary"
-                        icon={<CheckOutlined />}
-                        onClick={handleSubmitAndNext}
-                        loading={submitting}
-                        size="large"
-                      >
-                        {canNavigateNext ? '完成并下一条' : '完成评估'}
-                      </Button>
-                    )}
-                  </Space>
                 </Col>
               </Row>
-            </Card>
-          </div>
-        </Spin>
-      </Card>
+            )}
+          </Spin>
+        </div>
+
+        {/* 底部操作区 */}
+        <Card style={{ flexShrink: 0 }} bodyStyle={{ padding: 12 }}>
+          <Row justify="center" align="middle">
+            <Col>
+              <Space size="large">
+                <Button
+                  onClick={handlePrev}
+                  disabled={!canNavigatePrev}
+                  icon={<LeftOutlined />}
+                >
+                  上一条
+                </Button>
+                <Text type="secondary">
+                  {currentIndex} / {totalCount}
+                </Text>
+                <Button
+                  onClick={handleNext}
+                  disabled={!canNavigateNext}
+                >
+                  下一条
+                  <RightOutlined />
+                </Button>
+                {/* 只在未完成状态下显示提交按钮 */}
+                {contentData?.evaluationStatus !== 'COMPLETED' && (
+                  <Button
+                    type="primary"
+                    loading={submitting}
+                    onClick={handleSubmitAndNext}
+                    style={{ marginLeft: 16 }}
+                  >
+                    {canNavigateNext ? '完成并下一条' : '完成评估'}
+                  </Button>
+                )}
+              </Space>
+            </Col>
+          </Row>
+        </Card>
+      </div>
+
       {/* 全屏显示 */}
       <FullscreenDisplay
         visible={!!fullscreenData}
@@ -789,7 +734,7 @@ const AssessmentSingleCompareDetail: React.FC = () => {
         content={fullscreenData?.content || ''}
         onClose={handleExitFullscreen}
       />
-    </div>
+    </>
   );
 };
 

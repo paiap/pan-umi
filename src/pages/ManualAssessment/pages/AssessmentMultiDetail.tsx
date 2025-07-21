@@ -4,13 +4,28 @@
  * @since: 2025-07-12 16:30:00
  * @LastAuthor: 潘安 panan2001@outlook.com
  * @lastTime: 2025-07-21 09:24:24
- * @文件相对于项目的路径: /pan-umi/src/pages/ManualAssessment/pages/AssessmentMultiDetail.tsx
+ * @文件相对于项目的路径: /pan-umi/src/pages/ManualAssessment/pages/Assessment                 <Space>
+              <Button
+                type="text"
+                icon={<RollbackOutlined />}
+                onClick={handleBack}
+              >
+                返回
+              </Button>
+              <Title level={4} style={{ margin: 0 }}>
+                {data.name}Button
+                type="text"
+                icon={<RollbackOutlined />}
+                onClick={handleBack}
+              >
+                返回
+              </Button>tail.tsx
  */
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, message, Spin, Row, Col, Typography, Card, Space } from 'antd';
-import { ArrowLeftOutlined, ReloadOutlined } from '@ant-design/icons';
+import { RollbackOutlined, ReloadOutlined } from '@ant-design/icons';
 import { VersionComparisonData, getAssessmentMultiDetail, getAssessmentInfo } from '../api';
 import ComparisonChart from '../components/ComparisonChart';
 import ResultTable from '../components/ResultTable';
@@ -24,7 +39,7 @@ const AssessmentMultiDetail: React.FC = () => {
   const [data, setData] = useState<VersionComparisonData | null>(null);
   const [selectedDimension, setSelectedDimension] = useState<string | undefined>();
   const [selectedVersion, setSelectedVersion] = useState<string | undefined>();
-  
+
   // 从 URL 参数获取任务类型
   const searchParams = new URLSearchParams(window.location.search);
   const taskType = (searchParams.get('taskType') || 'multi') as 'single' | 'multi';
@@ -225,11 +240,9 @@ const AssessmentMultiDetail: React.FC = () => {
             <Space>
               <Button
                 type="text"
-                icon={<ArrowLeftOutlined />}
+                icon={<RollbackOutlined />}
                 onClick={handleBack}
-              >
-                返回
-              </Button>
+              ></Button>
               <Title level={4} style={{ margin: 0 }}>
                 {data.name}
               </Title>

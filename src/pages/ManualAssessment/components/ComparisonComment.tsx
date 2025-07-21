@@ -3,7 +3,7 @@
  * @message: 对比说明组件 - 支持文本和图片粘贴
  * @since: 2025-07-14 00:00:00
  * @LastAuthor: 潘安 panan2001@outlook.com
- * @lastTime: 2025-07-21 14:59:01
+ * @lastTime: 2025-07-21 16:27:57
  * @文件相对于项目的路径: /pan-umi/src/pages/ManualAssessment/components/ComparisonComment.tsx
  */
 
@@ -174,12 +174,11 @@ const ComparisonComment: React.FC<ComparisonCommentProps> = ({
 
   return (
     <div ref={containerRef} className="comparison-comment" style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
-      <div style={{ marginBottom: 12, flexShrink: 0 }}>
-        <Space>
-          <span style={{ fontWeight: 500 }}>对比说明：</span>
-          {(text || images.length > 0) && (
+
+      {(text || images.length > 0) && (
+        <div style={{ marginBottom: 12, flexShrink: 0 }}>
+          <Space>
             <Button
-              size="small"
               type="text"
               icon={<DeleteOutlined />}
               onClick={handleClear}
@@ -187,9 +186,10 @@ const ComparisonComment: React.FC<ComparisonCommentProps> = ({
             >
               清空
             </Button>
-          )}
-        </Space>
-      </div>
+          </Space>
+        </div>
+      )}
+
 
       <TextArea
         ref={textAreaRef}
