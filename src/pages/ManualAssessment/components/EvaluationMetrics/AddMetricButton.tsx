@@ -22,6 +22,7 @@ interface AddMetricButtonProps {
   block?: boolean;
   className?: string;
   style?: React.CSSProperties;
+  disabled?: boolean; // 添加disabled属性
 }
 
 const AddMetricButton: React.FC<AddMetricButtonProps> = ({
@@ -33,6 +34,7 @@ const AddMetricButton: React.FC<AddMetricButtonProps> = ({
   block = false,
   className,
   style,
+  disabled = false, // 添加disabled参数解构
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const formRef = useRef<any>(null);
@@ -59,6 +61,7 @@ const AddMetricButton: React.FC<AddMetricButtonProps> = ({
         block={block}
         className={className}
         style={style}
+        disabled={disabled} // 添加disabled属性
         onClick={handleAdd}
       >
         {children}

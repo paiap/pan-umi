@@ -318,6 +318,8 @@ const EvaluationMetrics = forwardRef<EvaluationMetricsRef, EvaluationMetricsProp
               <EditMetricButton
                 metric={record}
                 onSuccess={handleFormSuccess}
+                disabled={true}  // 添加这一行来禁用编辑按钮
+                title="编辑指标"
               // TODO: 添加权限控制逻辑
               // disabled={record.creator !== currentUser.name && !currentUser.isAdmin}
               />
@@ -326,6 +328,7 @@ const EvaluationMetrics = forwardRef<EvaluationMetricsRef, EvaluationMetricsProp
                 onConfirm={() => handleDelete(record.id)}
                 okText="确定"
                 cancelText="取消"
+                disabled={true}  // 添加这一行来禁用整个确认框
               >
                 <Button
                   type="link"
@@ -333,6 +336,7 @@ const EvaluationMetrics = forwardRef<EvaluationMetricsRef, EvaluationMetricsProp
                   danger
                   icon={<DeleteOutlined />}
                   title="删除"
+                  disabled={true}  // 添加这一行来禁用删除按钮
                 // TODO: 添加权限控制逻辑
                 // disabled={record.creator !== currentUser.name && !currentUser.isAdmin}
                 >
@@ -488,7 +492,10 @@ const EvaluationMetrics = forwardRef<EvaluationMetricsRef, EvaluationMetricsProp
 
         {/* 已选择指标显示（嵌入模式） */}
         <Space wrap>
-          <AddMetricButton onSuccess={handleFormSuccess}>
+          <AddMetricButton 
+            onSuccess={handleFormSuccess}
+            disabled={true}  // 禁用新增指标功能
+          >
             新增指标
           </AddMetricButton>
           <Text strong>已选择指标：</Text>
