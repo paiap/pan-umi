@@ -7,37 +7,38 @@
  * @文件相对于项目的路径: /pan-umi/src/pages/ManualAssessment/pages/CreateEvaluationTask.tsx
  */
 
-import React, { useState, useEffect } from 'react';
-import { useParams, useSearchParams, useNavigate } from 'umi';
 import {
-  Form,
-  Input,
-  Select,
+  ArrowLeftOutlined,
+  CheckOutlined,
+  SaveOutlined,
+} from '@ant-design/icons';
+import {
   Button,
   Card,
-  Space,
+  Form,
+  Input,
   message,
+  Select,
+  Space,
   Spin,
-  Row,
-  Col,
   Typography,
 } from 'antd';
-import { ArrowLeftOutlined, SaveOutlined, CheckOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'umi';
 import {
-  searchTestDatasets,
-  getDatasetVersions,
   createEvaluationTask,
-  updateEvaluationTask,
-  getEvaluationTaskDetail,
-  TestDataset,
-  DatasetVersion,
   CreateTaskParams,
+  DatasetVersion,
+  getDatasetVersions,
+  getEvaluationTaskDetail,
+  searchTestDatasets,
   TaskDetail,
+  TestDataset,
+  updateEvaluationTask,
 } from '../api';
-import EvaluationObjectConfig from '../components/EvaluationObjectConfig';
-import EvaluationMetrics from '../components/EvaluationMetrics';
-import TaskTypeCardSelect from '../components/TaskTypeCardSelect';
 import MetricFormItem from '../components/EvaluationMetrics/MetricFormItem';
+import TaskTypeCardSelect from '../components/TaskTypeCardSelect';
+import UnifiedObjectConfig from '../components/UnifiedObjectConfig';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -56,6 +57,10 @@ const CreateEvaluationTask: React.FC = () => {
   const [datasetVersions, setDatasetVersions] = useState<DatasetVersion[]>([]);
   const [loadingDatasets, setLoadingDatasets] = useState(false);
   const [loadingVersions, setLoadingVersions] = useState(false);
+
+  // 评估对象和对比对象数据
+  const [evaluationData, setEvaluationData] = useState<any>(null);
+  const [comparisonData, setComparisonData] = useState<any>(null);
 
   // 判断是否为编辑模式
   const isEditMode = !!id;
@@ -176,6 +181,24 @@ const CreateEvaluationTask: React.FC = () => {
     }
   }, []);
 
+  /**
+   * 处理评估对象数据变更
+   * @param value 新的评估对象数据
+   */
+  const handleEvaluationChange = (value: any) => {
+    form.setFieldValue('evaluationTarget', value);
+    // 可以在此处添加额外的数据处理逻辑
+  };
+
+  /**
+   * 处理对比对象数据变更
+   * @param value 新的对比对象数据
+   */
+  const handleComparisonChange = (value: any) => {
+    form.setFieldValue('comparisonTarget', value);
+    // 可以在此处添加额外的数据处理逻辑
+  };
+
   // 提交表单
   const handleSubmit = async () => {
     try {
@@ -213,23 +236,38 @@ const CreateEvaluationTask: React.FC = () => {
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '400px',
+        }}
+      >
         <Spin size="large" />
       </div>
     );
   }
 
   return (
-    <div style={{ padding: '24px', backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
+    <div
+      style={{
+        padding: '24px',
+        backgroundColor: '#f5f5f5',
+        minHeight: '100vh',
+      }}
+    >
       <div style={{ maxWidth: '100%', margin: '0 auto' }}>
         {/* 页面头部 */}
-        <div style={{
-          marginBottom: 24,
-          padding: '16px 24px',
-          backgroundColor: '#fff',
-          borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
-        }}>
+        <div
+          style={{
+            marginBottom: 24,
+            padding: '16px 24px',
+            backgroundColor: '#fff',
+            borderRadius: '8px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+          }}
+        >
           <Space>
             <Button
               type="text"
@@ -251,230 +289,260 @@ const CreateEvaluationTask: React.FC = () => {
           wrapperCol={{ span: 20 }}
           onFinish={handleSubmit}
           autoComplete="off"
+          // colon={false}
+          // size="large"
         >
-          <Row gutter={24}>
-            <Col span={24}>
-              {/* 基本信息 */}
-              <Card
-                title="基本信息"
-                style={{
-                  marginBottom: 16,
-                  borderRadius: '8px',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
-                }}
-              >
-                <Form.Item
-                  label="评估任务名称"
-                  name="taskName"
-                  rules={[{ required: true, message: '请输入评估任务名称' }]}
+          <div>
+            {/* 基本信息 */}
+            <Card
+              title={
+                <div
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
                 >
-                  <Input placeholder="请输入评估任务名称" />
-                </Form.Item>
-
-                <Form.Item
-                  label="评估任务描述"
-                  name="taskDescription"
-                  rules={[{ required: true, message: '请输入评估任务描述' }]}
-                >
-                  <TextArea
-                    placeholder="请输入评估任务描述"
-                    rows={2}
-                    maxLength={500}
-                    showCount
+                  <div
+                    style={{
+                      width: '4px',
+                      height: '16px',
+                      background: 'linear-gradient(135deg, #1890ff, #40a9ff)',
+                      borderRadius: '2px',
+                    }}
                   />
-                </Form.Item>
-
-                <Row gutter={8}>
-                  <Col span={12}>
-                    <Form.Item
-                      label="选择测试集"
-                      name="datasetId"
-                      labelCol={{ span: 8 }}
-                      wrapperCol={{ span: 16 }}
-                      rules={[{ required: true, message: '请选择测试集' }]}
-                    >
-                      <Select
-                        placeholder="请选择测试集"
-                        loading={loadingDatasets}
-                        showSearch
-                        filterOption={false}
-                        onSearch={fetchDatasets}
-                        onDropdownVisibleChange={(open) => {
-                          if (open) fetchDatasets();
-                        }}
-                        optionLabelProp="label"
-                      >
-                        {datasets.map(dataset => (
-                          <Option key={dataset.id} value={dataset.id} label={dataset.name}>
-                            <div>
-                              <div>{dataset.name}</div>
-                              {dataset.description && (
-                                <div style={{ fontSize: 12, color: '#666' }}>
-                                  {dataset.description}
-                                </div>
-                              )}
-                            </div>
-                          </Option>
-                        ))}
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item
-                      name="datasetVersionId"
-                      labelCol={{ span: 0 }}
-                      wrapperCol={{ span: 24 }}
-                      rules={[{ required: true, message: '请选择测试集版本' }]}
-                    >
-                      <Select
-                        placeholder="请选择测试集版本"
-                        loading={loadingVersions}
-                        disabled={!datasetId}
-                        optionLabelProp="label"
-                      >
-                        {datasetVersions.map(version => (
-                          <Option key={version.id} value={version.id} label={version.version}>
-                            <div>
-                              <div>{version.version}</div>
-                              {version.description && (
-                                <div style={{ fontSize: 12, color: '#666' }}>
-                                  {version.description}
-                                </div>
-                              )}
-                            </div>
-                          </Option>
-                        ))}
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                </Row>
-
-                <Form.Item
-                  label="评估任务类型"
-                  name="taskType"
-                  rules={[{ required: true, message: '请选择评估任务类型' }]}
-                  valuePropName="value"
-                  trigger="onChange"
-                >
-                  {/* 卡片式选择组件替换原Radio.Group */}
-                  <TaskTypeCardSelect
-                    options={[
-                      {
-                        value: 'dual',
-                        title: '两个对象对比',
-                        description: '即两个对象进行比对，从中选择最好的一个。适用于不同模型版本的优劣比较，或同一版本的推理结果与标准答案比对。',
-                      },
-                      {
-                        value: 'single',
-                        title: '单个对象评估',
-                        description: '即对单个对象进行评估，适用于模型单独评测等场景。',
-                      },
-                    ]}
-                    value={form.getFieldValue('taskType') || 'dual'}
-                    onChange={val => form.setFieldValue('taskType', val)}
-                  />
-                </Form.Item>
-              </Card>
-
-              {/* 评估对象配置 */}
-              <Card
-                title="评估对象"
-                style={{
-                  marginBottom: 16,
-                  borderRadius: '8px',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
-                }}
-              >
-                <Form.Item
-                  name="evaluationTarget"
-                  rules={[{ required: true, message: '请配置评估对象' }]}
-                >
-                  <EvaluationObjectConfig />
-                </Form.Item>
-              </Card>
-
-              {/* 对比对象配置 */}
-              {taskType === 'dual' && (
-                <Card
-                  title="对比对象"
-                  style={{
-                    marginBottom: 16,
-                    borderRadius: '8px',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
-                  }}
-                >
-                  <Form.Item
-                    name="comparisonTarget"
-                    rules={[{ required: true, message: '请配置对比对象' }]}
-                  >
-                    <EvaluationObjectConfig
-                      showModelName
-                      modelName={form.getFieldValue(['comparisonTarget', 'modelName'])}
-                      onModelNameChange={(name) => {
-                        const currentValue = form.getFieldValue('comparisonTarget') || {};
-                        form.setFieldValue('comparisonTarget', { ...currentValue, modelName: name });
-                      }}
-                    />
-                  </Form.Item>
-                </Card>
-              )}
-
-              {/* 评估指标配置 */}
-              <Card
-                title="评估指标"
-                style={{
-                  marginBottom: 16,
-                  borderRadius: '8px',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                  paddingLeft: 40,
-                }}
-              >
-                <Form.Item
-                  name="evaluationMetrics"
-                  rules={[
-                    { required: true, message: '请添加评估指标' },
-                    {
-                      validator: (_, value) => {
-                        if (!value || value.length === 0) {
-                          return Promise.reject(new Error('至少需要添加一个评估指标'));
-                        }
-                        return Promise.resolve();
-                      }
-                    }
-                  ]}
-                >
-                  <MetricFormItem placeholder="请点击上方按钮选择评估指标" />
-                </Form.Item>
-              </Card>
-
-              {/* 操作按钮 */}
-              <Card style={{
-                borderRadius: '8px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
-              }}>
-                <div style={{ textAlign: 'center' }}>
-                  <Space size="large">
-                    <Button
-                      size="large"
-                      onClick={() => navigate('/ManualAssessment')}
-                    >
-                      取消
-                    </Button>
-                    <Button
-                      type="primary"
-                      size="large"
-                      icon={isEditMode ? <SaveOutlined /> : <CheckOutlined />}
-                      loading={submitting}
-                      onClick={handleSubmit}
-                      style={{ borderRadius: '6px', minWidth: '120px' }}
-                    >
-                      {isEditMode ? '保存修改' : '创建任务'}
-                    </Button>
-                  </Space>
+                  基本信息
                 </div>
-              </Card>
-            </Col>
-          </Row>
+              }
+              style={{
+                marginBottom: 16,
+                borderRadius: '8px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+              }}
+            >
+              <Form.Item
+                label="评估任务名称"
+                name="taskName"
+                rules={[{ required: true, message: '请输入评估任务名称' }]}
+              >
+                <Input placeholder="请输入评估任务名称" />
+              </Form.Item>
+
+              <Form.Item
+                label="评估任务描述"
+                name="taskDescription"
+                rules={[{ required: true, message: '请输入评估任务描述' }]}
+              >
+                <TextArea
+                  placeholder="请输入评估任务描述"
+                  rows={2}
+                  maxLength={500}
+                  showCount
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="选择测试集"
+                name="datasetId"
+                rules={[{ required: true, message: '请选择测试集' }]}
+              >
+                <Select
+                  placeholder="请选择测试集"
+                  loading={loadingDatasets}
+                  showSearch
+                  filterOption={false}
+                  onSearch={fetchDatasets}
+                  onDropdownVisibleChange={(open) => {
+                    if (open) fetchDatasets();
+                  }}
+                  optionLabelProp="label"
+                >
+                  {datasets.map((dataset) => (
+                    <Option
+                      key={dataset.id}
+                      value={dataset.id}
+                      label={dataset.name}
+                    >
+                      <div>
+                        <div>{dataset.name}</div>
+                        {dataset.description && (
+                          <div style={{ fontSize: 12, color: '#666' }}>
+                            {dataset.description}
+                          </div>
+                        )}
+                      </div>
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="测试集版本"
+                name="datasetVersionId"
+                rules={[{ required: true, message: '请选择测试集版本' }]}
+              >
+                <Select
+                  placeholder="请选择测试集版本"
+                  loading={loadingVersions}
+                  disabled={!datasetId}
+                  optionLabelProp="label"
+                >
+                  {datasetVersions.map((version) => (
+                    <Option
+                      key={version.id}
+                      value={version.id}
+                      label={version.version}
+                    >
+                      <div>
+                        <div>{version.version}</div>
+                        {version.description && (
+                          <div style={{ fontSize: 12, color: '#666' }}>
+                            {version.description}
+                          </div>
+                        )}
+                      </div>
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="评估任务类型"
+                name="taskType"
+                rules={[{ required: true, message: '请选择评估任务类型' }]}
+                valuePropName="value"
+                trigger="onChange"
+              >
+                {/* 卡片式选择组件替换原Radio.Group */}
+                <TaskTypeCardSelect
+                  options={[
+                    {
+                      value: 'dual',
+                      title: '两个对象对比',
+                      description:
+                        '即两个对象进行比对，从中选择最好的一个。适用于不同模型版本的优劣比较，或同一版本的推理结果与标准答案比对。',
+                    },
+                    {
+                      value: 'single',
+                      title: '单个对象评估',
+                      description:
+                        '即对单个对象进行评估，适用于模型单独评测等场景。',
+                    },
+                  ]}
+                  value={form.getFieldValue('taskType') || 'dual'}
+                  onChange={(val) => form.setFieldValue('taskType', val)}
+                />
+              </Form.Item>
+            </Card>
+
+            {/* 评估对象配置 */}
+            <Form.Item
+              name="evaluationTarget"
+              rules={[{ required: true, message: '请配置评估对象' }]}
+              style={{ width: '100%' }}
+              labelCol={{ span: 0 }}
+              wrapperCol={{ span: 24 }}
+              noStyle
+            >
+              <UnifiedObjectConfig
+                style={{ width: '100%' }}
+                objectType="evaluation"
+                value={form.getFieldValue('evaluationTarget')}
+                onChange={handleEvaluationChange}
+                bordered={true}
+                title="评估对象"
+              />
+            </Form.Item>
+
+            {/* 对比对象配置 */}
+            {taskType === 'dual' && (
+              <Form.Item
+                name="comparisonTarget"
+                rules={[{ required: true, message: '请配置对比对象' }]}
+                labelCol={{ span: 0 }}
+                wrapperCol={{ span: 24 }}
+                noStyle
+              >
+                <UnifiedObjectConfig
+                  objectType="comparison"
+                  style={{ width: '100%' }}
+                  value={form.getFieldValue('comparisonTarget')}
+                  onChange={handleComparisonChange}
+                  bordered={true}
+                  title="对比对象"
+                />
+              </Form.Item>
+            )}
+
+            {/* 评估指标配置 */}
+            <Card
+              title={
+                <div
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                >
+                  <div
+                    style={{
+                      width: '4px',
+                      height: '16px',
+                      background: 'linear-gradient(135deg, #52c41a, #73d13d)',
+                      borderRadius: '2px',
+                    }}
+                  />
+                  评估指标
+                </div>
+              }
+              style={{
+                marginBottom: 16,
+                borderRadius: '8px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+              }}
+            >
+              <Form.Item
+                name="evaluationMetrics"
+                rules={[
+                  { required: true, message: '请添加评估指标' },
+                  {
+                    validator: (_, value) => {
+                      if (!value || value.length === 0) {
+                        return Promise.reject(
+                          new Error('至少需要添加一个评估指标'),
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
+                label="评估指标"
+              >
+                <MetricFormItem placeholder="请点击上方按钮选择评估指标" />
+              </Form.Item>
+            </Card>
+
+            {/* 操作按钮 */}
+            <Card
+              style={{
+                borderRadius: '8px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+              }}
+            >
+              <div style={{ textAlign: 'center' }}>
+                <Space size="large">
+                  <Button
+                    size="large"
+                    onClick={() => navigate('/ManualAssessment')}
+                  >
+                    取消
+                  </Button>
+                  <Button
+                    type="primary"
+                    size="large"
+                    icon={isEditMode ? <SaveOutlined /> : <CheckOutlined />}
+                    loading={submitting}
+                    onClick={handleSubmit}
+                    style={{ borderRadius: '6px', minWidth: '120px' }}
+                  >
+                    {isEditMode ? '保存修改' : '创建任务'}
+                  </Button>
+                </Space>
+              </div>
+            </Card>
+          </div>
         </Form>
       </div>
     </div>

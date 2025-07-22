@@ -1,4 +1,4 @@
-import { Button, Card, Col, DatePicker, Row, Space } from 'antd'
+import { Button, Card, DatePicker, Space } from 'antd'
 import React, { FC, useState, useEffect, useRef } from 'react'
 import ModelExpression from './ModelExpression'
 import CapabilityReport from './CapabilityReport'
@@ -10,14 +10,10 @@ const ModelPerformance: FC<Props> = () => {
   const [loading, setLoading] = useState<boolean>(false)
 
   return (
-    <Row gutter={[16, 16]}>
-      <Col span={24}>
-        <ModelExpression />
-      </Col>
-      <Col span={24}>
-        <CapabilityReport />
-      </Col>
-    </Row>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <ModelExpression />
+      <CapabilityReport />
+    </div>
   )
 }
 

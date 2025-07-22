@@ -27,49 +27,49 @@ export const routes = [
     path: '/ManualAssessment/detail/:id',
     name: '人工评估详情',
     component: './ManualAssessment/pages/AssessmentDetail',
-    menu: false
+    menu: false,
   },
   {
     path: '/ManualAssessment/multiDetail/:id',
     name: '人工评估多对比详情',
     component: './ManualAssessment/pages/AssessmentMultiDetail',
-    menu: false
+    menu: false,
   },
   {
     path: '/ManualAssessment/singleDetail/:id',
     name: '单个评估详情',
     component: './ManualAssessment/pages/AssessmentSingleDetail',
-    menu: false
+    menu: false,
   },
   {
     path: '/ManualAssessment/singleCompareDetail/:assessmentId/content/:contentId',
     component: './ManualAssessment/pages/AssessmentSingleCompareDetail',
     name: '单个评估内容详情',
-    menu: false
+    menu: false,
   },
   {
     path: '/ManualAssessment/multiDetail/:assessmentId/content/:contentId',
     component: './ManualAssessment/pages/AssessmentMultiCompareDetail',
     name: '多对比内容详情',
-    menu: false
+    menu: false,
   },
   {
     path: '/ManualAssessment/multiDetail/task_1/content/:lineId',
     component: './ManualAssessment/pages/AssessmentMultiCompareDetail',
     name: '多对比内容详情(旧版)',
-    menu: false
+    menu: false,
   },
   {
     path: '/manual-assessment/create',
     name: '创建人工评估任务',
     component: './ManualAssessment/pages/CreateEvaluationTask',
-    menu: false
+    menu: false,
   },
   {
     path: '/manual-assessment/edit/:id',
     name: '编辑人工评估任务',
     component: './ManualAssessment/pages/CreateEvaluationTask',
-    menu: false
+    menu: false,
   },
   {
     path: '/manual-assessment/metrics',
@@ -175,7 +175,7 @@ export const routes = [
     path: '/dataminer/config/:id',
     name: '配置详情',
     component: './Dataminer/Config',
-    menu: false
+    menu: false,
   },
   {
     path: '/conpoments',
@@ -267,4 +267,4 @@ export const routes = [
     name: '数据集弹窗',
     component: './DatasetTable',
   },
-]
+];

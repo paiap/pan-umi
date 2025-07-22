@@ -9,7 +9,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { Form, Radio, Select, message, Input, Row, Col } from 'antd';
-import { getModelVersions, getInferenceResultSets, ModelVersion, InferenceResultSet } from '../api';
+import { 
+  getModelVersions, 
+  getInferenceResultSets, 
+  ModelVersion, 
+  InferenceResultSet,
+  InferenceResultSetParams 
+} from '../api';
 
 const { Option } = Select;
 
@@ -52,7 +58,7 @@ const EvaluationObjectConfig: React.FC<EvaluationObjectConfigProps> = ({
       const fetchModelVersions = async () => {
         setLoadingVersions(true);
         try {
-          const response: any = await getModelVersions({});
+          const response: any = await getModelVersions();
           if (response.code === 0) {
             setModelVersions(response.data);
           }

@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useState } from 'react'
 import MonacoEditor from '@monaco-editor/react';
 
-import { Col, Row } from 'antd';
 import { PageContainer } from '@ant-design/pro-components';
 interface Props {
   [key: string]: any
@@ -134,8 +133,8 @@ const ReactEditor: FC<Props> = () => {
     <PageContainer ghost header={{
       title: 'json格式化校验——vscode代码编辑器',
     }}>
-      <Row>
-        <Col span={12}>
+      <div style={{ display: 'flex', gap: '16px', width: '100%' }}>
+        <div style={{ flex: 1 }}>
           <MonacoEditor
             height="800px"
             defaultLanguage="json"
@@ -143,8 +142,8 @@ const ReactEditor: FC<Props> = () => {
             defaultValue={content}
             onChange={handleEditorChange}
           />
-        </Col>
-        <Col span={12}>
+        </div>
+        <div style={{ flex: 1 }}>
           <MonacoEditor
             height="800px"
             defaultLanguage="json"
@@ -155,9 +154,8 @@ const ReactEditor: FC<Props> = () => {
             value={formattedContent}
             onChange={handleEditorChange}
           />
-        </Col>
-
-      </Row>
+        </div>
+      </div>
     </PageContainer>
 
   )

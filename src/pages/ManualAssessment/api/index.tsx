@@ -10,6 +10,14 @@
 import { request } from 'umi';
 import { shouldUseMock, getApiBaseUrl } from '../../../config/env';
 import { ApiDebugger } from '../../../utils/apiDebug';
+// 导入 mock 数据
+import {
+  getTrainingTasksResponse,
+  getTrainingTaskDetailResponse,
+  getWorkloadOptionsResponse,
+  createEvaluationTaskResponse,
+  createTaskValidationErrorResponse
+} from './mock';
 
 // 新增多版本对比评估接口类型定义
 export interface VersionComparisonData {
@@ -1581,7 +1589,6 @@ export interface CreateTaskParams {
 
   // 对比对象 (只有双对象对比时需要)
   comparisonTarget?: {
-    modelName: string;
     objectType: 'model_version' | 'checkpoint';
     modelVersionId?: string;
     checkpointId?: string;
@@ -1666,20 +1673,181 @@ export async function getModelVersions() {
   });
 }
 
+// 扩展推理结果集接口，添加关联信息
+export interface InferenceResultSet {
+  id: string;
+  name: string;
+  description?: string;
+  createTime: string;
+  // 关联信息，用于过滤
+  modelVersionId?: string; // 关联的模型版本ID
+  checkpointId?: string;   // 关联的checkpointID
+  trainingTaskId?: string; // 关联的训练任务ID
+  workloadPath?: string;   // 关联的工作负载路径
+}
+
+// 推理结果集查询参数
+export interface InferenceResultSetParams {
+  keyword?: string;
+  modelVersionId?: string;
+  checkpointId?: string;
+  trainingTaskId?: string;
+  workloadPath?: string;
+  pageNum?: number;
+  pageSize?: number;
+}
+
 // 获取推理结果集列表
-export async function getInferenceResultSets() {
+export async function getInferenceResultSets(params: InferenceResultSetParams = {}) {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const mockResultSets: InferenceResultSet[] = [
-        { id: '1', name: 'V172推理结果集(profile模型)', description: '基于profile模型的推理结果', createTime: '2025-07-10 10:00:00' },
-        { id: '2', name: 'checkpoint_002推理结果集', description: '基于checkpoint_002的推理结果', createTime: '2025-07-09 15:30:00' },
-        { id: '3', name: '通用推理结果集_0701', description: '7月1日生成的通用推理结果', createTime: '2025-07-01 09:00:00' },
+      // 丰富的mock数据，覆盖各种场景
+      const allMockResultSets: InferenceResultSet[] = [
+        // 模型版本相关的推理结果集
+        { 
+          id: '1', 
+          name: 'qwen模型V260推理结果集', 
+          description: '基于qwen模型V260版本的推理结果，包含通用问答数据', 
+          createTime: '2025-07-10 10:00:00',
+          modelVersionId: '1' // 对应V260
+        },
+        { 
+          id: '2', 
+          name: 'qwen模型V261推理结果集', 
+          description: '基于qwen模型V261版本的推理结果，优化后的版本', 
+          createTime: '2025-07-11 14:30:00',
+          modelVersionId: '2' // 对应V261
+        },
+        { 
+          id: '3', 
+          name: 'qwen模型V262推理结果集', 
+          description: '基于qwen模型V262版本的推理结果，最新稳定版本', 
+          createTime: '2025-07-12 09:15:00',
+          modelVersionId: '3' // 对应V262
+        },
+        
+        // checkpoint相关的推理结果集
+        { 
+          id: '4', 
+          name: 'checkpoint_001推理结果集', 
+          description: '基于checkpoint_001的推理结果，早期检查点', 
+          createTime: '2025-07-08 16:45:00',
+          checkpointId: 'checkpoint_001'
+        },
+        { 
+          id: '5', 
+          name: 'checkpoint_002推理结果集', 
+          description: '基于checkpoint_002的推理结果，训练中期检查点', 
+          createTime: '2025-07-09 11:20:00',
+          checkpointId: 'checkpoint_002',
+          trainingTaskId: '1',
+          workloadPath: '/workload/checkpoint_002'
+        },
+        { 
+          id: '6', 
+          name: 'checkpoint_003推理结果集', 
+          description: '基于checkpoint_003的推理结果，最新检查点', 
+          createTime: '2025-07-13 13:10:00',
+          checkpointId: 'checkpoint_003',
+          trainingTaskId: '2',
+          workloadPath: '/workload/checkpoint_003'
+        },
+        
+        // 训练任务相关的推理结果集
+        { 
+          id: '7', 
+          name: '数据处理任务推理结果集', 
+          description: '基于数据处理训练任务生成的推理结果集', 
+          createTime: '2025-07-07 10:30:00',
+          trainingTaskId: '1',
+          workloadPath: '/workload/data_processing',
+          checkpointId: 'data_processing_checkpoint'
+        },
+        { 
+          id: '8', 
+          name: '微调任务推理结果集', 
+          description: '基于模型微调训练任务生成的推理结果集', 
+          createTime: '2025-07-14 15:45:00',
+          trainingTaskId: '2',
+          workloadPath: '/workload/fine_tuning',
+          checkpointId: 'fine_tuning_checkpoint'
+        },
+        
+        // 通用推理结果集
+        { 
+          id: '9', 
+          name: '通用推理结果集_0701', 
+          description: '7月1日生成的通用推理结果，适用于多种评估场景', 
+          createTime: '2025-07-01 09:00:00'
+        },
+        { 
+          id: '10', 
+          name: '基准测试推理结果集', 
+          description: '用于基准测试的标准推理结果集', 
+          createTime: '2025-07-05 14:20:00'
+        }
       ];
+
+      // 根据参数过滤数据
+      let filteredResults = [...allMockResultSets];
+      
+      // 按模型版本过滤
+      if (params.modelVersionId) {
+        filteredResults = filteredResults.filter(item => 
+          item.modelVersionId === params.modelVersionId
+        );
+      }
+      
+      // 按checkpoint过滤
+      if (params.checkpointId) {
+        filteredResults = filteredResults.filter(item => 
+          item.checkpointId === params.checkpointId
+        );
+      }
+      
+      // 按训练任务过滤
+      if (params.trainingTaskId) {
+        filteredResults = filteredResults.filter(item => 
+          item.trainingTaskId === params.trainingTaskId
+        );
+      }
+      
+      // 按工作负载路径过滤
+      if (params.workloadPath) {
+        filteredResults = filteredResults.filter(item => 
+          item.workloadPath === params.workloadPath
+        );
+      }
+      
+      // 按关键词搜索
+      if (params.keyword) {
+        const keyword = params.keyword.toLowerCase();
+        filteredResults = filteredResults.filter(item => 
+          item.name.toLowerCase().includes(keyword) ||
+          (item.description && item.description.toLowerCase().includes(keyword))
+        );
+      }
+      
+      // 分页处理
+      const pageSize = params.pageSize || 20;
+      const pageNum = params.pageNum || 1;
+      const startIndex = (pageNum - 1) * pageSize;
+      const endIndex = startIndex + pageSize;
+      const paginatedResults = filteredResults.slice(startIndex, endIndex);
+      
+      console.log('🔍 [getInferenceResultSets] 过滤参数:', params);
+      console.log('📊 [getInferenceResultSets] 过滤后结果数量:', filteredResults.length);
+      console.log('📄 [getInferenceResultSets] 分页结果:', paginatedResults);
 
       resolve({
         code: 0,
         msg: 'Success',
-        data: mockResultSets,
+        data: {
+          list: paginatedResults,
+          total: filteredResults.length,
+          pageNum,
+          pageSize
+        }
       });
     }, 200);
   });
@@ -1707,24 +1875,56 @@ export async function getEvaluationMetrics() {
 
 // 创建评估任务
 export async function createEvaluationTask(params: CreateTaskParams) {
+  console.log('🔗 [API] createEvaluationTask 请求参数:', params);
+
+  // 记录API调试信息
+  ApiDebugger.logRequest('createEvaluationTask', params);
+
+  // 判断是否使用Mock数据
+  if (!shouldUseMock()) {
+    // 生产环境调用真实API
+    try {
+      const apiUrl = `${getApiBaseUrl()}/api/manual/assessment/task`;
+      console.log('🌐 [createEvaluationTask] 调用真实API:', apiUrl);
+
+      const response = await request(apiUrl, {
+        method: 'POST',
+        data: params,
+      });
+
+      ApiDebugger.logResponse('createEvaluationTask', response);
+      return response;
+    } catch (error) {
+      console.error('🚨 [createEvaluationTask] API调用失败:', error);
+      ApiDebugger.logError('createEvaluationTask', error);
+
+      return {
+        code: -1,
+        msg: `API调用失败: ${error instanceof Error ? error.message : '网络错误'}`,
+        data: null
+      };
+    }
+  }
+
+  // 开发环境使用Mock数据
+  console.log('🎭 [createEvaluationTask] 使用Mock数据');
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Creating evaluation task:', params);
+      // 简单的参数验证
+      if (!params.taskName || !params.datasetId) {
+        resolve(createTaskValidationErrorResponse('invalid_params'));
+        return;
+      }
 
-      const newTask: TaskDetail = {
-        ...params,
-        id: Date.now().toString(),
-        status: 'draft',
-        creator: '当前用户',
-        createTime: new Date().toISOString(),
-        updateTime: new Date().toISOString(),
-      };
+      // 模拟任务名称重复检查（随机）
+      if (Math.random() < 0.1) {
+        resolve(createTaskValidationErrorResponse('duplicate_task'));
+        return;
+      }
 
-      resolve({
-        code: 0,
-        msg: '评估任务创建成功',
-        data: newTask,
-      });
+      const mockResponse = createEvaluationTaskResponse(params);
+      console.log('📥 [createEvaluationTask] Mock响应数据:', mockResponse);
+      resolve(mockResponse);
     }, 500);
   });
 }
@@ -1763,7 +1963,6 @@ export async function getEvaluationTaskDetail(id: string) {
           inferenceResultSetId: '1',
         },
         comparisonTarget: {
-          modelName: 'qwen_v2.5',
           objectType: 'model_version',
           modelVersionId: '2',
           inferenceType: 'existing_data',
@@ -1818,4 +2017,151 @@ export const submitTaskLineScoring = async (submitData: UnifiedSubmitData) => {
     console.error('🔗 [API] submitTaskLineScoring 请求失败:', error);
     throw error;
   }
+};
+
+// ================ 新增接口函数 ================
+
+/**
+ * 获取训练任务列表
+ */
+export const getTrainingTasks = async (params: {
+  pageNum?: number;
+  pageSize?: number;
+  status?: string; // 'all' | 'completed' | 'running' | 'pending' | 'failed'
+  keyword?: string;
+}) => {
+  console.log('🔗 [API] getTrainingTasks 请求参数:', params);
+
+  // 记录API调试信息
+  ApiDebugger.logRequest('getTrainingTasks', params);
+
+  // 判断是否使用Mock数据
+  if (!shouldUseMock()) {
+    // 生产环境调用真实API
+    try {
+      const apiUrl = `${getApiBaseUrl()}/api/training/tasks`;
+      console.log('🌐 [getTrainingTasks] 调用真实API:', apiUrl);
+
+      const response = await request(apiUrl, {
+        method: 'GET',
+        params: params,
+      });
+
+      ApiDebugger.logResponse('getTrainingTasks', response);
+      return response;
+    } catch (error) {
+      console.error('🚨 [getTrainingTasks] API调用失败:', error);
+      ApiDebugger.logError('getTrainingTasks', error);
+
+      return {
+        code: -1,
+        msg: `API调用失败: ${error instanceof Error ? error.message : '网络错误'}`,
+        data: null
+      };
+    }
+  }
+
+  // 开发环境使用Mock数据
+  console.log('🎭 [getTrainingTasks] 使用Mock数据');
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const mockResponse = getTrainingTasksResponse(
+        params.pageNum,
+        params.pageSize,
+        params.status
+      );
+      console.log('📥 [getTrainingTasks] Mock响应数据:', mockResponse);
+      resolve(mockResponse);
+    }, 300);
+  });
+};
+
+/**
+ * 获取单个训练任务详情
+ */
+export const getTrainingTaskDetail = async (taskId: string) => {
+  console.log('🔗 [API] getTrainingTaskDetail 请求参数:', { taskId });
+
+  // 记录API调试信息
+  ApiDebugger.logRequest('getTrainingTaskDetail', { taskId });
+
+  // 判断是否使用Mock数据
+  if (!shouldUseMock()) {
+    // 生产环境调用真实API
+    try {
+      const apiUrl = `${getApiBaseUrl()}/api/training/tasks/${taskId}`;
+      console.log('🌐 [getTrainingTaskDetail] 调用真实API:', apiUrl);
+
+      const response = await request(apiUrl, {
+        method: 'GET',
+      });
+
+      ApiDebugger.logResponse('getTrainingTaskDetail', response);
+      return response;
+    } catch (error) {
+      console.error('🚨 [getTrainingTaskDetail] API调用失败:', error);
+      ApiDebugger.logError('getTrainingTaskDetail', error);
+
+      return {
+        code: -1,
+        msg: `API调用失败: ${error instanceof Error ? error.message : '网络错误'}`,
+        data: null
+      };
+    }
+  }
+
+  // 开发环境使用Mock数据
+  console.log('🎭 [getTrainingTaskDetail] 使用Mock数据');
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const mockResponse = getTrainingTaskDetailResponse(taskId);
+      console.log('📥 [getTrainingTaskDetail] Mock响应数据:', mockResponse);
+      resolve(mockResponse);
+    }, 200);
+  });
+};
+
+/**
+ * 获取工作负载选项列表
+ */
+export const getWorkloadOptions = async () => {
+  console.log('🔗 [API] getWorkloadOptions 请求工作负载选项列表');
+
+  // 记录API调试信息
+  ApiDebugger.logRequest('getWorkloadOptions', {});
+
+  // 判断是否使用Mock数据
+  if (!shouldUseMock()) {
+    // 生产环境调用真实API
+    try {
+      const apiUrl = `${getApiBaseUrl()}/api/workload/options`;
+      console.log('🌐 [getWorkloadOptions] 调用真实API:', apiUrl);
+
+      const response = await request(apiUrl, {
+        method: 'GET',
+      });
+
+      ApiDebugger.logResponse('getWorkloadOptions', response);
+      return response;
+    } catch (error) {
+      console.error('🚨 [getWorkloadOptions] API调用失败:', error);
+      ApiDebugger.logError('getWorkloadOptions', error);
+
+      return {
+        code: -1,
+        msg: `API调用失败: ${error instanceof Error ? error.message : '网络错误'}`,
+        data: null
+      };
+    }
+  }
+
+  // 开发环境使用Mock数据
+  console.log('🎭 [getWorkloadOptions] 使用Mock数据');
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const mockResponse = getWorkloadOptionsResponse();
+      console.log('📥 [getWorkloadOptions] Mock响应数据:', mockResponse);
+      resolve(mockResponse);
+    }, 200);
+  });
 };
