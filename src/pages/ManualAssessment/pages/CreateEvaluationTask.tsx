@@ -58,10 +58,6 @@ const CreateEvaluationTask: React.FC = () => {
   const [loadingDatasets, setLoadingDatasets] = useState(false);
   const [loadingVersions, setLoadingVersions] = useState(false);
 
-  // 评估对象和对比对象数据
-  const [evaluationData, setEvaluationData] = useState<any>(null);
-  const [comparisonData, setComparisonData] = useState<any>(null);
-
   // 判断是否为编辑模式
   const isEditMode = !!id;
   const isCopyMode = !!copyId;
